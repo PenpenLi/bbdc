@@ -207,7 +207,11 @@ function AppScene:startLoadingData(hasAccount, username, password)
         end
 
         if e ~= nil then                  
-            s_TIPS_LAYER:showSmall(e)
+            local function onError()
+                s_DATABASE_MGR.close()
+                s_START_FUNCTION()
+            end
+            s_TIPS_LAYER:showSmall(e, onError, onError)
             hideProgressHUD()
         elseif s_CURRENT_USER.bookKey == '' then
             s_SCENE:getConfigs(true)
