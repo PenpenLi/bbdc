@@ -242,7 +242,7 @@ public class BBNDK {
 	}
 	
 	private static void _hideCXProgressHUD() {
-		if (_loadingView != null) {
+		if (_loadingView != null && _loadingView.isShowing()) {
 			_loadingView.dismiss();
 		}
 		_loadingView = null;
