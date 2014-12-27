@@ -37,24 +37,31 @@ function SummaryBossAlter.create(win,wordCount,blood,index)
     local back = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
     back:setPosition(-s_DESIGN_OFFSET_WIDTH, 0)
     layer:addChild(back)
-    if win then
-        layer:win1()  
-        cc.SimpleAudioEngine:getInstance():pauseMusic()
+    
+    back:setVisible(false)
+    local show = cc.CallFunc:create(function()
+        back:setVisible(true)
+        if win then
+            layer:win1()  
+            cc.SimpleAudioEngine:getInstance():pauseMusic()
 
-        s_SCENE:callFuncWithDelay(0.3,function()
-        -- win sound
-        playSound(s_sound_win)
-        end)
-    else
-        layer:lose()
-        
-        cc.SimpleAudioEngine:getInstance():pauseMusic()
-
-        s_SCENE:callFuncWithDelay(0.3,function()
+            s_SCENE:callFuncWithDelay(0.3,function()
             -- win sound
-            playSound(s_sound_fail)
-        end)
-    end
+            playSound(s_sound_win)
+            end)
+        else
+            layer:lose()
+            
+            cc.SimpleAudioEngine:getInstance():pauseMusic()
+
+            s_SCENE:callFuncWithDelay(0.3,function()
+                -- win sound
+                playSound(s_sound_fail)
+            end)
+        end
+    end,{})
+
+    layer:runAction(cc.Sequence:create(cc.DelayTime:create(0.5),show))
     
     return layer
 end
