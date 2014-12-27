@@ -299,6 +299,10 @@ function HomeLayer.create()
 
             else
 
+                -- local PersonalInfo = require("view.PersonalInfo")
+                -- local personalInfoLayer = PersonalInfo.create()
+                -- s_SCENE:replaceGameLayer(personalInfoLayer) 
+
                 local Item_popup = require("popup/PopupModel")
                 local item_popup = Item_popup.create(Site_From_Information)  
                 s_SCENE:popup(item_popup)
