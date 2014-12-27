@@ -30,9 +30,10 @@ function FriendLayer:ctor()
     usrname:setPosition(0.2 * topline:getContentSize().width,0.5 * topline:getContentSize().height)
     topline:addChild(usrname)
     
-    local backBtn = ccui.Button:create('image/PersonalInfo/backButtonInPersonalInfo.png','image/PersonalInfo/backButtonInPersonalInfo.png','')
+    local backBtn = ccui.Button:create('image/friend/button_back.png','','')
+    backBtn:setScale9Enabled(true)
     backBtn:setAnchorPoint(0,0.5)
-    backBtn:setPosition(0,0.5 * topline:getContentSize().height)
+    backBtn:setPosition(0.05 * (s_RIGHT_X - s_LEFT_X),0.5 * topline:getContentSize().height)
     topline:addChild(backBtn)
     
     local function onBack(sender,eventType)

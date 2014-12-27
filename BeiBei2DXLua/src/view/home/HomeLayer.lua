@@ -119,7 +119,6 @@ function HomeLayer.create()
                 s_CorePlayManager.enterFriendLayer()
 
             else
-            
                 if s_CURRENT_USER.isGuest == 1 then
                     local Item_popup = require("popup/PopupModel")
                     local item_popup = Item_popup.create(Site_From_Friend_Guest)  
