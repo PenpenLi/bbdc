@@ -24,13 +24,13 @@ function LevelLayerI:plotLevelNumber(levelKey)
     local levelNumber = levelIndex + 1
     if  levelData ~= nil and levelData.isLevelUnlocked == 1 then
         if levelConfig['type'] == 1 then -- summary boss
-            local summaryboss = levelButton:getChildByName('summaryboss'..string.sub(levelKey,6))
-            local number = ccui.TextBMFont:create()
-            number:setFntFile('font/number_straight.fnt')
-            number:setScale(1.6)
-            number:setString(levelNumber)
-            number:setPosition(125, 100)
-            summaryboss:addChild(number)
+--            local summaryboss = levelButton:getChildByName('summaryboss'..string.sub(levelKey,6))
+--            local number = ccui.TextBMFont:create()
+--            number:setFntFile('font/number_straight.fnt')
+--            number:setScale(1.6)
+--            number:setString(levelNumber)
+--            number:setPosition(125, 100)
+--            summaryboss:addChild(number)
         else 
             local number = ccui.TextBMFont:create()
             number:setFntFile('font/number_inclined.fnt')
