@@ -30,12 +30,12 @@ end
 
 function LevelLayer:levelStateManager()
     -- set levelState if relogin after logout
-    if s_SCENE.levelLayerState == s_normal_level_state then
-        local currentLevelData = s_CURRENT_USER:getUserLevelData(s_CURRENT_USER.currentChapterKey,s_CURRENT_USER.currentLevelKey)
-        if currentLevelData.stars > 0 then  -- set unlock next level state
-            s_SCENE.levelLayerState = s_unlock_normal_notPlotInfo_state
-        end
-    end
+--    if s_SCENE.levelLayerState == s_normal_level_state then
+--        local currentLevelData = s_CURRENT_USER:getUserLevelData(s_CURRENT_USER.currentChapterKey,s_CURRENT_USER.currentLevelKey)
+--        if currentLevelData.stars > 0 then  -- set unlock next level state
+--            s_SCENE.levelLayerState = s_unlock_normal_notPlotInfo_state
+--        end
+--    end
     -- test
     --s_CURRENT_USER:initLevels()
     -- check current chapter
@@ -81,7 +81,7 @@ function LevelLayer:levelStateManager()
     -- TODO switch state
 --         s_SCENE.levelLayerState = s_unlock_next_chapter_state
     --    s_CURRENT_USER.currentChapterKey = 'chapter1'
-    print('state:'..s_SCENE.levelLayerState)
+--    print('state!!!!!!!!!!!!!!!:'..s_SCENE.levelLayerState)
     if s_SCENE.levelLayerState == s_normal_level_state then
         print(s_SCENE.levelLayerState)
     elseif s_SCENE.levelLayerState == s_normal_retry_state then
