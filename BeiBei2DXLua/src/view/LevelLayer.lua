@@ -30,12 +30,12 @@ end
 
 function LevelLayer:levelStateManager()
     -- set levelState if relogin after logout
---    if s_SCENE.levelLayerState == s_normal_level_state then
---        local currentLevelData = s_CURRENT_USER:getUserLevelData(s_CURRENT_USER.currentChapterKey,s_CURRENT_USER.currentLevelKey)
---        if currentLevelData.stars > 0 then  -- set unlock next level state
---            s_SCENE.levelLayerState = s_unlock_normal_notPlotInfo_state
---        end
---    end
+    if s_SCENE.levelLayerState == s_normal_level_state then
+        local currentLevelData = s_CURRENT_USER:getUserLevelData(s_CURRENT_USER.currentChapterKey,s_CURRENT_USER.currentLevelKey)
+        if currentLevelData.stars > 0 then  -- set unlock next level state
+            s_SCENE.levelLayerState = s_unlock_normal_notPlotInfo_state
+        end
+    end
     -- test
     --s_CURRENT_USER:initLevels()
     -- check current chapter
@@ -93,6 +93,8 @@ function LevelLayer:levelStateManager()
     elseif s_SCENE.levelLayerState == s_unlock_normal_plotInfo_state or s_SCENE.levelLayerState == s_unlock_normal_notPlotInfo_state then
         -- lock screen and plot animation
         s_TOUCH_EVENT_BLOCK_LAYER:lockTouch()
+        
+        -- TODO check the unlock state
         s_SCENE:callFuncWithDelay(3.9, function()
             s_TOUCH_EVENT_BLOCK_LAYER:unlockTouch()
         end)
