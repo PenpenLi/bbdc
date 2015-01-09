@@ -6,9 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-
-import com.beibei.wordmaster.AppActivity;
-import com.beibei.wordmaster.R;
+import com.beibei.wordmaster.beta.*;
 
 public class BBPushNotificationService extends Service {
 	

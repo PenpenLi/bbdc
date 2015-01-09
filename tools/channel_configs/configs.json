@@ -47,7 +47,7 @@
     },
     {
       "name": "android",
-      "packageName": "com.beibei.wordmaster",
+      "packageName": "com.beibei.wordmaster.beta",
       
       "leanCloudAppName":"贝贝单词X_0",
       "leanCloudAppId": "2ktgzl363xwj3y3l9axd5hx3i8t31k48tt6344ds0qdg38jq",
