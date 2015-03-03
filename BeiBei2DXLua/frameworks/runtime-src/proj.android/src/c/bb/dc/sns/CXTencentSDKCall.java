@@ -190,6 +190,20 @@ public class CXTencentSDKCall {
 	private String buildTransaction(final String type) {
 		return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
 	}
+	
+	public String addImageToGallery(final String filePath) {
+		File file = new File(filePath);
+		if (!file.exists()) {
+			return null;
+		}
+		
+		Bitmap rawbmp = BitmapFactory.decodeFile(filePath);
+		String newpath = BBNDK.getSDCardPath() + "/beibeidanci/screenshot/";
+		String tmpfilename = System.currentTimeMillis() + "screenshot.png";
+		if (saveMyBitmap(newpath, tmpfilename, rawbmp) == false) return null;
+		
+		return newpath + tmpfilename;
+	}
 
 	// ------------------------------------------------------------------------------
 	class LogInListener implements IUiListener {

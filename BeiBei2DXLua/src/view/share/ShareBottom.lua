@@ -38,12 +38,16 @@ function ShareBottom:ctor()
     -- target:setPosition(cc.p(s_DESIGN_WIDTH / 2, s_DESIGN_HEIGHT / 2))
 
     local png = "image_saved.png"
+    local time_png = png
+    if cc.Application:getInstance():getTargetPlatform() == cc.PLATFORM_OS_ANDROID then
+        time_png = 'image_saved_' .. tostring(os.time()) .. '.png'
+    end
     local function saveImage(sender, eventType)
         if eventType == ccui.TouchEventType.began then
-            self.target:saveToFile(png, cc.IMAGE_FORMAT_PNG)
+            self.target:saveToFile(time_png, cc.IMAGE_FORMAT_PNG)
         elseif eventType == ccui.TouchEventType.ended then
         	AnalyticsShare('save')
-            local imagePath = cc.FileUtils:getInstance():getWritablePath()..png
+            local imagePath = cc.FileUtils:getInstance():getWritablePath()..time_png
             cx.CXUtils:getInstance():addImageToGallery(imagePath)
             self:getParent():shareEnd()
             

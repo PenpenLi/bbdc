@@ -343,11 +343,16 @@ public class BBNDK {
 	
 	public static void addImageToGallery(final String filePath) {
 
+		String s = CXTencentSDKCall.getInstance().addImageToGallery(filePath);
+		if (s == null) return;
+		
 	    ContentValues values = new ContentValues();
 
 	    values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis());
 	    values.put(Images.Media.MIME_TYPE, "image/jpeg");
-	    values.put(MediaStore.MediaColumns.DATA, filePath);
+	    values.put(MediaStore.MediaColumns.DATA, s);
+	    values.put(MediaStore.MediaColumns.DISPLAY_NAME, "beibeidanci" + System.currentTimeMillis());
+        values.put(MediaStore.MediaColumns.TITLE, "beibeidanci" + System.currentTimeMillis());
 
 	    _context.getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
 	    
