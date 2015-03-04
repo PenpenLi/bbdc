@@ -1,0 +1,13 @@
+
+beibeidaizi.png
+size: 128,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+beibeidaizi
+  rotate: false
+  xy: 2, 2
+  size: 105, 107
+  orig: 105, 107
+  offset: 0, 0
+  index: -1

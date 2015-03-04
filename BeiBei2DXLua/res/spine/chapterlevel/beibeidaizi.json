@@ -1,0 +1,55 @@
+{
+"skeleton": {
+	"hash": "7BzTV1BVfmMm2KZe23msrangzD0",
+	"spine": "2.1.09",
+	"width": 105.57,
+	"height": 107.56,
+	"images": "/Users/yehanjie/Desktop/spine/beibeidaizi"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "bone", "parent": "root", "length": 54.08, "x": 55.56, "y": 6.72, "rotation": 93.17 }
+],
+"slots": [
+	{ "name": "beibeidaizi", "bone": "bone", "attachment": "beibeidaizi" }
+],
+"skins": {
+	"default": {
+		"beibeidaizi": {
+			"beibeidaizi": { "x": 50.51, "y": -6.69, "rotation": -92.88, "width": 105, "height": 107 }
+		}
+	}
+},
+"animations": {
+	"animation": {
+		"bones": {
+			"bone": {
+				"rotate": [
+					{ "time": 0, "angle": 0, "curve": "stepped" },
+					{ "time": 2.6, "angle": 0 }
+				],
+				"translate": [
+					{ "time": 0, "x": 0.3, "y": -5.42 },
+					{ "time": 0.2333, "x": -2.09, "y": 37.71 },
+					{ "time": 0.4666, "x": 0.3, "y": -5.42 },
+					{ "time": 0.7333, "x": -2.09, "y": 37.71 },
+					{ "time": 0.9333, "x": 0.3, "y": -5.42 },
+					{ "time": 1.2333, "x": -2.09, "y": 37.71 },
+					{ "time": 1.4333, "x": 0.3, "y": -5.42, "curve": "stepped" },
+					{ "time": 2.6, "x": 0.3, "y": -5.42 }
+				],
+				"scale": [
+					{ "time": 0, "x": 0.9, "y": 1 },
+					{ "time": 0.2333, "x": 0.997, "y": 1 },
+					{ "time": 0.4666, "x": 0.9, "y": 1 },
+					{ "time": 0.7333, "x": 0.997, "y": 1 },
+					{ "time": 0.9333, "x": 0.9, "y": 1 },
+					{ "time": 1.2333, "x": 0.997, "y": 1 },
+					{ "time": 1.4333, "x": 0.9, "y": 1, "curve": "stepped" },
+					{ "time": 2.6, "x": 0.9, "y": 1 }
+				]
+			}
+		}
+	}
+}
+}
