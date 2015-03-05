@@ -109,7 +109,7 @@
 		B8C5C35C1A44218E00593E15 /* CXAvos.mm in Sources */ = {isa = PBXBuildFile; fileRef = B8C5C35A1A44218E00593E15 /* CXAvos.mm */; };
 		B8C5C3611A44224200593E15 /* AVOSCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8C5C35F1A44224100593E15 /* AVOSCloud.framework */; };
 		B8C5C3621A44224200593E15 /* AVOSCloudSNS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8C5C3601A44224200593E15 /* AVOSCloudSNS.framework */; };
-		B8E98D9B1A3C37F500CE3119 /* string.strings in Resources */ = {isa = PBXBuildFile; fileRef = B8E98D9D1A3C37F500CE3119 /* string.strings */; };
+		B8C6D59A1AA5C18900CA73EF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B8C6D59C1AA5C18900CA73EF /* InfoPlist.strings */; };
 		C00FD4921938512100C6382D /* Landscape_png.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C00FD48A1938512100C6382D /* Landscape_png.cpp */; };
 		C00FD4931938512100C6382D /* Landscape_png.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C00FD48A1938512100C6382D /* Landscape_png.cpp */; };
 		C00FD4941938512100C6382D /* PlayDisable_png.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C00FD48B1938512100C6382D /* PlayDisable_png.cpp */; };
@@ -311,7 +311,7 @@
 		B85077561A5F7CC400A66723 /* CXNetworkStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXNetworkStatus.h; sourceTree = "<group>"; };
 		B85077571A5F7CC400A66723 /* CXNetworkStatusCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CXNetworkStatusCommon.cpp; sourceTree = "<group>"; };
 		B85077591A5F7CD500A66723 /* CXNetworkStatus.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CXNetworkStatus.mm; sourceTree = "<group>"; };
-		B8551C031A7CC98800F0037D /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "BeiBei2DXLua iOS/Images.xcassets/AppIcon.appiconset/Icon-72.png"; sourceTree = "<group>"; };
+		B8551C031A7CC98800F0037D /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../proj.ios_mac/BeiBei2DXLua iOS/Images.xcassets/AppIcon.appiconset/Icon-72.png"; sourceTree = "<group>"; };
 		B895B1121A7CE968005D78F3 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
 		B895B1131A7CE968005D78F3 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
 		B895B1141A7CE968005D78F3 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
@@ -328,7 +328,9 @@
 		B8C5C35E1A44219A00593E15 /* CXAvos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXAvos.h; sourceTree = "<group>"; };
 		B8C5C35F1A44224100593E15 /* AVOSCloud.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVOSCloud.framework; path = "frameworks/release-v2.6.9.1/AVOSCloud.framework"; sourceTree = "<group>"; };
 		B8C5C3601A44224200593E15 /* AVOSCloudSNS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVOSCloudSNS.framework; path = "frameworks/release-v2.6.9.1/AVOSCloudSNS.framework"; sourceTree = "<group>"; };
-		B8E98D9C1A3C37F500CE3119 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/string.strings; sourceTree = "<group>"; };
+		B8C6D59B1AA5C18900CA73EF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B8C6D59D1AA5C1C700CA73EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B8C6D59E1AA5C1D300CA73EF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		C00FD48A1938512100C6382D /* Landscape_png.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Landscape_png.cpp; sourceTree = "<group>"; };
 		C00FD48B1938512100C6382D /* PlayDisable_png.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayDisable_png.cpp; sourceTree = "<group>"; };
 		C00FD48C1938512100C6382D /* PlayEnable_png.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayEnable_png.cpp; sourceTree = "<group>"; };
@@ -651,8 +653,6 @@
 		F293B3BD15EB7BE500256477 = {
 			isa = PBXGroup;
 			children = (
-				B8551C031A7CC98800F0037D /* Icon-72.png */,
-				B8E98D9D1A3C37F500CE3119 /* string.strings */,
 				660224261A370E4B00233788 /* common */,
 				C03781AE18BF654500FE4F13 /* cocos2d_lua_bindings.xcodeproj */,
 				15A8A4031834BDA200142BE0 /* cocos2d_libs.xcodeproj */,
@@ -736,9 +736,11 @@
 		F293BC4615EB859D00256477 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B8551C031A7CC98800F0037D /* Icon-72.png */,
 				64E5CEC31A6F5A69005770C9 /* res */,
 				C05D1C111923449100B808A4 /* config.json */,
 				C03781B818BF655400FE4F13 /* src */,
+				B8C6D59C1AA5C18900CA73EF /* InfoPlist.strings */,
 			);
 			name = Resources;
 			path = ../Resources;
@@ -810,6 +812,8 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
+				"zh-Hans",
 			);
 			mainGroup = F293B3BD15EB7BE500256477;
 			productRefGroup = F293B3C915EB7BE500256477 /* Products */;
@@ -881,8 +885,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B89B86901A454C3C00E596E0 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
+				B8C6D59A1AA5C18900CA73EF /* InfoPlist.strings in Resources */,
 				66E529101A37EEA600D1FBB1 /* Images.xcassets in Resources */,
-				B8E98D9B1A3C37F500CE3119 /* string.strings in Resources */,
 				64E5CEC41A6F5A69005770C9 /* res in Resources */,
 				C03781BB18BF655400FE4F13 /* src in Resources */,
 				B8551C041A7CC98800F0037D /* Icon-72.png in Resources */,
@@ -1031,13 +1035,16 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B8E98D9D1A3C37F500CE3119 /* string.strings */ = {
+		B8C6D59C1AA5C18900CA73EF /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				B8E98D9C1A3C37F500CE3119 /* en */,
+				B8C6D59B1AA5C18900CA73EF /* en */,
+				B8C6D59D1AA5C1C700CA73EF /* Base */,
+				B8C6D59E1AA5C1D300CA73EF /* zh-Hans */,
 			);
-			name = string.strings;
-			sourceTree = "<group>";
+			name = InfoPlist.strings;
+			path = ios;
+			sourceTree = SOURCE_ROOT;
 		};
 		F405C6CB19ED14AA005AD31C /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
@@ -1172,7 +1179,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iOS Development: abby yi (7BBT23W58G)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iOS Development: abby yi (7BBT23W58G)";
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1194,8 +1201,8 @@
 					"-ObjC",
 					"-fobjc-arc",
 				);
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=*]" = "";
+				PROVISIONING_PROFILE = "949140dc-e6df-4c03-a3c4-a2bfb456d65b";
+				"PROVISIONING_PROFILE[sdk=*]" = "949140dc-e6df-4c03-a3c4-a2bfb456d65b";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios";
@@ -1211,7 +1218,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: abby yi (9363QVK9E9)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: abby yi (9363QVK9E9)";
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1233,7 +1240,7 @@
 					"-fobjc-arc",
 				);
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=*]" = "";
+				"PROVISIONING_PROFILE[sdk=*]" = "767660fb-8597-4f67-a61f-5ef675f96472";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios";

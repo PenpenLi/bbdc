@@ -1,8 +1,8 @@
 /* 
-  string.strings
+  InfoPlist.strings
   BeiBei2DXLua
 
-  Created by Bemoo on 12/13/14.
+  Created by Bemoo on 3/3/15.
 
 */
 CFBundleDisplayName = "贝贝单词";

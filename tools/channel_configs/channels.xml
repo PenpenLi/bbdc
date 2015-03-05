@@ -13,7 +13,7 @@
         QQName="贝贝单词"
         QQAppID="1103783596"
         QQAppKey="n7vXdt6eDIggSsa6"
-        isQQLogInAvailable="true"
+        isQQLogInAvailable="false"
         isQQShareAvailable="true"
 
         WXPkg="com.BeiBeiDanCiX" WXName="贝贝单词-背单词根本停不下来"
@@ -203,6 +203,28 @@
 
         umengAppName="贝贝单词-android"
         umengAppKey="549a5eb9fd98c5b2ac00144e"/>
+        
+    <channel name="jifeng" 
+        packageName="com.beibei.wordmaster"
+
+        leanCloudAppName="beibeidanci_v180"
+        leanCloudAppID="935lvmzn16sqvq8mbwflzb2mqy1p041zwyy8ofi13cg4oguk"
+        leanCloudAppKey="2rmiqb2437n4rovbufuivgssf04znlvhmeshu1a2a1fq3g9i"
+
+        QQPkgName="com.beibei.wordmaster.tencentmyapp"
+        QQName="贝贝单词"
+        QQAppID="1103783596"
+        QQAppKey="n7vXdt6eDIggSsa6"
+        isQQLogInAvailable="false"
+        isQQShareAvailable="true"
+
+        WXPkg="com.beibei.wordmaster.gfan" WXName="贝贝单词-机锋"
+        WXAppID="wx602b50a91e07e730"
+        WXAppSecret="ec78445c811b7b0e8611adb765aca3d1"
+        WXSignature="47424d9b8a7d88432ed09f9e113693d0"
+
+        umengAppName="贝贝单词-android"
+        umengAppKey="549a5eb9fd98c5b2ac00144e"/>
 
 <channel name="360 jiagu ----------------------------------------------------------------" />
     
@@ -239,7 +261,7 @@
         QQName="贝贝单词"
         QQAppID="1103783596"
         QQAppKey="n7vXdt6eDIggSsa6"
-        isQQLogInAvailable="true"
+        isQQLogInAvailable="false"
         isQQShareAvailable="true"
 
         WXPkg="com.beibei.wordmaster.tencentmyapp" WXName="贝贝单词-应用宝正式"

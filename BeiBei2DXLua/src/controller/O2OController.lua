@@ -154,7 +154,7 @@ function O2OController.startLoadingData(userStartType, username, password)
             -- 210 : The username and password mismatch
                 s_TIPS_LAYER:showSmall(e)
             else
-                onErrorNeedRestartAppHappend(e .. '\n username: ' .. username)
+                onErrorNeedRestartAppHappend(e .. '\n username: ' .. tostring(username))
             end
             hideProgressHUD()
         else -- no error

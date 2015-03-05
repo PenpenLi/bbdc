@@ -25,7 +25,7 @@ CXAvos::CXAvos()
 , mLuaHandlerId_signUp(0)
 , mLuaHandlerId_logIn(0)
 , mLuaHandlerId_logInByQQ(0) {
-    
+    init();
 }
 
 void CXAvos::invokeLuaCallbackFunction_dl(const char* objectId, const char* filename, const char* error, bool isSaved)
