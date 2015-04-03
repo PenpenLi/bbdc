@@ -93,7 +93,7 @@ function EndLayer:ctor()
     backColor:addChild(label_hint)
 
     local beibeiAnimation = sp.SkeletonAnimation:create("spine/bb_happy_public.json", 'spine/bb_happy_public.atlas',1)
-    beibeiAnimation:addAnimation(0, 'animation', true)
+    beibeiAnimation:addAnimation(0, 'animation', false)
     beibeiAnimation:setPosition(s_DESIGN_WIDTH/2-s_LEFT_X-100, 320)
 
     local partical = cc.ParticleSystemQuad:create('image/studyscene/ribbon.plist')
