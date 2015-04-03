@@ -148,15 +148,15 @@ end
 
 local flag_getMaxWrongNumEveryLevel = {}
 function getMaxWrongNumEveryLevel()
-    if s_CURRENT_USER.bookKey == nil or s_CURRENT_USER.bookKey == '' or flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] == nil or flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] <= 9 then
+    if true then
         local bossList = s_LocalDatabaseManager.getAllBossInfo()
         flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] = #bossList
     end
     if flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] <= 1 then
         return s_max_wrong_num[1]
-    elseif flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] == 2 or flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] == 5 then 
+    elseif flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] % 3 == 2 then 
         return s_max_wrong_num[2]
-    elseif flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] == 3 or flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] == 6 or flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] == 8 then 
+    elseif flag_getMaxWrongNumEveryLevel[s_CURRENT_USER.bookKey] % 3 == 0 then 
         return s_max_wrong_num[3]
     else
         return s_max_wrong_num[4]

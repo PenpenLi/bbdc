@@ -123,6 +123,8 @@ function HomeLayer.create()
     layer:addChild(offlineTipHome,2)
     layer:addChild(offlineTipFriend,2) 
 
+    local createDataShareMark 
+
     local mission_progress
     local checkInDisplay = s_CURRENT_USER.logInDatas[#s_CURRENT_USER.logInDatas]:isCheckIn(os.time(),s_CURRENT_USER.bookKey) and not s_isCheckInAnimationDisplayed
     if checkInDisplay then
@@ -131,12 +133,14 @@ function HomeLayer.create()
         mission_progress = MissionProgress.create(true,dataShare)
     else
         if showDataShare then
-            dataShare:moveDown()
+            createDataShareMark = true 
         end
         mission_progress = MissionProgress.create()
         mission_progress.animation()
     end
     backColor:addChild(mission_progress,1,'mission_progress')
+
+
     local downloadSoundButton = require("view.home.DownloadSoundButton").create(top)
 
     local name = cc.Sprite:create('image/homescene/BBDC_word_title.png')
@@ -736,27 +740,36 @@ function HomeLayer.create()
         if math.floor(s_LocalDatabaseManager.isBuy() / math.pow(10,i-1)) == 1 then
             if i == 1 then
                 layer.friendButtonFunc()
+                createDataShareMark = false
             elseif i == 2 then
                 isDataShow = true 
                 layer:showDataLayerByItem(3)
                 s_SCENE:removeAllPopups()
+                createDataShareMark = false
             elseif i == 3 then
                 isDataShow = true 
                 layer:showDataLayerByItem(2)
                 s_SCENE:removeAllPopups()
+                createDataShareMark = false
             elseif i == 4 then
                 isDataShow = true 
                 layer:showDataLayerByItem(1)
                 s_SCENE:removeAllPopups()
+                createDataShareMark = false
             elseif i == 5 then
                 isDataShow = true 
                 layer:showDataLayerByItem(0)
                 s_SCENE:removeAllPopups()
+                createDataShareMark = false
             end
             s_LocalDatabaseManager.setBuy(0)
-            s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
+            s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch() 
         end
     end 
+
+    if  createDataShareMark == true then
+        dataShare:moveDown()
+    end
 
     onAndroidKeyPressed(layer, function ()
         local isPopup = s_SCENE.popupLayer:getChildren()
