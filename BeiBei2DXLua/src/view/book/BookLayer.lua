@@ -179,9 +179,9 @@ function BookLayer.create()
     local listView = ccui.ListView:create()
     -- set list view ex direction
     listView:setDirection(ccui.ScrollViewDir.vertical)
-    listView:setBounceEnabled(true)
-    listView:setContentSize(cc.size(s_RIGHT_X - s_LEFT_X,0.85 * s_DESIGN_HEIGHT))
-    listView:setPosition(s_LEFT_X,0)
+    listView:setBounceEnabled(false)
+    listView:setContentSize(cc.size(s_RIGHT_X - s_LEFT_X,0.7 * s_DESIGN_HEIGHT))
+    listView:setPosition(s_LEFT_X,0.15 * s_DESIGN_HEIGHT)
     layer:addChild(listView)
     local count = math.ceil(bookCount / 2) + 1
     for i = 1, count do 
@@ -191,7 +191,7 @@ function BookLayer.create()
 
         local custom_item = ccui.Layout:create()
         custom_item:setTouchEnabled(true)
-        custom_item:setContentSize(cc.size(s_RIGHT_X - s_LEFT_X,0.26 * s_DESIGN_HEIGHT))
+        custom_item:setContentSize(cc.size(s_RIGHT_X - s_LEFT_X,0.35 * s_DESIGN_HEIGHT))
         shelf:setPosition(cc.p(custom_item:getContentSize().width / 2.0, custom_item:getContentSize().height * 0.2))
         custom_item:addChild(shelf,0,'shelf')
 
