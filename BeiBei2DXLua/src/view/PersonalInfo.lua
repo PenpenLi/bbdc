@@ -835,8 +835,8 @@ function PersonalInfo:login()
                     
                     if self.checkIn ~= nil and self.checkIn then
                         local tick = nil
-                        if s_HUD_LAYER:getChildByName('missionCompleteCircle') ~= nil then
-                           tick = s_HUD_LAYER:getChildByName('missionCompleteCircle'):getChildByName('back')
+                        if s_HUD_LAYER:getChildByName('missionComplete') ~= nil then
+                           tick = s_HUD_LAYER:getChildByName('missionComplete'):getChildByName('back')
                         end
                         local move = cc.MoveTo:create(0.5,cc.p(loadingList[curIndex]:getPositionX() + s_LEFT_X,loadingList[curIndex]:getPositionY()))
                         local delay = cc.DelayTime:create(0.5)

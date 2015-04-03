@@ -128,7 +128,9 @@ function HomeLayer.create()
     local mission_progress
     local checkInDisplay = s_CURRENT_USER.logInDatas[#s_CURRENT_USER.logInDatas]:isCheckIn(os.time(),s_CURRENT_USER.bookKey) and not s_isCheckInAnimationDisplayed
     if checkInDisplay then
-        s_HUD_LAYER:getChildByName('missionCompleteCircle'):setVisible(true)
+        if s_HUD_LAYER:getChildByName('missionComplete') ~= nil then
+            s_HUD_LAYER:getChildByName('missionComplete'):setVisible(true)
+        end
         s_isCheckInAnimationDisplayed = true
         mission_progress = MissionProgress.create(true,dataShare)
     else

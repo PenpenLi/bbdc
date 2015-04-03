@@ -328,7 +328,7 @@ function SummaryBossAlter:win1(entrance)
 
     if not hasCheckedIn and entrance == ENTRANCE_NORMAL then
         local missionCompleteCircle = require('view.MissionCompleteCircle').create()
-        s_HUD_LAYER:addChild(missionCompleteCircle,1000,'missionCompleteCircle')
+        s_HUD_LAYER:addChild(missionCompleteCircle,1000,'missionComplete')
         self:runAction(cc.Sequence:create(cc.DelayTime:create(0.5),cc.CallFunc:create(function ()
             self:win2(entrance,hasCheckedIn)
             if entrance == ENTRANCE_NORMAL then
@@ -376,8 +376,8 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
         if entrance == ENTRANCE_WORD_LIBRARY then
             s_CorePlayManager.enterLevelLayer()
         else
-            if s_HUD_LAYER:getChildByName('missionCompleteCircle') ~= nil then
-                s_HUD_LAYER:getChildByName('missionCompleteCircle'):setVisible(false)
+            if s_HUD_LAYER:getChildByName('missionComplete') ~= nil then
+                s_HUD_LAYER:getChildByName('missionComplete'):setVisible(false)
             end
             s_CorePlayManager.enterLevelLayer()
         end
@@ -410,7 +410,7 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
     end
 
     onAndroidKeyPressed(self, function ()
-        s_HUD_LAYER:removeChildByName('missionCompleteCircle')
+        s_HUD_LAYER:removeChildByName('missionComplete')
         s_CorePlayManager.enterLevelLayer()
     end, function ()
 
