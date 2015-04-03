@@ -376,7 +376,9 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
         if entrance == ENTRANCE_WORD_LIBRARY then
             s_CorePlayManager.enterLevelLayer()
         else
-            s_HUD_LAYER:getChildByName('missionCompleteCircle'):setVisible(false)
+            if s_HUD_LAYER:getChildByName('missionCompleteCircle') ~= nil then
+                s_HUD_LAYER:getChildByName('missionCompleteCircle'):setVisible(false)
+            end
             s_CorePlayManager.enterLevelLayer()
         end
     end
