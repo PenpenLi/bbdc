@@ -144,7 +144,7 @@ local function update(dt)
         if s_CURRENT_USER.dataDailyUsing:isToday() then
             s_CURRENT_USER.dataDailyUsing:update(dt)
             usingTimeSaveToLocalDB = usingTimeSaveToLocalDB + dt
-            if usingTimeSaveToLocalDB > 10 then -- 5 min
+            if usingTimeSaveToLocalDB > 10 then -- 10 s
                 usingTimeSaveToLocalDB = 0
                 s_LocalDatabaseManager.saveDataClassObject(s_CURRENT_USER.dataDailyUsing, s_CURRENT_USER.objectId, s_CURRENT_USER.username)
             end
