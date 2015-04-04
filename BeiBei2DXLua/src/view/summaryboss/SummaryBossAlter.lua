@@ -328,7 +328,7 @@ function SummaryBossAlter:win1(entrance)
 
     if not hasCheckedIn and entrance == ENTRANCE_NORMAL then
         local missionCompleteCircle = require('view.MissionCompleteCircle').create()
-        s_HUD_LAYER:addChild(missionCompleteCircle,1000,'missionComplete')
+        s_HUD_LAYER:addChild(missionCompleteCircle,1000,'missionCompleteCircle')
         self:runAction(cc.Sequence:create(cc.DelayTime:create(0.5),cc.CallFunc:create(function ()
             self:win2(entrance,hasCheckedIn)
             if entrance == ENTRANCE_NORMAL then
@@ -373,6 +373,12 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
     end
 
     local function button_func()
+        if not s_isCheckInAnimationDisplayed then
+            if s_HUD_LAYER:getChildByName('missionCompleteCircle') ~= nil then
+                s_HUD_LAYER:getChildByName('missionCompleteCircle'):setName('missionComplete')
+            end
+        end
+        s_HUD_LAYER:removeChildByName('missionCompleteCircle')
         if entrance == ENTRANCE_WORD_LIBRARY then
             s_CorePlayManager.enterLevelLayer()
         else
@@ -380,7 +386,7 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
                 s_HUD_LAYER:getChildByName('missionComplete'):setVisible(false)
             end
             s_CorePlayManager.enterLevelLayer()
-        end
+        end       
     end
 
     local button = Button.create("long","blue","完成")
@@ -410,7 +416,10 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
     end
 
     onAndroidKeyPressed(self, function ()
-        s_HUD_LAYER:removeChildByName('missionComplete')
+        s_HUD_LAYER:removeChildByName('missionCompleteCircle')
+        if s_HUD_LAYER:getChildByName('missionComplete') ~= nil then
+            s_HUD_LAYER:getChildByName('missionComplete'):setVisible(false)
+        end
         s_CorePlayManager.enterLevelLayer()
     end, function ()
 

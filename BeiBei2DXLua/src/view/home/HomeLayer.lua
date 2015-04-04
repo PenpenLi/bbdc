@@ -20,6 +20,7 @@ local TEXT_CHANGE_ACCOUNT = '切换账号' -- "登出游戏"
 
 function HomeLayer.create()
     --s_CURRENT_USER:addBeans(100)
+    s_CURRENT_USER.dataDailyUsing:reset()
 
     AnalyticsSecondDayBook(s_CURRENT_USER.bookKey)
     local showDataShare = true
@@ -769,7 +770,7 @@ function HomeLayer.create()
         end
     end 
 
-    if  createDataShareMark == true then
+    if  createDataShareMark == true and s_CURRENT_USER.dataDailyUsing.usingTime >= 60 then 
         dataShare:moveDown()
     end
 

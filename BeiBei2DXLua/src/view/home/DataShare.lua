@@ -16,7 +16,7 @@ end
 
 function DataShare:ctor()
 	
-	LEARN_TIME = math.ceil(s_CURRENT_USER.dataDailyUsing.usingTime / 60.0)
+	LEARN_TIME = math.floor(s_CURRENT_USER.dataDailyUsing.usingTime / 60.0)
 	LEARN_INDEX = math.ceil(LEARN_TIME * 2.5)
 	LEARN_COUNT = s_LocalDatabaseManager.getStudyWordsNum(os.date('%x',os.time()))
 	-- LEARN_TIME = 23
@@ -138,9 +138,9 @@ function DataShare:ctor()
 end
 
 function DataShare:moveDown()
-	if LEARN_TIME == 0 then
-		return
-	end
+	-- if LEARN_TIME == 0 then
+	-- 	return
+	-- end
  -- print('s_CURRENT_USER.dataDailyUsing.startTime',s_CURRENT_USER.dataDailyUsing.startTime)
 	--  print('s_CURRENT_USER.dataDailyUsing.usingTime',s_CURRENT_USER.dataDailyUsing.usingTime)
 	s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
