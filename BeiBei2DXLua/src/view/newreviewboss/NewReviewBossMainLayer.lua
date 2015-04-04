@@ -16,9 +16,6 @@ Review_From_Normal    = 2
 
 function NewReviewBossMainLayer.create(ReviewWordList,number)
     AnalyticsReviewBoss_EnterLayer()
-    if s_CURRENT_USER.tutorialStep == s_tutorial_review_boss then
-        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_review_boss)
-    end
 
     AnalyticsFirst(ANALYTICS_FIRST_REVIEW_BOSS, 'SHOW')
 
