@@ -372,7 +372,7 @@ function AnalyticsFirstDayEnterSecondIsland()
     if bossList == nil then
         return
     end
-    if #bossList == 2 and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) and  #s_LocalDatabaseManager.getBossInfo(1).rightWordList == 0 and #s_LocalDatabaseManager.getBossInfo(1).wrongWordList == 0 then
+    if #bossList == 2 and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) and  #s_LocalDatabaseManager.getBossInfo(2).rightWordList == 0 and #s_LocalDatabaseManager.getBossInfo(2).wrongWordList == 0 then
         print('Analytics', getAnalyticsPrefix() .. 'FirstDayEnterSecondIsland', 'TOUCH'); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'FirstDayEnterSecondIsland', 'TOUCH')
     end
     if #bossList == 2 then
