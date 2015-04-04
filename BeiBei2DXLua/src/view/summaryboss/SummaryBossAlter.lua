@@ -64,10 +64,10 @@ function SummaryBossAlter.create(bossLayer,win,index,entrance)
 end
 
 function SummaryBossAlter:lose(entrance)
-    if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
-        s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
-        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_timeout)
-    end
+    -- if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
+    --     s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
+    --     s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_timeout)
+    -- end
 
     --add board
     self.loseBoard = cc.Sprite:create("image/summarybossscene/background_zjboss_tanchu.png")
@@ -230,12 +230,14 @@ function SummaryBossAlter:addTime()
 end
 
 function SummaryBossAlter:lose2(entrance)
+
+    AnalyticsSummaryBossResult('lose')
+
     if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
         s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
         s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_lose)
     end
-    AnalyticsSummaryBossResult('lose')
-
+    
     playMusic(s_sound_fail,true)
 
     self.loseBoard2 = cc.Sprite:create(string.format("image/summarybossscene/summaryboss_board_%d.png",self.index))
