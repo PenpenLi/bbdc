@@ -439,8 +439,10 @@ function AnalyticsPassSecondSummaryBoss()
     local bossList = s_LocalDatabaseManager.getAllBossInfo()
         if #bossList >= 2 and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) then
             print('Analytics', getAnalyticsPrefix() .. 'PassSecondSummaryBoss_1st_day', 'SHOW'); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'PassSecondSummaryBoss_1st_day', 'SHOW')
+        elseif #bossList >= 2 then
+            print('Analytics', getAnalyticsPrefix() .. 'PassSecondSummaryBoss', 'SHOW'); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'PassSecondSummaryBoss', 'SHOW')
         end
-    print('Analytics', getAnalyticsPrefix() .. 'PassSecondSummaryBoss', 'SHOW'); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'PassSecondSummaryBoss', 'SHOW')
+    
 end
 
 function AnalyticsSummaryBossAddTime()
