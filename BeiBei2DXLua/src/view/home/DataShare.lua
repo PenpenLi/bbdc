@@ -16,7 +16,7 @@ end
 
 function DataShare:ctor()
 	
-	LEARN_TIME = math.ceil(s_CURRENT_USER.dataDailyUsing.usingTime / 60.0)
+	LEARN_TIME = math.floor(s_CURRENT_USER.dataDailyUsing.usingTime / 60.0)
 	LEARN_INDEX = math.ceil(LEARN_TIME * 2.5)
 	LEARN_COUNT = s_LocalDatabaseManager.getStudyWordsNum(os.date('%x',os.time()))
 	-- LEARN_TIME = 23
