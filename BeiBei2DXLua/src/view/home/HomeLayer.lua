@@ -181,6 +181,7 @@ function HomeLayer.create()
 
             if viewIndex == 1 then
                 s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
+                dataShare:setEnabled(false)
 
                 mission_progress.stopListener = true
 
@@ -197,6 +198,7 @@ function HomeLayer.create()
 
             else
                 s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
+                dataShare:setEnabled(true)
 
                 mission_progress.stopListener = false
 
@@ -660,6 +662,7 @@ function HomeLayer.create()
             if viewIndex == 2 then
                 s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
                 mission_progress.stopListener = false
+                dataShare:setEnabled(true)
                 viewIndex = 1
 
                 local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2,s_DESIGN_HEIGHT/2))
