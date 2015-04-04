@@ -234,6 +234,7 @@ function SummaryBossAlter:lose2(entrance)
         s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
         s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_lose)
     end
+    AnalyticsSummaryBossResult('lose')
 
     playMusic(s_sound_fail,true)
 

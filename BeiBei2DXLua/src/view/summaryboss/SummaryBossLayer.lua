@@ -1636,7 +1636,7 @@ function SummaryBossLayer:lose(chapter,entrance,wordList)
     
 --    -- lose sound
 --    playSound(s_sound_fail)    
-    AnalyticsSummaryBossResult('lose')
+    --AnalyticsSummaryBossResult('lose')
 end
 
 function SummaryBossLayer:hint()
