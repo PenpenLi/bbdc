@@ -101,6 +101,7 @@ function SummaryBossAlter:lose(entrance)
     self.loseBoard:addChild(giveup)
 
     local function button_giveup_func()
+        playSound(s_sound_buttonEffect)
         self:lose2(entrance)
     end
 
@@ -126,6 +127,7 @@ function SummaryBossAlter:lose(entrance)
 
 
     local function button_buyTime_func()
+        playSound(s_sound_buttonEffect)
         if s_CURRENT_USER:getBeans() >= 10 then
             s_CURRENT_USER:addBeans(-10)
             saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY]})
@@ -373,6 +375,7 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
     end
 
     local function button_func()
+        playSound(s_sound_buttonEffect)
         if not s_isCheckInAnimationDisplayed then
             if s_HUD_LAYER:getChildByName('missionCompleteCircle') ~= nil then
                 s_HUD_LAYER:getChildByName('missionCompleteCircle'):setName('missionComplete')

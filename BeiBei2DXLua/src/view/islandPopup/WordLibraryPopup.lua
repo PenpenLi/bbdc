@@ -81,6 +81,7 @@ end
 local function addReviewButton(bottom_sprite,boss)
 
     local button_func = function()
+        playSound(s_sound_buttonEffect)
         local ReviewBoss = require("view.newreviewboss.NewReviewBossMainLayer")
         if boss.wrongWordList == nil then
             return 
@@ -126,6 +127,7 @@ local function addSummaryButton(bottom_sprite,boss)
         return  endList
     end
     local button_func = function()
+        playSound(s_sound_buttonEffect)
         local endList = wordList(boss.wrongWordList)
         local SummaryBossLayer = require('view.summaryboss.SummaryBossLayer')
         local summaryBossLayer = SummaryBossLayer.create(endList,1,false)

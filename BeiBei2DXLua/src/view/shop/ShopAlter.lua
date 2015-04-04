@@ -105,6 +105,7 @@ function ShopAlter.create(itemId, location)
         back:addChild(item)
 
         local button_func = function()
+            playSound(s_sound_buttonEffect)
             main.sure()
         end
 
@@ -128,6 +129,7 @@ function ShopAlter.create(itemId, location)
         back:addChild(item)
         
         local button_func = function()
+            playSound(s_sound_buttonEffect)
             main.go()
         end
 
