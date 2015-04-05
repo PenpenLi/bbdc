@@ -770,7 +770,7 @@ function HomeLayer.create()
         end
     end 
 
-    if  createDataShareMark == true then 
+    if  createDataShareMark == true and s_CURRENT_USER.dataDailyUsing.usingTime >= 60 then 
         dataShare:moveDown()
     end
 

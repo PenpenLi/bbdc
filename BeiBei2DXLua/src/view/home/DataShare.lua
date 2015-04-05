@@ -138,9 +138,9 @@ function DataShare:ctor()
 end
 
 function DataShare:moveDown()
-	if LEARN_TIME == 0 then
-		return
-	end
+	-- if LEARN_TIME == 0 then
+	-- 	return
+	-- end
  -- print('s_CURRENT_USER.dataDailyUsing.startTime',s_CURRENT_USER.dataDailyUsing.startTime)
 	--  print('s_CURRENT_USER.dataDailyUsing.usingTime',s_CURRENT_USER.dataDailyUsing.usingTime)
 	s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
