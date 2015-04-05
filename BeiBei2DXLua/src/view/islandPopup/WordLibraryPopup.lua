@@ -200,6 +200,18 @@ function WordLibraryPopup:ctor(index)
     local onTouchBegan = function(touch, event)
         return true  
     end
+
+    local function getMaxNumEveryLevel(int)
+        if int <= 1 then
+            return s_max_wrong_num[1]
+        elseif int % 3 == 2 then 
+            return s_max_wrong_num[2]
+        elseif int % 3 == 0 then 
+            return s_max_wrong_num[3]
+        else
+            return s_max_wrong_num[4]
+        end
+    end
     
 
     if s_CURRENT_USER.familiarOrUnfamiliar == 0 then -- 0 for choose familiar ,1 for choose unfamiliar
@@ -212,13 +224,8 @@ function WordLibraryPopup:ctor(index)
         self.listview = Listview.create(boss.wrongWordList)  
         self.familiarButton:setTexture("image/islandPopup/familiarwordbegin.png")
         self.unfamiliarButton:setTexture("image/islandPopup/unfamiliarwordend.png") 
-        if tonumber(index) == 0 then
-            if #boss.wrongWordList >= 3 then
-                self.reviewButton:setVisible(true)
-                self.summaryButton:setVisible(true)
-            end
-        elseif #boss.wrongWordList >= getMaxWrongNumEveryLevel() then
-        --if true then
+        local number = getMaxNumEveryLevel(tonumber(index) + 1)
+        if #boss.wrongWordList >= number then
             self.reviewButton:setVisible(true)
             self.summaryButton:setVisible(true)
         else
@@ -250,12 +257,8 @@ function WordLibraryPopup:ctor(index)
             self.listview = Listview.create(boss.wrongWordList) 
             self.listview:setPosition(2,70)
             self.backPopup:addChild(self.listview)
-            if tonumber(index) == 0 then
-                if #boss.wrongWordList >= 3 then
-                    self.reviewButton:setVisible(true)
-                    self.summaryButton:setVisible(true)
-                end
-            elseif #boss.wrongWordList >= getMaxWrongNumEveryLevel() then
+            local number = getMaxNumEveryLevel(tonumber(index) + 1)
+            if #boss.wrongWordList >= number then
                 self.reviewButton:setVisible(true)
                 self.summaryButton:setVisible(true)
             else
