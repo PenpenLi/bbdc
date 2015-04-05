@@ -288,6 +288,7 @@ function DataShare:addMedal(background,offset,forShare)
 
 					local ShareBottom = require('view.share.ShareBottom')
 					local shareBottomLayer = ShareBottom.create(target)
+					shareBottomLayer:setPosition(-s_LEFT_X,0)
 					self:addChild(shareBottomLayer)
 
 				end
