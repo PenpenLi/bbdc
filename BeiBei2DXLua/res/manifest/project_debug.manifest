@@ -4,7 +4,7 @@
         "packageUrl" : "http://123.56.84.196/AssetsManagerDebug/",
         "remoteManifestUrl" : "http://123.56.84.196/AssetsManagerDebug/project_server_debug.manifest", 
         "remoteVersionUrl" : "http://123.56.84.196/AssetsManagerDebug/version_debug.manifest", 
-        "version" : "2.0.5.0.0.0", 
+        "version" : "2.0.6.0.0.0", 
         "engineVersion" : "3.3 rc2" 
     , 
         "assets" : {    

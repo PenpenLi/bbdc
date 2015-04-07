@@ -12,7 +12,7 @@ import hashlib
 # AssetsManager = 'AssetsManagerDebug'
 
 tmp_assetPath = os.getcwd() + '/../tmp_asset/release/'
-AssetsManager = 'AssetsManagerRelease/2.0.5'
+AssetsManager = 'AssetsManagerRelease/2.0.6'
 
 for parent, dirnames, filenames in os.walk(tmp_assetPath):
     for filename in filenames:

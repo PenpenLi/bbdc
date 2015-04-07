@@ -7,15 +7,15 @@ Store.isRequestProductsSucceed = false
 function Store.init()
     s_logd('getTargetPlatform:' .. cc.Application:getInstance():getTargetPlatform())
     if cc.Application:getInstance():getTargetPlatform() == cc.PLATFORM_OS_ANDROID then
-    --xiao mi
-    -- 包名： com.beibei.wordmaster.mi
-    -- AppID： 2882303761517268156
-    -- AppKey： 5651726838156
-    -- AppSecret： HGZ2qylwis37Ro0qlNC8qQ==
+--xiao mi
+-- 包名： com.beibei.wordmaster.cet.beta.mi
+-- AppID： 2882303761517321888
+-- AppKey： 5641732154888
+-- AppSecret： bP7urwnvwK7uvsQbSBKEaA==
 
-        local appKey = "AAE74B88-AB0E-4345-E14C-867708E18AFA"
-        local appSecret = "a254b3174edb02ed4a93b231887cddf1"
-        local privateKey = "DADD0816DB496CA2C98A34D9A616BD55"
+        local appKey = "7FA34EB7-E4FB-8FC1-E9B3-B886EA7752EC"
+        local appSecret = "22577f7dcb9462e963d32ff0cb230db8"
+        local privateKey = "7D1ACA383F155FD22D52C6FE64B87C03"
         local oauthLoginServer = "http://oauth.anysdk.com/api/User/LoginOauth/"
         local agent = AgentManager:getInstance()
         agent:init(appKey,appSecret,privateKey,oauthLoginServer)
