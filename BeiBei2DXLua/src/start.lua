@@ -37,6 +37,7 @@ end
 
 function start.init()
     initResolution()
+    initBuildTarget()
 
     reloadModule('common.text')
 
@@ -77,8 +78,7 @@ function start.start(hotUpdate)
     reloadModule('common.text')
     reloadModule("common.global")
     s_APP_VERSION = app_version_release -- reset
-    
-    initBuildTarget()
+
     initApp()
     if IS_SNS_QQ_LOGIN_AVAILABLE or IS_SNS_QQ_SHARE_AVAILABLE then 
         cx.CXAvos:getInstance():initTencentQQ(SNS_QQ_APPID, SNS_QQ_APPKEY) 
