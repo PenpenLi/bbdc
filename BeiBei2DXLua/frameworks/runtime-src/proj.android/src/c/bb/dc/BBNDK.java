@@ -36,6 +36,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.FunctionCallback;
+import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.GetFileCallback;
 import com.avos.avoscloud.LogInCallback;
@@ -473,6 +474,30 @@ public class BBNDK {
 		}
 	}
 	
+	public static void getBulletinBoard(final long cppObjPtr) {
+		AVQuery<AVObject> query = AVQuery.getQuery("DataBulletinBoard");
+		query.getFirstInBackground(new GetCallback<AVObject>() {
+	        public void done(final AVObject object, final AVException e) {
+	        	
+	        	((Cocos2dxActivity)(_instance)).runOnGLThread(new Runnable() {
+					@Override
+					public void run() {
+						if (object != null) {
+							Number index = object.getNumber("index");
+							String content_top = object.getString("content_top");
+							String content = object.getString("content");
+							invokeLuaCallbackFunction_getBulletinBoard(cppObjPtr, index != null ? index.intValue() : -1, content_top != null ? content_top : "", content != null ? content : "", null);
+			            } else {
+			            	String errorjson = e != null ? "{\"code\":" + e.hashCode() + ",\"message\":\"" + e.getMessage() + "\",\"description\":\"" + e.getLocalizedMessage() + "\"}" : null;
+			        		invokeLuaCallbackFunction_getBulletinBoard(cppObjPtr, -1, "", "", errorjson);
+			            }
+			        }
+					
+	        	});
+	        }
+		});
+	}
+	
 	// ***************************************************************************************************************************
 	// share
 	// ***************************************************************************************************************************
@@ -620,5 +645,6 @@ public class BBNDK {
 	public static native void invokeLuaCallbackFunctionSU(String objectjson, String error, int errorcode);
 	public static native void invokeLuaCallbackFunctionLI(String objectjson, String error, int errorcode);
 	public static native void invokeLuaCallbackFunctionLIQQ(String objectjson, String qqjson, String authjson, String error, int errorcode);
-	public static native void invokeLuaCallbackFunctionCallAVCloudFunction(long cppObjPtr, String func, String parameters);
+	public static native void invokeLuaCallbackFunctionCallAVCloudFunction(long cppObjPtr, String jsons, String errorjson);
+	public static native void invokeLuaCallbackFunction_getBulletinBoard(long cppObjPtr, int index, String content_top, String content, String error);
 }

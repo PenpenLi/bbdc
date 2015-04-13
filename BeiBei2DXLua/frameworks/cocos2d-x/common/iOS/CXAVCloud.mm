@@ -101,3 +101,19 @@ void CXAVCloud::searchUser(const char* username, const char* nickName, CXLUAFUNC
         invokeCallback(nullptr, "{\"code\":-1,\"message\":\"CXAVCloud-searchUser query\",\"description\":\"CXAVCloud-searchUser query\"}");
     }
 }
+
+void CXAVCloud::getBulletinBoard(CXLUAFUNC nHandler) {
+    m_callback_getBulletinBoard = nHandler;
+    AVQuery* query = [AVQuery queryWithClassName:@"DataBulletinBoard"];
+    [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+        if (object != nil) {
+            NSNumber* index = [object valueForKey:@"index"];
+            NSString* content_top = [object valueForKey:@"content_top"];
+            NSString* content = [object valueForKey:@"content"];
+            invokeCallback_getBulletinBoard(index ? index.intValue : -1, content_top ? content_top.UTF8String : "", content ? content.UTF8String : "", nullptr);
+        } else {
+            NSString* errorjson = error ? NSErrorToJSONString(error) : nil;
+            invokeCallback_getBulletinBoard(-1, "", "", errorjson ? errorjson.UTF8String : nullptr);
+        }
+    }];
+}

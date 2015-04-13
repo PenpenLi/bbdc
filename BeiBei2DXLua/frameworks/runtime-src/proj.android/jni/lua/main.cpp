@@ -116,4 +116,19 @@ extern "C"
     	if (objectjson) env->ReleaseStringUTFChars(objectjson, nativeString_objectjson);
     	if (errorjson) env->ReleaseStringUTFChars(errorjson, nativeString_errorjson);
     }
+
+    void Java_c_bb_dc_BBNDK_invokeLuaCallbackFunction_getBulletinBoard(JNIEnv *env, jobject cppObjPtr, jint index, jstring content_top, jstring content, jstring errorjson) {
+    	CXAVCloud* cloud = (CXAVCloud*)cppObjPtr;
+
+    	const char *nativeString_content_top = content_top ? env->GetStringUTFChars(content_top, 0) : "";
+    	const char *nativeString_content = content ? env->GetStringUTFChars(content, 0) : "";
+		const char *nativeString_errorjson = errorjson ? env->GetStringUTFChars(errorjson, 0) : 0;
+
+    	cloud->invokeCallback_getBulletinBoard(index, nativeString_content_top, nativeString_content, nativeString_errorjson);
+		cloud->release();
+
+		if (content_top) env->ReleaseStringUTFChars(content_top, nativeString_content_top);
+		if (content) env->ReleaseStringUTFChars(content, nativeString_content);
+		if (errorjson) env->ReleaseStringUTFChars(errorjson, nativeString_errorjson);
+    }
 }
