@@ -104,6 +104,8 @@ void CXAVCloud::searchUser(const char* username, const char* nickName, CXLUAFUNC
 
 void CXAVCloud::getBulletinBoard(CXLUAFUNC nHandler) {
     m_callback_getBulletinBoard = nHandler;
+    retain();
+    
     AVQuery* query = [AVQuery queryWithClassName:@"DataBulletinBoard"];
     [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
         if (object != nil) {
@@ -115,5 +117,7 @@ void CXAVCloud::getBulletinBoard(CXLUAFUNC nHandler) {
             NSString* errorjson = error ? NSErrorToJSONString(error) : nil;
             invokeCallback_getBulletinBoard(-1, "", "", errorjson ? errorjson.UTF8String : nullptr);
         }
+        
+        release();
     }];
 }

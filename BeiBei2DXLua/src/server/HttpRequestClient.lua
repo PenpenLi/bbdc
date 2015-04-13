@@ -4,34 +4,39 @@ local HttpRequestClient = {}
 
 -- callbackFunc: function (index, title, content)
 function HttpRequestClient.getBulletinBoard(callbackFunc)
-    local retIdx = -1
-    local retTitle = ''
-    local retContent = ''
-    local onSucceed = function (api, result)
-        if result.results ~= nil and type(result.results) == 'table' then
-            for i, v in ipairs(result.results) do
-                local idx = v["index"]
-                local t = v["content_top"]
-                local ct = v["content"]
-                if idx > retIdx then
-                    retIdx = idx
-                    retTitle = t
-                    retContent = ct
-                end
-            end
-        else
-            LUA_ERROR = LUA_ERROR .. 'getBulletinBoard:' .. tostring(result.results) .. '\n'
-        end
-        if callbackFunc ~= nil then callbackFunc(retIdx, retTitle, retContent) end
-    end
-    local onFailed = function (api, code, message, description)
-        if callbackFunc ~= nil then callbackFunc(retIdx, retTitle, retContent) end
-    end
-    if s_SERVER.isNetworkConnectedNow() then
-        s_SERVER.search('classes/DataBulletinBoard', onSucceed, onFailed)
-    else
-        onFailed()
-    end
+    local request = cx.CXAVCloud:new()
+    request:getBulletinBoard(function (index, content_top, content, errorjson)
+        print('getBulletinBoard', index, content_top, content)
+        if callbackFunc ~= nil then callbackFunc(index, content_top, content) end
+    end)
+    -- local retIdx = -1
+    -- local retTitle = ''
+    -- local retContent = ''
+    -- local onSucceed = function (api, result)
+    --     if result.results ~= nil and type(result.results) == 'table' then
+    --         for i, v in ipairs(result.results) do
+    --             local idx = v["index"]
+    --             local t = v["content_top"]
+    --             local ct = v["content"]
+    --             if idx > retIdx then
+    --                 retIdx = idx
+    --                 retTitle = t
+    --                 retContent = ct
+    --             end
+    --         end
+    --     else
+    --         LUA_ERROR = LUA_ERROR .. 'getBulletinBoard:' .. tostring(result.results) .. '\n'
+    --     end
+    --     if callbackFunc ~= nil then callbackFunc(retIdx, retTitle, retContent) end
+    -- end
+    -- local onFailed = function (api, code, message, description)
+    --     if callbackFunc ~= nil then callbackFunc(retIdx, retTitle, retContent) end
+    -- end
+    -- if s_SERVER.isNetworkConnectedNow() then
+    --     s_SERVER.search('classes/DataBulletinBoard', onSucceed, onFailed)
+    -- else
+    --     onFailed()
+    -- end
 end
 
 ---------------------------------------------------------------------------------------------------------------------

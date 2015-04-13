@@ -486,10 +486,10 @@ public class BBNDK {
 							Number index = object.getNumber("index");
 							String content_top = object.getString("content_top");
 							String content = object.getString("content");
-							invokeLuaCallbackFunction_getBulletinBoard(cppObjPtr, index != null ? index.intValue() : -1, content_top != null ? content_top : "", content != null ? content : "", null);
+							invokeLuaCallbackFunctionGetBulletinBoard(cppObjPtr, index != null ? index.intValue() : -1, content_top != null ? content_top : "", content != null ? content : "", null);
 			            } else {
 			            	String errorjson = e != null ? "{\"code\":" + e.hashCode() + ",\"message\":\"" + e.getMessage() + "\",\"description\":\"" + e.getLocalizedMessage() + "\"}" : null;
-			        		invokeLuaCallbackFunction_getBulletinBoard(cppObjPtr, -1, "", "", errorjson);
+			        		invokeLuaCallbackFunctionGetBulletinBoard(cppObjPtr, -1, "", "", errorjson);
 			            }
 			        }
 					
@@ -646,5 +646,5 @@ public class BBNDK {
 	public static native void invokeLuaCallbackFunctionLI(String objectjson, String error, int errorcode);
 	public static native void invokeLuaCallbackFunctionLIQQ(String objectjson, String qqjson, String authjson, String error, int errorcode);
 	public static native void invokeLuaCallbackFunctionCallAVCloudFunction(long cppObjPtr, String jsons, String errorjson);
-	public static native void invokeLuaCallbackFunction_getBulletinBoard(long cppObjPtr, int index, String content_top, String content, String error);
+	public static native void invokeLuaCallbackFunctionGetBulletinBoard(long cppObjPtr, int index, String content_top, String content, String error);
 }

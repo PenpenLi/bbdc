@@ -117,7 +117,8 @@ extern "C"
     	if (errorjson) env->ReleaseStringUTFChars(errorjson, nativeString_errorjson);
     }
 
-    void Java_c_bb_dc_BBNDK_invokeLuaCallbackFunction_getBulletinBoard(JNIEnv *env, jobject cppObjPtr, jint index, jstring content_top, jstring content, jstring errorjson) {
+    void Java_c_bb_dc_BBNDK_invokeLuaCallbackFunctionGetBulletinBoard(JNIEnv *env, jobject thisz, jlong cppObjPtr,
+    		jint index, jstring content_top, jstring content, jstring errorjson) {
     	CXAVCloud* cloud = (CXAVCloud*)cppObjPtr;
 
     	const char *nativeString_content_top = content_top ? env->GetStringUTFChars(content_top, 0) : "";

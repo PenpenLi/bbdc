@@ -6,10 +6,33 @@
 
 --------------------------------
 -- 
+-- @function [parent=#CXAVCloud] callAVCloudFunction 
+-- @param self
+-- @param #string func
+-- @param #string parameters
+-- @param #int callback
+        
+--------------------------------
+-- 
 -- @function [parent=#CXAVCloud] invokeCallback 
 -- @param self
 -- @param #char objectjson
 -- @param #char errorjson
+        
+--------------------------------
+-- 
+-- @function [parent=#CXAVCloud] invokeCallback_getBulletinBoard 
+-- @param self
+-- @param #int index
+-- @param #char content_top
+-- @param #char content
+-- @param #char errorjson
+        
+--------------------------------
+-- 
+-- @function [parent=#CXAVCloud] getBulletinBoard 
+-- @param self
+-- @param #int nHandler
         
 --------------------------------
 -- 
@@ -18,14 +41,6 @@
 -- @param #char username
 -- @param #char nickName
 -- @param #int nHandler
-        
---------------------------------
--- 
--- @function [parent=#CXAVCloud] callAVCloudFunction 
--- @param self
--- @param #string func
--- @param #string parameters
--- @param #int callback
         
 --------------------------------
 -- 
