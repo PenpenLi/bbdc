@@ -26,8 +26,12 @@ public:
     
     void searchUser(const char* username, const char* nickName, CXLUAFUNC nHandler);
     
+    void getBulletinBoard(CXLUAFUNC nHandler);
+    void invokeCallback_getBulletinBoard(int index, const char* content_top, const char* content, const char* errorjson);
+    
 private:
     CXLUAFUNC m_callback;
+    CXLUAFUNC m_callback_getBulletinBoard;
 };
 
 #endif /* defined(__BeiBei2DXLua__CXAVCloud__) */

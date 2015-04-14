@@ -56,3 +56,17 @@ void CXAVCloud::searchUser(const char* username, const char* nickName, CXLUAFUNC
         t.env->DeleteLocalRef(t.classID);
     }
 }
+
+void CXAVCloud::getBulletinBoard(CXLUAFUNC nHandler) {
+    m_callback_getBulletinBoard = nHandler;
+    retain();
+    CCLOG("CXAVCloud::getBulletinBoard 1");
+
+    cocos2d::JniMethodInfo t;
+    if (cocos2d::JniHelper::getStaticMethodInfo(t, JAVA_PKG, "getBulletinBoard", "(J)V")) {
+        CCLOG("CXAVCloud::getBulletinBoard 2");
+        long addr = (long)this;
+        t.env->CallStaticVoidMethod(t.classID, t.methodID, (jlong)addr);
+        t.env->DeleteLocalRef(t.classID);
+    }
+}

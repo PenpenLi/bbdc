@@ -125,6 +125,15 @@ int CXNetworkStatus::getStatus() {
 }
 
 const char* CXNetworkStatus::getDeviceUDID() {
+    // TODO: CXAnalytics.mm
+    // std::string deviceId = cocos2d::UserDefault::getInstance()->getStringForKey(DA_DEVICE_ID);
+    // if (deviceId.length() <= 0) {
+    //     NSDate* datenow = [NSDate date];
+    //     NSString* username = [NSString stringWithFormat: @"%d__%lf__%d", arc4random(), [datenow timeIntervalSince1970], arc4random()];
+    //     std::string md5name(username.UTF8String);
+    //     deviceId = CXUtils::md5(username.UTF8String, md5name);
+    //     cocos2d::UserDefault::getInstance()->setStringForKey(DA_DEVICE_ID, md5name);
+    // }
     NSDate *datenow = [NSDate date];
     NSString* username = [NSString stringWithFormat: @"%d__%lf__%d", arc4random(), [datenow timeIntervalSince1970], arc4random()];
     NSString* md5name = [CXNS md5:username];

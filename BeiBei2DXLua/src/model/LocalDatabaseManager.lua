@@ -328,6 +328,15 @@ local is_buy_key = 'buy'
 function Manager.isBuy() return cc.UserDefault:getInstance():getIntegerForKey(is_buy_key) end
 function Manager.setBuy(b) cc.UserDefault:getInstance():setIntegerForKey(is_buy_key, b) end
 
+local DA_DEVICE_ID = 'DA_DEVICE_ID'
+function Manager.get_DA_DEVICE_ID() 
+    if cc.Application:getInstance():getTargetPlatform() == cc.PLATFORM_OS_ANDROID then
+        return cx.CXNetworkStatus:getInstance():getDeviceUDID()
+    else
+        return cc.UserDefault:getInstance():getStringForKey(DA_DEVICE_ID) 
+    end
+end
+
 return Manager
 
 
