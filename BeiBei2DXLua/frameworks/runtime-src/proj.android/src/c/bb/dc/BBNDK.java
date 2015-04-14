@@ -138,7 +138,7 @@ public class BBNDK {
 			    }
 			});
 		} catch (Exception e) {
-			Log.d("saveDataAnalytics: 2 保存失败", "_save: " + e.getMessage());
+			Log.d("saveDataAnalytics:", "2 保存失败 _save: " + e.getMessage());
 		}
 	}
 	private static void saveDataAnalytics(final String eventName, final String tag) {
@@ -186,6 +186,27 @@ public class BBNDK {
 			MobclickAgent.onEvent(_context, eventName, map); 
 		}
 		saveDataAnalytics(eventName, tag);
+	}
+	
+	public static void logUsingTime(final String userId, final String bookKey, final int startTime, final int usingTime) {
+		AVObject dataDailyUsing = AVObject.create("DataDailyUsing");
+		dataDailyUsing.put("userId", userId);
+		dataDailyUsing.put("bookKey", bookKey);
+		dataDailyUsing.put("startTime", startTime);
+		dataDailyUsing.put("usingTime", usingTime);
+		try {
+			dataDailyUsing.saveEventually(new SaveCallback() {
+			    public void done(AVException e) {
+			        if (e == null) {
+			        	Log.d("save dataDailyUsing", "1 T: " + userId + ", " + bookKey + ", " + startTime + ", " + usingTime);
+			        } else {
+			        	Log.d("save dataDailyUsing", "1 F: " + userId + ", " + bookKey + ", " + startTime + ", " + usingTime + ", " + e.getMessage());
+			        }
+			    }
+			});
+		} catch (Exception e) {
+			Log.d("save dataDailyUsing:", "2 保存失败 _save: " + userId + ", " + bookKey + ", " + startTime + ", " + usingTime + ", " + e.getMessage());
+		}
 	}
 	
 	// ***************************************************************************************************************************

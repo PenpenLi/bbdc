@@ -102,3 +102,22 @@ void CXAnalytics::logEventAndLabel(const char* event, const char* label) {
                  label:[NSString stringWithUTF8String:label]];
     saveDataAnalytics(event, label);
 }
+
+void CXAnalytics::logUsingTime(const char* userId, const char* bookKey, int startTime, int usingTime) {
+    AVObject* dataDailyUsing = [AVObject objectWithClassName:@"DataDailyUsing"];
+    [dataDailyUsing setObject:[NSString stringWithUTF8String:userId] forKey:@"userId"];
+    [dataDailyUsing setObject:[NSString stringWithUTF8String:bookKey] forKey:@"bookKey"];
+    [dataDailyUsing setObject:[NSNumber numberWithInt:startTime] forKey:@"startTime"];
+    [dataDailyUsing setObject:[NSNumber numberWithInt:usingTime] forKey:@"usingTime"];
+#if (COCOS2D_DEBUG > 0)
+    [dataDailyUsing saveEventually:^(BOOL succeeded, NSError *error) {
+        if (!error) {
+            CCLOG("dataDailyUsing:%d,%d", startTime, usingTime);
+        } else {
+            CCLOG("dataDailyUsing:%d,%d,%s", startTime, usingTime, error.localizedDescription.UTF8String);
+        }
+    }];
+#else
+    [dataDailyUsing saveEventually];
+#endif
+}

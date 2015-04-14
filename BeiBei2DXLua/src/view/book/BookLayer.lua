@@ -79,7 +79,7 @@ function BookLayer.create()
                 AnalyticsFirst(ANALYTICS_FIRST_BOOK, key)
                 
                 s_CorePlayManager.enterHomeLayer()
-                O2OController.getBulletinBoard()
+                s_O2OController.getBulletinBoard()
             
                 playSound(s_sound_buttonEffect)   
 
