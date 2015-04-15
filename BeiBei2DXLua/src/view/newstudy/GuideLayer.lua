@@ -78,6 +78,7 @@ function GuideLayer:createFromCollectWord(GUIDE_TYPE)
     back:runAction(cc.Sequence:create(action2,action3))
 
     local function closeAnimation() 
+        s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
         if back_exist ~= true then
             return
         end
@@ -91,12 +92,14 @@ function GuideLayer:createFromCollectWord(GUIDE_TYPE)
         local action4 = cc.CallFunc:create(function()
             s_SCENE:removeAllPopups()
         end)
-        back:runAction(cc.Sequence:create(action1,action3,action4))
+        local action5 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
+        back:runAction(cc.Sequence:create(action1,action3,action4,action5))
         back_exist = false
     end
 
     s_SCENE:callFuncWithDelay(2.5,function ()
         if closeAnimation() ~= nil then closeAnimation() end
+        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     end)
     
     local onTouchBegan = function(touch, event)
@@ -105,6 +108,7 @@ function GuideLayer:createFromCollectWord(GUIDE_TYPE)
 
     local onTouchEnded = function(touch, event)
         if closeAnimation() ~= nil then closeAnimation() end
+        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     end
 
     local listener = cc.EventListenerTouchOneByOne:create()
@@ -174,6 +178,7 @@ function GuideLayer:createFromFamiliarWord()
 
     local function closeAnimation() 
         if back_exist == "tip1" then
+            s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
             local action1 = cc.CallFunc:create(function()
                 beibei_head:stopAllActions()
             end)
@@ -182,7 +187,8 @@ function GuideLayer:createFromFamiliarWord()
             local action4 = cc.MoveBy:create(1,cc.p(-3,-3))
             local action5 = cc.MoveBy:create(1,cc.p(5,5))
             local action6 = cc.MoveBy:create(1,cc.p(-5,-5))
-            beibei_arm:runAction(cc.Sequence:create(action1,action2,action3,action4,action5,action6))
+            local action7 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
+            beibei_arm:runAction(cc.Sequence:create(action1,action2,action3,action4,action5,action6,action7))
             title:setString("这个熟词在这里喔！")
             back_exist = "tip2"
             local action5 = cc.MoveTo:create(0.3, cc.p(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT * 0.75))
@@ -196,6 +202,7 @@ function GuideLayer:createFromFamiliarWord()
                 lastWordAndTotalNumberTip.setWord(self.word,nil)
             end
         elseif back_exist == "tip2" then
+            s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
             back_exist = "null"
             local action2 = cc.MoveTo:create(0.3, cc.p(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT * 0.55*3))
             local action3 = cc.EaseBackIn:create(action2)
@@ -204,16 +211,19 @@ function GuideLayer:createFromFamiliarWord()
                 local lastWordInfo = LastWordInfo.create(self.word)
                 s_SCENE:popup(lastWordInfo)
             end)
-            back:runAction(cc.Sequence:create(action3,action4))
+            local action5 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
+            back:runAction(cc.Sequence:create(action3,action4,action5))
         end
     end
 
     s_SCENE:callFuncWithDelay(2.5,function ()
         if closeAnimation() ~= nil then closeAnimation() end
+        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     end)
 
     s_SCENE:callFuncWithDelay(5.5,function ()
         if closeAnimation() ~= nil then closeAnimation() end
+        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     end)
     
     local onTouchBegan = function(touch, event)
@@ -221,7 +231,8 @@ function GuideLayer:createFromFamiliarWord()
     end
 
     local onTouchEnded = function(touch, event)
-        closeAnimation() 
+        closeAnimation()
+        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch() 
     end
 
     local listener = cc.EventListenerTouchOneByOne:create()

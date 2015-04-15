@@ -15,6 +15,7 @@ Review_From_Word_Bank = 1
 Review_From_Normal    = 2
 
 function NewReviewBossMainLayer.create(ReviewWordList,number)
+    s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     AnalyticsReviewBoss_EnterLayer()
 
     AnalyticsFirst(ANALYTICS_FIRST_REVIEW_BOSS, 'SHOW')

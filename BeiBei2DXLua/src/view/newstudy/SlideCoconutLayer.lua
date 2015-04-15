@@ -217,8 +217,8 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
         end
 
         if s_CURRENT_USER.slideNum == 1 then
-            local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
-            s_SCENE:popup(CongratulationPopup)
+            -- local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
+            -- s_SCENE:popup(CongratulationPopup)
             s_CURRENT_USER.slideNum = 0
             saveUserToServer({['slideNum'] = s_CURRENT_USER.slideNum})
             normal()

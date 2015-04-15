@@ -1116,12 +1116,22 @@ function SummaryBossLayer:initWordList(word)
         self.totalBlood = self.totalBlood + string.len(wordList[i]) * 2
     end
     self.currentBlood = self.totalBlood
-    if self.entrance then
-        self.totalTime = math.ceil(self.totalBlood / 14) * 15 + s_CURRENT_USER.timeAdjust
+    local isFirstBoss = #s_LocalDatabaseManager.getAllBossInfo()
+    local time_value = 15
+    if isFirstBoss <= 1 then
+        time_value = 30
     else
-        self.totalTime = math.ceil(self.totalBlood / 14) * 15
+        time_value = 15
+    end
+    if self.entrance then
+        self.totalTime = math.ceil(self.totalBlood / 14) * time_value + s_CURRENT_USER.timeAdjust
+    else
+        self.totalTime = math.ceil(self.totalBlood / 14) * time_value
     end
     self.leftTime = self.totalTime
+    -- print("~~~~~~~~time"..self.totalTime)
+    -- print("~~~~~~~~value"..time_value)
+    -- print("~~~~~~~~isFirstBoss"..isFirstBoss)
     --self:runAction(cc.Ripple3D:create(20, cc.size(32,24), cc.p(s_DESIGN_WIDTH/2,s_DESIGN_HEIGHT/2), 120, 40, 240))
     -- self.totalBlood = levelConfig.summary_boss_hp
     -- self.currentBlood = self.totalBlood
