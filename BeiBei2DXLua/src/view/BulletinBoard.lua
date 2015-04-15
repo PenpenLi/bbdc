@@ -92,13 +92,25 @@ function BulletinBoard:updateValue(index, title, content)
 end
 
 function BulletinBoard:onClose()
+    s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
     saveUserToServer({['bulletinBoardMask']=s_CURRENT_USER.bulletinBoardMask, ['bulletinBoardTime']=s_CURRENT_USER.bulletinBoardTime})
     local move = cc.EaseBackIn:create(cc.MoveTo:create(0.3, cc.p(cw / 2, ch * 1.5)))
     local remove = cc.CallFunc:create(function() 
         s_SCENE:removeAllPopups()
     end,{})
     ccbBulletinBoard['board']:runAction(cc.Sequence:create(move,remove))
-    
+
+    local currentWeek = s_CURRENT_USER.logInDatas[#s_CURRENT_USER.logInDatas]
+    local isGot = currentWeek:isGotReward(os.time())
+
+    s_SCENE:callFuncWithDelay(0.4,function()
+        if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == false then
+            local Loginreward = require("view.loginreward.LoginRewardPopup")
+            local loginreward = Loginreward:create()
+            s_SCENE:popup(loginreward) 
+        end
+        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
+    end)
     -- button sound
     playSound(s_sound_buttonEffect)
 end

@@ -40,11 +40,14 @@ function DataShare:ctor()
 	self:addChild(background)
 	self.background = background
 	--background:runAction(cc.EaseBackOut:create(cc.MoveBy:create(0.5,cc.p(0,- s_DESIGN_HEIGHT * 5 / 6))))
-	self.background = background
 	-- add label
 	self:addLabel(background,150)
 	--add medal
 	self:addMedal(background,150,true)
+
+	self.moveUp = function ()
+
+	end
 
 	--add animation
 
@@ -73,7 +76,6 @@ function DataShare:ctor()
    	girl:addChild(girlBtn)
 
    	self.girlBtn = girlBtn
-   	
 
 	self.bangle = bangle
 	self.girl = girl
@@ -108,6 +110,7 @@ function DataShare:ctor()
 					bangle:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.MoveBy:create(0.4,cc.p(0,-20)),cc.MoveBy:create(0.4,cc.p(0,20)),cc.DelayTime:create(2.2))))
 					self.listener:setSwallowTouches(false)
 					girl:setAnimation(0, 'animation', true)
+					self.moveUp()
 				end,{})))
 			end,{})))
 		end

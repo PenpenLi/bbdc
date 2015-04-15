@@ -286,16 +286,17 @@ function HomeLayer.create()
 
     --    layer:addFriendButton(backColor)  
 
+    local function ClickRewardBtnFunction()
+        local Loginreward = require("view.loginreward.LoginRewardPopup")
+        local loginreward = Loginreward:create()
+        s_SCENE:popup(loginreward) 
+    end
+
     local button_reward_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.began then
             playSound(s_sound_buttonEffect)
-
-        elseif eventType == ccui.TouchEventType.ended then
-
-            local Loginreward = require("view.loginreward.LoginRewardPopup")
-            local loginreward = Loginreward:create()
-            s_SCENE:popup(loginreward)         
-
+        elseif eventType == ccui.TouchEventType.ended then        
+            ClickRewardBtnFunction()
         end
     end
 
@@ -779,10 +780,25 @@ function HomeLayer.create()
         end
     end 
 
-    if  createDataShareMark == true and s_CURRENT_USER.dataDailyUsing.usingTime >= 60 then 
-        dataShare:moveDown()
-    end
+    -- get reward 
+    local isPopup = s_SCENE.popupLayer:getChildren()
+    local currentWeek = s_CURRENT_USER.logInDatas[#s_CURRENT_USER.logInDatas]
+    local isGot = currentWeek:isGotReward(os.time())
+    local wordInfo = s_LocalDatabaseManager.getAllBossInfo()
+    local isGotAllWord = #wordInfo[1].wrongWordList
 
+    if  createDataShareMark == true and s_CURRENT_USER.dataDailyUsing.usingTime >= 60 then 
+        dataShare:moveDown() 
+        dataShare.moveUp = function ()
+            if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == true and isGotAllWord >= s_max_wrong_num[1] then
+                ClickRewardBtnFunction()
+            end
+            if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == false and #isPopup == 0 then
+                ClickRewardBtnFunction()
+            end 
+        end
+    end
+    
     onAndroidKeyPressed(layer, function ()
         local isPopup = s_SCENE.popupLayer:getChildren()
         if viewIndex == 2 and #isPopup == 0 then
