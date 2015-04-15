@@ -787,6 +787,47 @@ int lua_register_cx_common_CXAvos(lua_State* tolua_S)
     return 1;
 }
 
+int lua_cx_common_CXAnalytics_logUsingTime(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"CXAnalytics",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+
+    if (argc == 4)
+    {
+        const char* arg0;
+        const char* arg1;
+        int arg2;
+        int arg3;
+        std::string arg0_tmp; ok &= luaval_to_std_string(tolua_S, 2, &arg0_tmp, "CXAnalytics:logUsingTime"); arg0 = arg0_tmp.c_str();
+        std::string arg1_tmp; ok &= luaval_to_std_string(tolua_S, 3, &arg1_tmp, "CXAnalytics:logUsingTime"); arg1 = arg1_tmp.c_str();
+        ok &= luaval_to_int32(tolua_S, 4,(int *)&arg2, "CXAnalytics:logUsingTime");
+        ok &= luaval_to_int32(tolua_S, 5,(int *)&arg3, "CXAnalytics:logUsingTime");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cx_common_CXAnalytics_logUsingTime'", nullptr);
+            return 0;
+        }
+        CXAnalytics::logUsingTime(arg0, arg1, arg2, arg3);
+        return 0;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "CXAnalytics:logUsingTime",argc, 4);
+    return 0;
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cx_common_CXAnalytics_logUsingTime'.",&tolua_err);
+#endif
+    return 0;
+}
 int lua_cx_common_CXAnalytics_beginLog(lua_State* tolua_S)
 {
     int argc = 0;
@@ -906,6 +947,7 @@ int lua_register_cx_common_CXAnalytics(lua_State* tolua_S)
     tolua_cclass(tolua_S,"CXAnalytics","CXAnalytics","",nullptr);
 
     tolua_beginmodule(tolua_S,"CXAnalytics");
+        tolua_function(tolua_S,"logUsingTime", lua_cx_common_CXAnalytics_logUsingTime);
         tolua_function(tolua_S,"beginLog", lua_cx_common_CXAnalytics_beginLog);
         tolua_function(tolua_S,"endLog", lua_cx_common_CXAnalytics_endLog);
         tolua_function(tolua_S,"logEventAndLabel", lua_cx_common_CXAnalytics_logEventAndLabel);

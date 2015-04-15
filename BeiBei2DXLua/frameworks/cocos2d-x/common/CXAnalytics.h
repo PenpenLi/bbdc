@@ -16,6 +16,7 @@ public:
     static void beginLog(const char* pageName);
     static void endLog(const char* pageName);
     static void logEventAndLabel(const char* event, const char* label);
+    static void logUsingTime(const char* userId, const char* bookKey, int startTime, int usingTime); // DataDailyUsing
 };
 
 #endif /* defined(__BeiBei2DXLua__CXAnalytics__) */
