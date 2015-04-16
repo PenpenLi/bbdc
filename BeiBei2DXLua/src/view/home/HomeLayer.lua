@@ -288,7 +288,7 @@ function HomeLayer.create()
 
     local function ClickRewardBtnFunction()
         local Loginreward = require("view.loginreward.LoginRewardPopup")
-        local loginreward = Loginreward:create()
+        local loginreward = Loginreward.create()
         s_SCENE:popup(loginreward) 
     end
 
@@ -737,8 +737,8 @@ function HomeLayer.create()
     local eventDispatcher = layer:getEventDispatcher()
     eventDispatcher:addEventListenerWithSceneGraphPriority(listener, layer)
 
-    -- main pape  "First_Noel_pluto" 
     playMusic(s_sound_First_Noel_pluto,true)
+    
     layer.button_main = button_main
     layer.button_sound = downloadSoundButton
     layer.button_enter = mission_progress
@@ -793,12 +793,18 @@ function HomeLayer.create()
             if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == true and isGotAllWord >= s_max_wrong_num[1] then
                 ClickRewardBtnFunction()
             end
-            if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == false and #isPopup == 0 then
-                ClickRewardBtnFunction()
-            end 
         end
     end
-    
+
+    --avoid bulletInBoard and reward popup exist at same time
+    s_SCENE:callFuncWithDelay(0.5,function ()
+        local isPopup = s_SCENE.popupLayer:getChildren()
+        if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == false and #isPopup == 0 then
+            ClickRewardBtnFunction()
+        end
+    end)
+
+
     onAndroidKeyPressed(layer, function ()
         local isPopup = s_SCENE.popupLayer:getChildren()
         if viewIndex == 2 and #isPopup == 0 then

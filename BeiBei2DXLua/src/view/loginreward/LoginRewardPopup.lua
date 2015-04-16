@@ -275,10 +275,22 @@ function LoginRewardPopup:ctor()
             local action0 = cc.DelayTime:create(0.5)
             local action1 = cc.MoveTo:create(0.2,cc.p(s_RIGHT_X - s_LEFT_X - 100, s_DESIGN_HEIGHT - 70))
             local action2 = cc.ScaleTo:create(0.2,0)
-            local action3 = cc.CallFunc:create(function()been_number:setString(s_CURRENT_USER:getBeans())end)
-            local action4 = cc.DelayTime:create(0.5)
-            local action5 = cc.CallFunc:create(function()backColor:removeFromParent()s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()end)
-            bean:runAction(cc.Sequence:create(action0,action1,action2,action3,action4,action5))
+            local action3 = cc.DelayTime:create(0.5)
+            local action4 = cc.CallFunc:create(function()backColor:removeFromParent()s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()end)
+            bean:runAction(cc.Sequence:create(action0,action1,action2,action3,action4))
+
+            local time = 0
+            local function update(delta)
+                time = time + delta
+                local num = math.ceil(s_CURRENT_USER:getBeans() - rewardList[#currentData].reward + rewardList[#currentData].reward * (time - 1) / 0.4)
+                    if time >= 1 then
+                        been_number:setString(num)
+                        if num == s_CURRENT_USER:getBeans() then 
+                            bean:unscheduleUpdate()
+                        end
+                    end
+                end
+            bean:scheduleUpdateWithPriorityLua(update, 0)
         end)
     end
 
