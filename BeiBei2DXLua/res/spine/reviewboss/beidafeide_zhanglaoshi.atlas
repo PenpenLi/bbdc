@@ -6,153 +6,153 @@ filter: Linear,Linear
 repeat: none
 bishangyanjing
   rotate: false
-  xy: 154, 119
+  xy: 154, 118
   size: 50, 13
   orig: 50, 13
   offset: 0, 0
   index: -1
 chuizi
   rotate: false
-  xy: 782, 13
+  xy: 782, 12
   size: 233, 225
   orig: 233, 225
   offset: 0, 0
   index: -1
+gebo
+  rotate: false
+  xy: 2, 2
+  size: 76, 65
+  orig: 76, 65
+  offset: 0, 0
+  index: -1
 shent
   rotate: false
-  xy: 2, 676
+  xy: 2, 675
   size: 195, 342
   orig: 195, 342
   offset: 0, 0
   index: -1
 xingxing
   rotate: false
-  xy: 2, 70
+  xy: 2, 69
   size: 150, 62
   orig: 150, 62
   offset: 0, 0
   index: -1
 yanjing
   rotate: true
-  xy: 199, 713
+  xy: 199, 712
   size: 67, 32
   orig: 67, 32
   offset: 0, 0
   index: -1
 youbi
   rotate: false
-  xy: 80, 27
+  xy: 80, 26
   size: 90, 41
   orig: 90, 41
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0000_nose
   rotate: false
-  xy: 199, 782
+  xy: 199, 781
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0001_left-eye1
   rotate: false
-  xy: 470, 782
+  xy: 470, 781
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0002_felt-eye2
   rotate: false
-  xy: 741, 782
+  xy: 741, 781
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0003_felt-eye3
   rotate: true
-  xy: 2, 405
+  xy: 2, 404
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0004_right-eye1
   rotate: true
-  xy: 2, 134
+  xy: 2, 133
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0005_right-eye2
   rotate: false
-  xy: 240, 544
+  xy: 240, 543
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0006_right-eye3
   rotate: false
-  xy: 240, 306
+  xy: 240, 305
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0007_moutch-
   rotate: false
-  xy: 511, 544
+  xy: 511, 543
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0008_moutch1
   rotate: false
-  xy: 511, 306
+  xy: 511, 305
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0009_shadow
   rotate: true
-  xy: 782, 511
+  xy: 782, 510
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0010_face
   rotate: false
-  xy: 240, 68
+  xy: 240, 67
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0011_bao
   rotate: false
-  xy: 511, 68
+  xy: 511, 67
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
 zhanglaoshi_0000s_0000s_0012_foot1
   rotate: true
-  xy: 782, 240
+  xy: 782, 239
   size: 269, 236
   orig: 269, 236
   offset: 0, 0
   index: -1
-未标题-1
-  rotate: false
-  xy: 2, 3
-  size: 76, 65
-  orig: 76, 65
-  offset: 0, 0
-  index: -1
 
 beidafeide_zhanglaoshi2.png
-size: 512,512
+size: 512,256
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 zhanglaoshi_0000s_0000s_0013_foot
   rotate: false
-  xy: 2, 35
+  xy: 2, 2
   size: 269, 236
   orig: 269, 236
   offset: 0, 0

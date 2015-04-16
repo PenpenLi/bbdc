@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "UpMSSE+5rKFSOzI5wwsov0RF7yM",
-	"spine": "2.1.17",
+	"hash": "9kyEczvIEd6ByjN5TfVF47GVAqQ",
+	"spine": "2.1.27",
 	"width": 524.7,
 	"height": 367.31,
 	"images": "./beidafeide_zhanglaoshi/"
@@ -25,7 +25,7 @@
 	{ "name": "shent", "bone": "root", "attachment": "shent" },
 	{ "name": "yanjing", "bone": "root", "attachment": "yanjing" },
 	{ "name": "chuizi", "bone": "gebo", "attachment": "chuizi" },
-	{ "name": "未标题-1", "bone": "gebo", "attachment": "未标题-1" },
+	{ "name": "未标题-1", "bone": "gebo", "attachment": "gebo" },
 	{ "name": "bishangyanjing", "bone": "root", "attachment": "bishangyanjing" },
 	{ "name": "zhanglaoshi_0000s_0000s_0011_bao", "bone": "bone3", "attachment": "zhanglaoshi_0000s_0000s_0011_bao" },
 	{ "name": "zhanglaoshi_0000s_0000s_0013_foot", "bone": "bone", "attachment": "zhanglaoshi_0000s_0000s_0013_foot" },
@@ -106,7 +106,7 @@
 			"zhanglaoshi_0000s_0000s_0013_foot": { "x": 99.6, "y": -10.6, "rotation": -92.25, "width": 269, "height": 236 }
 		},
 		"未标题-1": {
-			"未标题-1": { "x": 38.83, "y": -7.71, "rotation": 128.36, "width": 76, "height": 65 }
+			"gebo": { "x": 38.83, "y": -7.71, "rotation": 128.36, "width": 76, "height": 65 }
 		}
 	}
 },
