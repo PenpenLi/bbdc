@@ -147,8 +147,8 @@ def exportAssets(isDebug, assetsPath, tmp_assetPath, AssetsManagerReleaseFolder,
 # --------------------------------------------------------------------------------
 
 assetsPath = os.getcwd() + '/../BeiBei2DXLua/frameworks/runtime-src/proj.android/assets/'
-AssetsManagerReleaseFolder = '2.0.7'
-version = '2.0.7.0.0.0'
+AssetsManagerReleaseFolder = '2.0.8'
+version = '2.0.8.0.0.0'
 engineVersion = '3.3 rc2'
 
 tmp_assetPath = os.getcwd() + '/../tmp_asset/debug/'

@@ -69,9 +69,13 @@ function ShareCheckIn:ctor()
 	    local remove = cc.CallFunc:create(function ()
 	    	self.dataShare:moveDown()
 	    	self.dataShare.moveUp = function ()
-		        local Loginreward = require("view.loginreward.LoginRewardPopup")
-		        local loginreward = Loginreward:create()
-		        s_SCENE:popup(loginreward) 
+		    	local currentWeek = s_CURRENT_USER.logInDatas[#s_CURRENT_USER.logInDatas]
+		    	local isGot = currentWeek:isGotReward(os.time())
+		    	if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == true then
+			        local Loginreward = require("view.loginreward.LoginRewardPopup")
+			        local loginreward = Loginreward.create()
+			        s_SCENE:popup(loginreward)
+	            end
 	    	end
 			self:removeFromParent()
 		end,{})
