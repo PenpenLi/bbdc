@@ -49,6 +49,7 @@ function LoginRewardPopup:ctor()
         local move = cc.EaseBackIn:create(cc.MoveTo:create(0.3, cc.p(s_DESIGN_WIDTH / 2, s_DESIGN_HEIGHT * 1.5)))
         local remove = cc.CallFunc:create(function() 
              s_SCENE:removeAllPopups()
+             s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
         end)
         backPopup:runAction(cc.Sequence:create(move,remove))
     end
@@ -220,37 +221,76 @@ function LoginRewardPopup:ctor()
     end 
 
     local sprite = backPopup:getChildByName("reward"..(today + 1))
+
+    if todayMark == 0 and sprite ~= nil then
+        s_TOUCH_EVENT_BLOCK_LAYER.lockTouch() 
+        s_SCENE:callFuncWithDelay(0.5,function()
+            s_CURRENT_USER:addBeans(rewardList[#currentData].reward)  
+            saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY]}) 
+            sprite:setVisible(true) 
+                    
+            local spine = sp.SkeletonAnimation:create('spine/duigou.json', 'spine/duigou.atlas',1)
+            spine:setOpacity(0)
+            local action1 = cc.FadeIn:create(0.5)
+            local action2 = cc.CallFunc:create(function()spine:addAnimation(0, 'animation', false)end)
+            spine:runAction(cc.Sequence:create(action1,action2))
+            spine:setPosition(50,0)
+            sprite:addChild(spine)
+            spine:setScale(0.8)
+            currentWeek:getReward(os.time())
+            getRewardEverydayInfo()
+            todayMark = 1   
+        end)   
+
+        s_SCENE:callFuncWithDelay(2,function()
+            local backColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+            backColor:setPosition(-s_DESIGN_OFFSET_WIDTH, 0)
+            s_SCENE.popupLayer:addChild(backColor)
+
+            local shine1 = cc.Sprite:create("image/loginreward/shine_complete_studys.png")
+            shine1:setPosition(backColor:getContentSize().width / 2 ,backColor:getContentSize().height / 2)
+            backColor:addChild(shine1)
+
+            local action1 = cc.RotateBy:create(0.5,20)
+            shine1:runAction(cc.RepeatForever:create(action1))
+
+            local action0 = cc.DelayTime:create(0.5)
+            local action1 = cc.FadeOut:create(0.2)
+            shine1:runAction(cc.Sequence:create(action0,action1))
+
+            local bean = cc.Sprite:create('image/summarybossscene/been_complete_studys.png')
+            bean:setPosition(backColor:getContentSize().width / 2 ,backColor:getContentSize().height / 2)
+            bean:setScale(1.5)
+            backColor:addChild(bean)
+
+            local been_number_back = cc.Sprite:create("image/chapter/chapter0/background_been_white.png")
+            been_number_back:setPosition(s_RIGHT_X - s_LEFT_X - 100, s_DESIGN_HEIGHT - 70)
+            backColor:addChild(been_number_back)
+
+            local been_number = cc.Label:createWithSystemFont(s_CURRENT_USER:getBeans() - rewardList[#currentData].reward,'',24)
+            been_number:setColor(cc.c4b(0,0,0,255))
+            been_number:setPosition(been_number_back:getContentSize().width * 0.65 , been_number_back:getContentSize().height/2)
+            been_number_back:addChild(been_number)
+
+            local action0 = cc.DelayTime:create(0.5)
+            local action1 = cc.MoveTo:create(0.2,cc.p(s_RIGHT_X - s_LEFT_X - 100, s_DESIGN_HEIGHT - 70))
+            local action2 = cc.ScaleTo:create(0.2,0)
+            local action3 = cc.CallFunc:create(function()been_number:setString(s_CURRENT_USER:getBeans())end)
+            local action4 = cc.DelayTime:create(0.5)
+            local action5 = cc.CallFunc:create(function()backColor:removeFromParent()s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()end)
+            bean:runAction(cc.Sequence:create(action0,action1,action2,action3,action4,action5))
+        end)
+    end
+
+
+
     local onTouchEnded = function(touch, event)
-        if todayMark == 0 and sprite ~= nil then
-            local location = backPopup:convertToNodeSpace(touch:getLocation())
-            if cc.rectContainsPoint(sprite:getBoundingBox(), location)  then
-                s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
-                s_CURRENT_USER:addBeans(rewardList[#currentData].reward)  
-                saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY]}) 
-                sprite:setVisible(true) 
-                
-                local spine = sp.SkeletonAnimation:create('spine/duigou.json', 'spine/duigou.atlas',1)
-                local action = cc.DelayTime:create(0.3)
-                spine:runAction(cc.Sequence:create(action,cc.CallFunc:create(function()spine:addAnimation(0, 'animation', false)
-                    s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
-                    end)))
-                spine:setPosition(50,0)
-                sprite:addChild(spine)
-                spine:setScale(0.8)
-                currentWeek:getReward(os.time())
-                getRewardEverydayInfo()
-                todayMark = 1   
-            end
-        end
-        
         local location = self:convertToNodeSpace(touch:getLocation())
         if not cc.rectContainsPoint(backPopup:getBoundingBox(),location) then
               closeAnimation()
         end
     end
-    
 
-    
     local listener = cc.EventListenerTouchOneByOne:create()
     listener:setSwallowTouches(true)
     listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
