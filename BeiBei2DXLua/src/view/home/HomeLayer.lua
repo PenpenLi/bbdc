@@ -133,7 +133,7 @@ function HomeLayer.create()
             s_HUD_LAYER:getChildByName('missionComplete'):setVisible(true)
         end
         s_isCheckInAnimationDisplayed = true
-        mission_progress = MissionProgress.create(true,dataShare)
+        mission_progress = MissionProgress.create(true,layer)
     else
         if showDataShare then
             createDataShareMark = true 
@@ -888,6 +888,26 @@ function HomeLayer:setButtonEnabled(enabled)
     self.button_reward:setEnabled(enabled)
     self.dataShare:setEnabled(enabled)
 
+end
+
+function HomeLayer:showShareCheckIn()
+    local Share = require('view.share.ShareCheckIn')
+    local shareLayer = Share.create(self)
+    shareLayer:setPosition(0,-s_DESIGN_HEIGHT)
+    local move = cc.MoveTo:create(0.3,cc.p(0,0))
+    shareLayer:runAction(cc.Sequence:create(cc.DelayTime:create(0.5),move,cc.CallFunc:create(function ()
+        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
+    end,{})))
+    self:addChild(shareLayer,2)
+end
+
+function HomeLayer:showDataShare()
+    self.dataShare:moveDown()
+    self.dataShare.moveUp = function ()
+        local Loginreward = require("view.loginreward.LoginRewardPopup")
+        local loginreward = Loginreward:create()
+        s_SCENE:popup(loginreward) 
+    end
 end
 
 return HomeLayer
