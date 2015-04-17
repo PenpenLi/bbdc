@@ -786,9 +786,9 @@ function HomeLayer.create(share)
     local isGot = currentWeek:isGotReward(os.time())
     local wordInfo = s_LocalDatabaseManager.getAllBossInfo()
     local isGotAllWord = #wordInfo[1].wrongWordList
-    print('createDataShareMark',tostring(createDataShareMark),s_CURRENT_USER.dataDailyUsing.usingTime)
+    --print('createDataShareMark',tostring(createDataShareMark),s_CURRENT_USER.dataDailyUsing.usingTime)
     if  createDataShareMark == true and s_CURRENT_USER.dataDailyUsing.usingTime >= 60 then 
-        print('dataShareTime',s_CURRENT_USER.dataShareTime)
+        --print('dataShareTime',s_CURRENT_USER.dataShareTime)
         if s_CURRENT_USER.dataShareTime >= 300 and share ~= nil and share then
             s_CURRENT_USER.dataShareTime = 0
             dataShare:moveDown()
