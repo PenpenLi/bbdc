@@ -737,7 +737,7 @@ function ChapterLayer:addBackToHome()
     local click_home = function(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
             local IntroLayer = require("view.home.HomeLayer")
-            local introLayer = IntroLayer.create()  
+            local introLayer = IntroLayer.create(true)  
             s_SCENE:replaceGameLayer(introLayer)
         end
     end

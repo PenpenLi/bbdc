@@ -18,7 +18,7 @@ local bigWidth = s_DESIGN_WIDTH+2*s_DESIGN_OFFSET_WIDTH
 local list = {}
 local TEXT_CHANGE_ACCOUNT = '切换账号' -- "登出游戏"
 
-function HomeLayer.create()
+function HomeLayer.create(share)
     --s_CURRENT_USER:addBeans(100)
     s_CURRENT_USER.dataDailyUsing:reset()
 
@@ -786,9 +786,13 @@ function HomeLayer.create()
     local isGot = currentWeek:isGotReward(os.time())
     local wordInfo = s_LocalDatabaseManager.getAllBossInfo()
     local isGotAllWord = #wordInfo[1].wrongWordList
-
+    print('createDataShareMark',tostring(createDataShareMark),s_CURRENT_USER.dataDailyUsing.usingTime)
     if  createDataShareMark == true and s_CURRENT_USER.dataDailyUsing.usingTime >= 60 then 
-        dataShare:moveDown() 
+        print('dataShareTime',s_CURRENT_USER.dataShareTime)
+        if s_CURRENT_USER.dataShareTime >= 300 and share ~= nil and share then
+            s_CURRENT_USER.dataShareTime = 0
+            dataShare:moveDown()
+        end 
         dataShare.moveUp = function ()
             if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == true and isGotAllWord >= s_max_wrong_num[1] then
                 ClickRewardBtnFunction()
@@ -902,11 +906,14 @@ function HomeLayer:showShareCheckIn()
 end
 
 function HomeLayer:showDataShare()
-    self.dataShare:moveDown()
     self.dataShare.moveUp = function ()
         local Loginreward = require("view.loginreward.LoginRewardPopup")
         local loginreward = Loginreward:create()
         s_SCENE:popup(loginreward) 
+    end
+    if s_CURRENT_USER.dataShareTime >= 300 then
+        s_CURRENT_USER.dataShareTime = 0
+        self.dataShare:moveDown()
     end
 end
 

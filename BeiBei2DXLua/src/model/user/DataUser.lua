@@ -104,6 +104,9 @@ function DataUser:ctor()
     self.beanRewardForIron                 = 3
 
     self.dataDailyUsing                    = DataDailyUsing.create()
+
+    --data share time
+    self.dataShareTime                     = 300
 end
 
 function DataUser:getLockFunctionState(productId)
