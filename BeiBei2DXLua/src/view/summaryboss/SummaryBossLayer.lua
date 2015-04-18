@@ -294,8 +294,8 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
                                 layer.globalLock = true
                                 layer.currentIndex = layer.currentIndex + 1
                                 killedCrabCount = 0
-                                for m = 1, 5 do
-                                    for n = 1, 5 do
+                                for m = 1, layer.mat_length do
+                                    for n = 1, layer.mat_length do
                                         local remove = cc.CallFunc:create(function() 
     --                                        layer.coconut[m][n]:removeFromParent(true)    
                                         end,{})
@@ -448,14 +448,43 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
             light:setVisible(true)
         end
         if layer.onNode then
+            startNode = layer.coconut[layer.current_node_x][layer.current_node_y]
+            if startNode.isFirst > 0 and layer.crabOnView[startNode.isFirst] and layer.isTutorial then
+                layer.isTutorial = false
+                layer.tutorial:removeFromParent()
+                local bossAction = {}
+                for i = 1, 10 do
+                    local stop = cc.DelayTime:create(layer.totalTime / 10 * 0.8)
+                    local stopAnimation = cc.CallFunc:create(function() 
+                        layer.boss:setAnimation(0,'a2',true)
+                    end,{})
+                    local move = cc.MoveBy:create(layer.totalTime / 10 * 0.2,cc.p(- 0.45 * s_DESIGN_WIDTH / 10, 0))
+                    local moveAnimation = cc.CallFunc:create(function() 
+                        layer.boss:setAnimation(0,'animation',false)
+                    end,{})
+                    bossAction[#bossAction + 1] = cc.Spawn:create(stop,stopAnimation)
+                    bossAction[#bossAction + 1] = cc.Spawn:create(move,moveAnimation)
+                end
+                bossAction[#bossAction + 1] = cc.CallFunc:create(function() 
+
+                    if layer.currentBlood > 0 then
+                        layer.isLose = true
+                        layer:lose(chapter,entrance,wordList)    
+                    end
+                end,{})
+                layer.bossNode:runAction(cc.Sequence:create(bossAction))
+            end
+            if layer.isTutorial then
+                return true
+            end
             layer.isPaused = true
-            for i = 1, 5 do
-                for j = 1,5 do
+            for i = 1, layer.mat_length do
+                for j = 1,layer.mat_length do
                     layer.coconut[i][j]:stopAllActions()
                     layer.coconut[i][j]:setScale(scale)
                 end
             end
-            startNode = layer.coconut[layer.current_node_x][layer.current_node_y]
+            
             if not startNode.hasSelected then
                 selectStack[#selectStack+1] = startNode
                 layer:updateWord(selectStack,chapter)
@@ -472,6 +501,9 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
             end
             
         else
+            if layer.isTutorial then
+                return true
+            end
             startAtNode = false
         end
         
@@ -480,8 +512,8 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
                 layer.isPaused = true
                 layer:crabBig(chapter,i)
                 layer.onCrab = i
-                for m = 1, 5 do
-                    for n = 1,5 do
+                for m = 1, layer.mat_length do
+                    for n = 1,layer.mat_length do
                         if layer.coconut[m][n].isFirst == i then
                             layer.coconut[m][n]:runAction(cc.Repeat:create(cc.Sequence:create(cc.ScaleTo:create(0.5,1.2 * scale),cc.ScaleTo:create(0.5,1.0 * scale)),2))
                             break
@@ -498,7 +530,7 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
     end
 
     onTouchMoved = function(touch, event)
-        if layer.currentBlood <= 0 or layer.isLose or layer.globalLock or s_SCENE.popupLayer.layerpaused or not layer.gameStart then
+        if layer.currentBlood <= 0 or layer.isLose or layer.globalLock or s_SCENE.popupLayer.layerpaused or not layer.gameStart or layer.isTutorial then
             return true
         end
     
@@ -656,6 +688,7 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
     listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
     local eventDispatcher = layer:getEventDispatcher()
     eventDispatcher:addEventListenerWithSceneGraphPriority(listener, layer)
+    listener:setSwallowTouches(true)
 
     --update
     local function update(delta)
@@ -685,7 +718,7 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
             loadingTime = loadingTime + delta
         end
         
-        if layer.currentBlood <= 0 or layer.isLose or s_SCENE.popupLayer.layerpaused or not layer.gameStart then
+        if layer.currentBlood <= 0 or layer.isLose or s_SCENE.popupLayer.layerpaused or not layer.gameStart or layer.isTutorial then
             return
         end
         
@@ -825,11 +858,11 @@ function SummaryBossLayer:initBossLayer_back(chapter)
     --add hole
     local hole = {}    
     local gap = 120
-    local left = (s_DESIGN_WIDTH - (5 - 1)*gap)/2
-    local bottom = 220
-    for i = 1, 5 do
+    local left = (s_DESIGN_WIDTH - (self.mat_length - 1)*gap)/2
+    local bottom = 220 + (5-self.mat_length)* 100
+    for i = 1, self.mat_length do
         hole[i] = {}
-        for j = 1, 5 do
+        for j = 1, self.mat_length do
             hole[i][j] = cc.Sprite:create(string.format("image/summarybossscene/hole_%d.png",chapter))
             hole[i][j]:setScale(0.92)
             hole[i][j]:setPosition(left + gap * (i - 1), bottom + gap * (j - 1))
@@ -845,7 +878,7 @@ function SummaryBossLayer:initBossLayer_girl(chapter)
     pauseBtn:ignoreAnchorPointForPosition(false)
     pauseBtn:setAnchorPoint(0,1)
     s_SCENE.popupLayer.pauseBtn = pauseBtn
-    self:addChild(pauseBtn,100)
+    self:addChild(pauseBtn)
     pauseBtn:setPosition(s_LEFT_X, s_DESIGN_HEIGHT)
 
     -- add combo icon
@@ -862,7 +895,7 @@ function SummaryBossLayer:initBossLayer_girl(chapter)
     for i = 1,12 do
         combo_icon[i] = cc.ProgressTimer:create(cc.Sprite:create(string.format('image/summarybossscene/yuanhuan_zjboss_%d.png',math.ceil(i/3))))
         combo_icon[i]:setPosition(s_DESIGN_WIDTH * 0.9,s_DESIGN_HEIGHT * 0.95 + 5)
-        self:addChild(combo_icon[i],100)
+        self:addChild(combo_icon[i])
 
         combo_icon[i]:setRotation(6 + 120 * ((i - 1)%3))
         combo_icon[i]:setPercentage(30)
@@ -875,7 +908,7 @@ function SummaryBossLayer:initBossLayer_girl(chapter)
         local label1 = cc.Label:createWithSystemFont('+','',30)
         label1:setAnchorPoint(1,0.5)
         label1:setPosition(combo_icon[i]:getPositionX() + 3,combo_icon[i]:getPositionY() + 3)
-        self:addChild(label1,100)
+        self:addChild(label1)
         label1:setColor(combo_color[i])
         label1:enableOutline(combo_color[i],2)
         self.combo_label[#self.combo_label + 1] = label1
@@ -884,7 +917,7 @@ function SummaryBossLayer:initBossLayer_girl(chapter)
         label2:setAnchorPoint(0,0.5)
         label2:enableOutline(combo_color[i],2)
         label2:setPosition(combo_icon[i]:getPositionX() - 1,combo_icon[i]:getPositionY() + 1)
-        self:addChild(label2,100)
+        self:addChild(label2)
         label2:setColor(combo_color[i])
 
         self.combo_label[#self.combo_label + 1] = label2
@@ -898,7 +931,7 @@ function SummaryBossLayer:initBossLayer_girl(chapter)
     self.combo_icon = combo_icon
 
     local function createPausePopup()
-        if self.currentBlood <= 0 or self.isLose or self.globalLock or s_SCENE.popupLayer.layerpaused then
+        if self.currentBlood <= 0 or self.isLose or self.globalLock or s_SCENE.popupLayer.layerpaused or layer.isTutorial then
             return
         end
         local pauseLayer = Pause.create()
@@ -1059,25 +1092,27 @@ function SummaryBossLayer:initBossLayer_boss(chapter,entrance,wordList)
         -- body
         self:initMap(chapter)
     end,{})
-    for i = 1, 10 do
-        local stop = cc.DelayTime:create(self.totalTime / 10 * 0.8)
-        local stopAnimation = cc.CallFunc:create(function() 
-            boss:setAnimation(0,'a2',true)
-        end,{})
-        local move = cc.MoveBy:create(self.totalTime / 10 * 0.2,cc.p(- 0.45 * s_DESIGN_WIDTH / 10, 0))
-        local moveAnimation = cc.CallFunc:create(function() 
-            boss:setAnimation(0,'animation',false)
-        end,{})
-        bossAction[#bossAction + 1] = cc.Spawn:create(stop,stopAnimation)
-        bossAction[#bossAction + 1] = cc.Spawn:create(move,moveAnimation)
-    end
-    bossAction[#bossAction + 1] = cc.CallFunc:create(function() 
-
-        if self.currentBlood > 0 then
-            self.isLose = true
-            self:lose(chapter,entrance,wordList)    
+    if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
+        for i = 1, 10 do
+            local stop = cc.DelayTime:create(self.totalTime / 10 * 0.8)
+            local stopAnimation = cc.CallFunc:create(function() 
+                boss:setAnimation(0,'a2',true)
+            end,{})
+            local move = cc.MoveBy:create(self.totalTime / 10 * 0.2,cc.p(- 0.45 * s_DESIGN_WIDTH / 10, 0))
+            local moveAnimation = cc.CallFunc:create(function() 
+                boss:setAnimation(0,'animation',false)
+            end,{})
+            bossAction[#bossAction + 1] = cc.Spawn:create(stop,stopAnimation)
+            bossAction[#bossAction + 1] = cc.Spawn:create(move,moveAnimation)
         end
-    end,{})
+        bossAction[#bossAction + 1] = cc.CallFunc:create(function() 
+
+            if self.currentBlood > 0 then
+                self.isLose = true
+                self:lose(chapter,entrance,wordList)    
+            end
+        end,{})
+    end
     bossNode:runAction(cc.Sequence:create(bossAction))
     local bloodBack = cc.Sprite:create("image/summarybossscene/summaryboss_blood_back.png")
     bloodBack:setPosition(100,-10)
@@ -1099,6 +1134,13 @@ function SummaryBossLayer:initWordList(word)
        -- wordList = {'apple','many','many','many','many','many','many','many','many','many','many','tea','banana','cat','dog','camel','ant'}
     --end
     local index = 1
+
+    self.mat_length = 5
+    self.isTutorial = false
+    if s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and self.entrance then
+        self.mat_length = 4
+        self.isTutorial = true
+    end
     
     for i = 1, #wordList do
         local randomIndex = math.random(1,#wordList)
@@ -1141,9 +1183,13 @@ function SummaryBossLayer:initWordList(word)
     while true do
         local totalLength = 0
         local tmp = {}
-        for i = 1, 3 do
+        local COUNT = 3
+        if s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and self.entrance then
+            COUNT = 1
+        end
+        for i = 1,COUNT do
             local w = wordList[index]
-            if(totalLength + string.len(w) <= 25) then
+            if(totalLength + string.len(w) <= self.mat_length^2) then
                 tmp[#tmp + 1] = w
                 totalLength = totalLength + string.len(w)
                 index = index + 1
@@ -1163,18 +1209,18 @@ end
 function SummaryBossLayer:initStartIndex(index)
     self.startIndexPool = {}
     if #self.wordPool[index] == 1 then
-        local localgap = 25 - string.len(self.wordPool[index][1])
+        local localgap = self.mat_length^2 - string.len(self.wordPool[index][1])
         local randomStart = math.random(0,localgap)
         self.startIndexPool[#self.startIndexPool + 1] = randomStart + 1
     elseif #self.wordPool[index] == 2 then
-        local localgap = 25 - string.len(self.wordPool[index][1]) - string.len(self.wordPool[index][2])
+        local localgap = self.mat_length^2 - string.len(self.wordPool[index][1]) - string.len(self.wordPool[index][2])
         local randomStart1 = math.random(0,localgap)
         localgap = localgap - randomStart1
         local randomStart2 = math.random(0,localgap)
         self.startIndexPool[#self.startIndexPool + 1] = randomStart1 + 1
         self.startIndexPool[#self.startIndexPool + 1] = randomStart1 + string.len(self.wordPool[index][1]) + randomStart2 + 1
     elseif #self.wordPool[index] == 3 then
-        local localgap = 25 - string.len(self.wordPool[index][1]) - string.len(self.wordPool[index][2]) - string.len(self.wordPool[index][3])
+        local localgap = self.mat_length^2 - string.len(self.wordPool[index][1]) - string.len(self.wordPool[index][2]) - string.len(self.wordPool[index][3])
         local randomStart1 = math.random(0,localgap)
         localgap = localgap - randomStart1
         local randomStart2 = math.random(0,localgap)
@@ -1204,21 +1250,21 @@ function SummaryBossLayer:initCrab1()
         self.ccb[1]['CCB_crab'] = self.ccbcrab[1]
         self.crab[1] = CCBReaderLoad("ccb/crab1.ccbi", proxy, self.ccbcrab[1],self.ccb[1])
         self.crab[1]:setPosition(s_DESIGN_WIDTH * 0.5, -s_DESIGN_HEIGHT * 0.1)
-        self:addChild(self.crab[1])
+        self:addChild(self.crab[1],1)
     elseif #self.wordPool[self.currentIndex] ==2 then
         self.ccbcrab[1] = {} 
         self.ccb[1] = {}
         self.ccb[1]['CCB_crab'] = self.ccbcrab[1]
         self.crab[1] = CCBReaderLoad("ccb/crab1.ccbi", proxy, self.ccbcrab[1],self.ccb[1])
         self.crab[1]:setPosition(s_DESIGN_WIDTH * 0.3, -s_DESIGN_HEIGHT * 0.1)
-        self:addChild(self.crab[1])
+        self:addChild(self.crab[1],1)
         
         self.ccbcrab[2] = {} 
         self.ccb[2] = {}
         self.ccb[2]['CCB_crab'] = self.ccbcrab[2]
         self.crab[2] = CCBReaderLoad("ccb/crab1.ccbi", proxy, self.ccbcrab[2],self.ccb[2])
         self.crab[2]:setPosition(s_DESIGN_WIDTH * 0.7, -s_DESIGN_HEIGHT * 0.1)
-        self:addChild(self.crab[2])
+        self:addChild(self.crab[2],1)
     elseif #self.wordPool[self.currentIndex] ==3 then
         self.ccbcrab[1] = {} 
         self.ccb[1] = {}
@@ -1226,19 +1272,19 @@ function SummaryBossLayer:initCrab1()
         self.crab[1] = CCBReaderLoad("ccb/crab1.ccbi", proxy, self.ccbcrab[1],self.ccb[1])
         self.crab[1]:setPosition(s_DESIGN_WIDTH * 0.2, -s_DESIGN_HEIGHT * 0.1)
         self.crab[1]:setRotation(5)
-        self:addChild(self.crab[1])
+        self:addChild(self.crab[1],1)
         self.ccbcrab[2] = {} 
         self.ccb[2] = {}
         self.ccb[2]['CCB_crab'] = self.ccbcrab[2]
         self.crab[2] = CCBReaderLoad("ccb/crab1.ccbi", proxy, self.ccbcrab[2],self.ccb[2])
         self.crab[2]:setPosition(s_DESIGN_WIDTH * 0.5, -s_DESIGN_HEIGHT * 0.1 - 10)
-        self:addChild(self.crab[2])
+        self:addChild(self.crab[2],1)
         self.ccbcrab[3] = {} 
         self.ccb[3] = {}
         self.ccb[3]['CCB_crab'] = self.ccbcrab[3]
         self.crab[3] = CCBReaderLoad("ccb/crab1.ccbi", proxy, self.ccbcrab[3],self.ccb[3])
         self.crab[3]:setPosition(s_DESIGN_WIDTH * 0.8, -s_DESIGN_HEIGHT * 0.1)
-        self:addChild(self.crab[3])
+        self:addChild(self.crab[3],1)
         
     end
     for i = 1,#self.crab do
@@ -1252,6 +1298,24 @@ function SummaryBossLayer:initCrab1()
         self.ccbcrab[i]['meaningBig']:setString(s_LocalDatabaseManager.getWordInfoFromWordName(self.wordPool[self.currentIndex][i]).wordMeaningSmall)
     end
     self.crab[self.firstIndex]:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.DelayTime:create(2),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale))))
+    --print('s_tutorial_summary_boss',s_tutorial_summary_boss,s_CURRENT_USER.tutorialStep)
+    if s_CURRENT_USER.isTutorial then
+        s_SCENE:callFuncWithDelay(1.6 ,function (  )
+            self:addTutorial()
+        end)
+    end
+end
+
+function SummaryBossLayer:addTutorial()
+    local curtain = cc.LayerColor:create(cc.c4b(0,0,0,150),s_RIGHT_X - s_LEFT_X,s_DESIGN_HEIGHT)
+    curtain:ignoreAnchorPointForPosition(false)
+    curtain:setAnchorPoint(0.5,0.5)
+    curtain:setPosition(0.5 *s_DESIGN_WIDTH,0.5 * s_DESIGN_HEIGHT)
+    self:addChild(curtain)
+    self.tutorial = curtain
+    local hintboard = cc.Sprite:create('image/summarybossscene/hintboard2.png')
+    hintboard:setPosition(curtain:getContentSize().width * 0.6,s_DESIGN_HEIGHT * 0.8)
+    curtain:addChild(hintboard)
 end
 
 function SummaryBossLayer:initCrab2(chapter)
@@ -1332,12 +1396,17 @@ function SummaryBossLayer:initMapInfoByIndex(startIndex)
             local char = string.char(96+i)
             charaster_set_filtered[#charaster_set_filtered+1] = char
         end
-        local main_logic_mat = getRandomBossPath()
-        for i = 1, 5 do
+        local main_logic_mat
+        if s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and self.entrance then
+            main_logic_mat = randomMat(4, 4)
+        else
+            main_logic_mat = getRandomBossPath()
+        end
+        for i = 1, self.mat_length do
             self.character[k][i] = {}
             self.isFirst[k][i] = {}
             self.isCrab[k][i] = {}
-            for j = 1, 5 do
+            for j = 1, self.mat_length do
                 local randomIndex = math.random(1, #charaster_set_filtered)
                 self.isFirst[k][i][j] = 0
                 self.isCrab[k][i][j] = 0
@@ -1418,7 +1487,7 @@ function SummaryBossLayer:addMapInfo(word)
         for i = 1,#self.wordPool[#self.wordPool] do
             length = string.len(self.wordPool[#self.wordPool][i]) + length
         end
-        if length > 25 then
+        if length > self.mat_length^2 then
             flag = true
         end
     end
@@ -1446,11 +1515,11 @@ function SummaryBossLayer:initMap(chapter)
         self.crabOnView[i] = true
     end
     
-    for i = 1, 5 do
+    for i = 1, self.mat_length do
         if self.currentIndex == 1 then
             self.coconut[i] = {}
         end
-        for j = 1, 5 do
+        for j = 1, self.mat_length do
             
              if self.currentIndex > 1 then
                 self.coconut[i][j].main_character_content = self.character[self.currentIndex][i][j]
@@ -1470,6 +1539,7 @@ function SummaryBossLayer:initMap(chapter)
              end
              if self.isFirst[self.currentIndex][i][j] == self.firstIndex then
                 self.coconut[i][j].firstStyle()
+                self.coconut[i][j]:setLocalZOrder(1)
                 self.coconut[i][j]:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.DelayTime:create(2),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale))))
              end
            
@@ -1483,7 +1553,7 @@ function SummaryBossLayer:initMap(chapter)
                     self.coconut[i][j].bullet = sp.SkeletonAnimation:create("spine/summaryboss/third-level-summary-boss-coin-effect.json","spine/summaryboss/third-level-summary-boss-coin-effect.atlas",1)
                     self.coconut[i][j].bullet:setAnimation(0,'animation',true)
                 end
-                self:addChild(self.coconut[i][j],1)
+                self:addChild(self.coconut[i][j])
                 self:addChild(self.coconut[i][j].bullet,2)
             else
                 self.coconut[i][j].bullet:stopAllActions()  
@@ -1497,14 +1567,14 @@ function SummaryBossLayer:initMap(chapter)
             if self.currentIndex == 1 then
                 --delaytime = 1.5
             end
-            if i == 5 and j == 1 then
+            if i == self.mat_length and j == 1 then
                 local unlock = cc.CallFunc:create(function() 
                     self.gameStart = true
                     self.globalLock = false
                 end,{})
-                self.coconut[i][j]:runAction(cc.Sequence:create(cc.DelayTime:create(0.1 * (3 + i - j) + delaytime),cc.ScaleTo:create(0.1, scale),unlock))
+                self.coconut[i][j]:runAction(cc.Sequence:create(cc.DelayTime:create(0.1 * (self.mat_length - 1 + i - j) + delaytime),cc.ScaleTo:create(0.1, scale),unlock))
             else
-                self.coconut[i][j]:runAction(cc.Sequence:create(cc.DelayTime:create(0.1 * (3 + i - j) + delaytime),cc.ScaleTo:create(0.1, scale)))
+                self.coconut[i][j]:runAction(cc.Sequence:create(cc.DelayTime:create(0.1 * (self.mat_length - 1 + i - j) + delaytime),cc.ScaleTo:create(0.1, scale)))
             end
             self.coconut[i][j].isFirst = self.isFirst[self.currentIndex][i][j]
         end
@@ -1518,9 +1588,9 @@ function SummaryBossLayer:checkTouchLocation(location)
     local main_width    = 640
     
     local gap       = 120
-    local left      = (main_width - (5-1)*gap) / 2
-    local main_height   = 220 * 2 + 4 * gap
-    local bottom    = 220
+    local left      = (main_width - (self.mat_length-1)*gap) / 2
+    local bottom    = 220 + (5-self.mat_length)* 100
+    local main_height   = bottom * 2 + 4 * gap 
     local i = 0
     local j = 0
 
@@ -1664,8 +1734,8 @@ function SummaryBossLayer:hint()
     end
     self.currentHintWord[index] = true
     self.crab[self.firstIndex]:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale))))
-    for i = 1, 5 do
-        for j = 1, 5 do
+    for i = 1, self.mat_length do
+        for j = 1, self.mat_length do
             if self.isCrab[self.currentIndex][i][j] == index then
                 self.coconut[i][j]:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale))))
             end
