@@ -59,8 +59,8 @@ function HomeLayer.create()
     -- data end
 
     local username = "游客"
-    local logo_name = {"head","book","feedback","information","logout"}
-    local label_name = {username,"选择书籍","用户反馈","完善个人信息",TEXT_CHANGE_ACCOUNT}
+    local logo_name = {"head","book","information","logout"}
+    local label_name = {username,"选择书籍","完善个人信息",TEXT_CHANGE_ACCOUNT}
 
     s_SCENE.touchEventBlockLayer.unlockTouch()
     local layer = HomeLayer.new()
@@ -377,10 +377,55 @@ function HomeLayer.create()
         if sprite3 ~= nil then sprite3:removeFromParent() end
     end
 
+    local follow_button_clicked = function(sender, eventType)
+        if eventType == ccui.TouchEventType.ended then
+            -- popup layer
+
+            local back = cc.Sprite:create("image/homescene/background_ciku_white.png")
+            back:setPosition(cc.p(s_DESIGN_WIDTH/2, 550))
+            local info = cc.Sprite:create('image/homescene/Phone-Hook1.png')
+            info:setPosition(back:getContentSize().width/2, back:getContentSize().height/2)
+            back:addChild(info)
+
+            local close_button_clicked = function(sender, eventType)
+                if eventType == ccui.TouchEventType.ended then
+                    s_SCENE:removeAllPopups()
+                end
+            end
+            local closeButton = ccui.Button:create("image/popupwindow/closeButtonRed.png","image/popupwindow/closeButtonRed.png","")
+            closeButton:setPosition(back:getContentSize().width-30, back:getContentSize().height-30)
+            closeButton:addTouchEventListener(close_button_clicked)
+            back:addChild(closeButton)
+
+            local label2 = cc.Label:createWithSystemFont("V2.0.6","",25)
+            label2:setColor(cc.c4b(36,61,78,255))
+            label2:setPosition(back:getContentSize().width/2+45, back:getContentSize().height/2+75)
+            info:addChild(label2)
+
+            local layer = cc.Layer:create()
+            layer:addChild(back)
+
+            s_SCENE:popup(layer)
+        end
+    end
+    local followButton = ccui.Button:create("image/homescene/attention_button.png","image/homescene/attention_button_press.png","image/setting/attention_button_press.png")
+    followButton:setAnchorPoint(0,1)
+    followButton:setPosition(400,190)
+    setting_back:addChild(followButton,10)
+    local deco = cc.Sprite:create("image/homescene/attention_beibei1.png")
+    deco:setPosition(750,100)
+    setting_back:addChild(deco, 10)
+    local text = cc.Label:createWithSystemFont("关注贝贝","",36)
+    text:setColor(cc.c4b(255,255,255,255))
+    -- text:setAnchorPoint(0, 0)
+    text:setPosition(followButton:getContentSize().width/2, followButton:getContentSize().height/2)
+    followButton:addChild(text)
+    followButton:addTouchEventListener(follow_button_clicked)
+
     if s_CURRENT_USER.usertype ~= USER_TYPE_GUEST then
         username = s_CURRENT_USER:getNameForDisplay()
-        logo_name = {"head","book","feedback","logout"}
-        label_name = {username,"选择书籍","用户反馈",TEXT_CHANGE_ACCOUNT}
+        logo_name = {"head","book","logout"}
+        label_name = {username,"选择书籍",TEXT_CHANGE_ACCOUNT}
     end
     local label = {}
     local logo = {}
@@ -392,13 +437,13 @@ function HomeLayer.create()
                 if label_name[i] == "选择书籍" then
                     AnalyticsChangeBookBtn()
                     s_CorePlayManager.enterBookLayer()
-                elseif label_name[i] == "用户反馈" then
-                    if  online == false then
-                        offlineTipHome.setTrue(OfflineTipForHome_Feedback)
-                    else
-                        local alter = AlterI.create("用户反馈")
-                        s_SCENE:popup(alter)
-                    end
+                -- elseif label_name[i] == "用户反馈" then
+                --     if  online == false then
+                --         offlineTipHome.setTrue(OfflineTipForHome_Feedback)
+                --     else
+                --         local alter = AlterI.create("用户反馈")
+                --         s_SCENE:popup(alter)
+                --     end
                 elseif label_name[i] == "完善个人信息" then
                     if  online == false then
                         offlineTipHome.setTrue(OfflineTipForHome_ImproveInformation)

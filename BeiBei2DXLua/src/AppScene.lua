@@ -140,7 +140,7 @@ local function update(dt)
         end
     end
 
-    if s_CURRENT_USER ~= nil and s_CURRENT_USER.dataDailyUsing:isInited() then
+    if s_CURRENT_USER ~= nil and s_CURRENT_USER.dataDailyUsing ~= nil and s_CURRENT_USER.dataDailyUsing:isInited() then
         if s_CURRENT_USER.dataDailyUsing:isToday() then
             s_CURRENT_USER.dataDailyUsing:update(dt)
             usingTimeSaveToLocalDB = usingTimeSaveToLocalDB + dt
