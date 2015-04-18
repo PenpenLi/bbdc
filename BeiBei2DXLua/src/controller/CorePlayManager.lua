@@ -224,8 +224,13 @@ end
 --     s_SCENE:replaceGameLayer(IntroLayer)
 -- end
 
-function CorePlayManager.enterHomeLayer()
-    local homeLayer = HomeLayer.create()
+function CorePlayManager.enterHomeLayer(share)
+    local homeLayer
+    if share ~= nil and share then
+        homeLayer = HomeLayer.create(share)
+    else
+        homeLayer = HomeLayer.create()
+    end
     s_SCENE:replaceGameLayer(homeLayer)
 end
 

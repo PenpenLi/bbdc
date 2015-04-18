@@ -18,7 +18,7 @@ local bigWidth = s_DESIGN_WIDTH+2*s_DESIGN_OFFSET_WIDTH
 local list = {}
 local TEXT_CHANGE_ACCOUNT = '切换账号' -- "登出游戏"
 
-function HomeLayer.create()
+function HomeLayer.create(share)
     --s_CURRENT_USER:addBeans(100)
     s_CURRENT_USER.dataDailyUsing:reset()
 
@@ -133,7 +133,7 @@ function HomeLayer.create()
             s_HUD_LAYER:getChildByName('missionComplete'):setVisible(true)
         end
         s_isCheckInAnimationDisplayed = true
-        mission_progress = MissionProgress.create(true,dataShare)
+        mission_progress = MissionProgress.create(true,layer)
     else
         if showDataShare then
             createDataShareMark = true 
@@ -786,9 +786,13 @@ function HomeLayer.create()
     local isGot = currentWeek:isGotReward(os.time())
     local wordInfo = s_LocalDatabaseManager.getAllBossInfo()
     local isGotAllWord = #wordInfo[1].wrongWordList
-
+    --print('createDataShareMark',tostring(createDataShareMark),s_CURRENT_USER.dataDailyUsing.usingTime)
     if  createDataShareMark == true and s_CURRENT_USER.dataDailyUsing.usingTime >= 60 then 
-        dataShare:moveDown() 
+        --print('dataShareTime',s_CURRENT_USER.dataShareTime)
+        if s_CURRENT_USER.dataShareTime >= 300 and share ~= nil and share then
+            s_CURRENT_USER.dataShareTime = 0
+            dataShare:moveDown()
+        end 
         dataShare.moveUp = function ()
             if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == true and isGotAllWord >= s_max_wrong_num[1] then
                 ClickRewardBtnFunction()
@@ -888,6 +892,29 @@ function HomeLayer:setButtonEnabled(enabled)
     self.button_reward:setEnabled(enabled)
     self.dataShare:setEnabled(enabled)
 
+end
+
+function HomeLayer:showShareCheckIn()
+    local Share = require('view.share.ShareCheckIn')
+    local shareLayer = Share.create(self)
+    shareLayer:setPosition(0,-s_DESIGN_HEIGHT)
+    local move = cc.MoveTo:create(0.3,cc.p(0,0))
+    shareLayer:runAction(cc.Sequence:create(cc.DelayTime:create(0.5),move,cc.CallFunc:create(function ()
+        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
+    end,{})))
+    self:addChild(shareLayer,2)
+end
+
+function HomeLayer:showDataShare()
+    self.dataShare.moveUp = function ()
+        local Loginreward = require("view.loginreward.LoginRewardPopup")
+        local loginreward = Loginreward:create()
+        s_SCENE:popup(loginreward) 
+    end
+    if s_CURRENT_USER.dataShareTime >= 300 then
+        s_CURRENT_USER.dataShareTime = 0
+        self.dataShare:moveDown()
+    end
 end
 
 return HomeLayer

@@ -129,6 +129,8 @@ local function update(dt)
         -- end
     -- end 
 
+    s_CURRENT_USER.dataShareTime = s_CURRENT_USER.dataShareTime + dt
+
     if IS_DEVELOPMENT_MODE and s_WordDictionaryDatabase and not s_WordDictionaryDatabase.allwords and s_SCENE.currentGameLayerName == 'HomeLayer' then
         print(s_WordDictionaryDatabase.nextframe, 's_WordDictionaryDatabase.nextframe')
         if s_WordDictionaryDatabase.nextframe == WDD_NEXTFRAME_STATE__RM_LOAD then

@@ -5,9 +5,9 @@ local ShareCheckIn = class('ShareCheckIn',function ()
 	return cc.Layer:create()
 end)
 
-function ShareCheckIn.create(dataShare)
+function ShareCheckIn.create(homelayer)
 	local layer = ShareCheckIn.new()
-	layer.dataShare = dataShare
+	layer.homelayer = homelayer
 	return layer
 end
 
@@ -67,16 +67,7 @@ function ShareCheckIn:ctor()
 
 	local function closeAnimation()
 	    local remove = cc.CallFunc:create(function ()
-	    	self.dataShare:moveDown()
-	    	self.dataShare.moveUp = function ()
-		    	local currentWeek = s_CURRENT_USER.logInDatas[#s_CURRENT_USER.logInDatas]
-		    	local isGot = currentWeek:isGotReward(os.time())
-		    	if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == true then
-			        local Loginreward = require("view.loginreward.LoginRewardPopup")
-			        local loginreward = Loginreward.create()
-			        s_SCENE:popup(loginreward)
-	            end
-	    	end
+	    	self.homelayer:showDataShare()
 			self:removeFromParent()
 		end,{})
 		local move = cc.MoveBy:create(0.3,cc.p(0,-s_DESIGN_HEIGHT))
