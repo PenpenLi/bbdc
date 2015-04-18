@@ -431,52 +431,55 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
             return true
         end
 
-        layer.crab[layer.firstIndex]:stopAllActions()
-        layer.coconut[layer.firstNodeArray[layer.firstIndex].x][layer.firstNodeArray[layer.firstIndex].y]:stopAllActions()
-
-        isTouchEnded = false
-        endTime = 0
-        
         local location = layer:convertToNodeSpace(touch:getLocation())
         
         startTouchLocation = location
         lastTouchLocation = location
         
         layer:checkTouchLocation(location)
+
+        startNode = layer.coconut[layer.current_node_x][layer.current_node_y]
+        if startNode.isFirst > 0 and layer.crabOnView[startNode.isFirst] and layer.isTutorial then
+            layer.isTutorial = false
+            layer.tutorial:removeFromParent()
+            local bossAction = {}
+            for i = 1, 10 do
+                local stop = cc.DelayTime:create(layer.totalTime / 10 * 0.8)
+                local stopAnimation = cc.CallFunc:create(function() 
+                    layer.boss:setAnimation(0,'a2',true)
+                end,{})
+                local move = cc.MoveBy:create(layer.totalTime / 10 * 0.2,cc.p(- 0.45 * s_DESIGN_WIDTH / 10, 0))
+                local moveAnimation = cc.CallFunc:create(function() 
+                    layer.boss:setAnimation(0,'animation',false)
+                end,{})
+                bossAction[#bossAction + 1] = cc.Spawn:create(stop,stopAnimation)
+                bossAction[#bossAction + 1] = cc.Spawn:create(move,moveAnimation)
+            end
+            bossAction[#bossAction + 1] = cc.CallFunc:create(function() 
+
+                if layer.currentBlood > 0 then
+                    layer.isLose = true
+                    layer:lose(chapter,entrance,wordList)    
+                end
+            end,{})
+            layer.bossNode:runAction(cc.Sequence:create(bossAction))
+        end
+
+        if layer.isTutorial then
+                return true
+            end
+
+        layer.crab[layer.firstIndex]:stopAllActions()
+        layer.coconut[layer.firstNodeArray[layer.firstIndex].x][layer.firstNodeArray[layer.firstIndex].y]:stopAllActions()
+
+        isTouchEnded = false
+        endTime = 0
+        
         if chapter == 2 then
             light:setPosition(location)
             light:setVisible(true)
         end
         if layer.onNode then
-            startNode = layer.coconut[layer.current_node_x][layer.current_node_y]
-            if startNode.isFirst > 0 and layer.crabOnView[startNode.isFirst] and layer.isTutorial then
-                layer.isTutorial = false
-                layer.tutorial:removeFromParent()
-                local bossAction = {}
-                for i = 1, 10 do
-                    local stop = cc.DelayTime:create(layer.totalTime / 10 * 0.8)
-                    local stopAnimation = cc.CallFunc:create(function() 
-                        layer.boss:setAnimation(0,'a2',true)
-                    end,{})
-                    local move = cc.MoveBy:create(layer.totalTime / 10 * 0.2,cc.p(- 0.45 * s_DESIGN_WIDTH / 10, 0))
-                    local moveAnimation = cc.CallFunc:create(function() 
-                        layer.boss:setAnimation(0,'animation',false)
-                    end,{})
-                    bossAction[#bossAction + 1] = cc.Spawn:create(stop,stopAnimation)
-                    bossAction[#bossAction + 1] = cc.Spawn:create(move,moveAnimation)
-                end
-                bossAction[#bossAction + 1] = cc.CallFunc:create(function() 
-
-                    if layer.currentBlood > 0 then
-                        layer.isLose = true
-                        layer:lose(chapter,entrance,wordList)    
-                    end
-                end,{})
-                layer.bossNode:runAction(cc.Sequence:create(bossAction))
-            end
-            if layer.isTutorial then
-                return true
-            end
             layer.isPaused = true
             for i = 1, layer.mat_length do
                 for j = 1,layer.mat_length do
@@ -501,9 +504,6 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
             end
             
         else
-            if layer.isTutorial then
-                return true
-            end
             startAtNode = false
         end
         
@@ -931,7 +931,7 @@ function SummaryBossLayer:initBossLayer_girl(chapter)
     self.combo_icon = combo_icon
 
     local function createPausePopup()
-        if self.currentBlood <= 0 or self.isLose or self.globalLock or s_SCENE.popupLayer.layerpaused or layer.isTutorial then
+        if self.currentBlood <= 0 or self.isLose or self.globalLock or s_SCENE.popupLayer.layerpaused or self.isTutorial then
             return
         end
         local pauseLayer = Pause.create()
@@ -1299,7 +1299,7 @@ function SummaryBossLayer:initCrab1()
     end
     self.crab[self.firstIndex]:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.DelayTime:create(2),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale))))
     --print('s_tutorial_summary_boss',s_tutorial_summary_boss,s_CURRENT_USER.tutorialStep)
-    if s_CURRENT_USER.isTutorial then
+    if self.isTutorial then
         s_SCENE:callFuncWithDelay(1.6 ,function (  )
             self:addTutorial()
         end)
