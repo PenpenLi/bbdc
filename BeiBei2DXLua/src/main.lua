@@ -47,10 +47,10 @@ local function main()
     cc.FileUtils:getInstance():addSearchPath("res/sound/words/")
     cc.FileUtils:getInstance():addSearchPath(cc.FileUtils:getInstance():getWritablePath())
     require("cocos.init")
-
+    --初始化热更模块
     local HotUpdateController = require("hu.HotUpdateController")
     HotUpdateController.init()
-
+    --启动逻辑运行  start.init里会调用start.start()
     local start = reloadModule('start')
     start.init()
 end

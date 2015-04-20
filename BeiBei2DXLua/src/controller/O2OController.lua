@@ -1,4 +1,5 @@
-
+--数据同步控制器
+--登陆 取数据 推送数据等等
 local DataEverydayInfo -- = require('model.user.DataEverydayInfo')
 local DataDailyStudyInfo -- = require('model.user.DataDailyStudyInfo')
 
@@ -61,7 +62,7 @@ end
 
 ----------------------------------------------------------------------------------------------------------------
 -- start
-
+--热更结束之后，就到这里了
 function O2OController.start()
     DataEverydayInfo = require('model.user.DataEverydayInfo')
     DataEverydayInfo.initCheckedInMask()

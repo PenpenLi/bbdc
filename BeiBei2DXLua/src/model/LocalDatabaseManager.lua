@@ -1,8 +1,8 @@
-
+--本地数据管理器
 require("common.global")
 local sqlite3 = require("lsqlite3")
 
-local DataEverydayInfo          = require('model.user.DataEverydayInfo')
+local DataEverydayInfo          = require('model.user.DataEverydayInfo')    --
 local DataLevelInfo             = require('model.user.DataLevelInfo')
 local DataDailyStudyInfo        = require('model.user.DataDailyStudyInfo')
 local DataBossWord              = require('model.user.DataBossWord')
