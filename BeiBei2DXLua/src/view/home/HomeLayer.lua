@@ -20,7 +20,8 @@ local TEXT_CHANGE_ACCOUNT = '切换账号' -- "登出游戏"
 
 function HomeLayer.create()
     --s_CURRENT_USER:addBeans(100)
-
+    --Analytics.lua
+    --打印bookKey
     AnalyticsSecondDayBook(s_CURRENT_USER.bookKey)
     local showDataShare = true
     if s_CURRENT_USER.tutorialStep == s_tutorial_book_select then
