@@ -92,6 +92,8 @@ function Pause:ctor()
     listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
     local eventDispatcher = node:getEventDispatcher()
     eventDispatcher:addEventListenerWithSceneGraphPriority(listener, node)
+
+    self.inTryingLayer = false
     
     onAndroidKeyPressed(node, function ()
         self:onClose()
@@ -143,7 +145,6 @@ end
 
 function Pause:onBack()
     --button sound
-    
     playSound(s_sound_buttonEffect)
     --cc.SimpleAudioEngine:getInstance():stopMusic()
     
@@ -151,11 +152,17 @@ function Pause:onBack()
     if s_LocalDatabaseManager.isMusicOn() then
         cc.SimpleAudioEngine:getInstance():setMusicVolume(0.2) 
     end
+
+    if ccbPause['Layer'].inTryingLayer then
+        --s_CorePlayManager.enterLevelLayer()
+    else
+        s_CorePlayManager.enterLevelLayer()
+    end
     
     s_SCENE.popupLayer.listener:setSwallowTouches(false)
     s_SCENE.popupLayer:removeAllChildren()
     s_SCENE.popupLayer.layerpaused = false
-    s_CorePlayManager.enterLevelLayer()
+    
     s_CURRENT_USER.beanRewardForIron = 3
     --if self.win and isPassed == 0 then
     --    s_SCENE.levelLayerState = s_unlock_normal_plotInfo_state

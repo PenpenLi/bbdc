@@ -20,13 +20,22 @@ local dir_right = 4
 local HINT_TIME = 10
 local bullet_damage = 2
 
-function SummaryBossLayer.create(wordList,chapter,entrance)   
+function SummaryBossLayer.create(wordList,type,entrance)   
     AnalyticsSummaryBoss()
     s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     local layer = SummaryBossLayer.new()
     math.randomseed(os.time())
     --add coconut
     --layer.levelConfig = levelConfig
+    layer.isTrying = false
+    layer.isGuiding = false
+    local chapter = type
+    --if (s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and entrance) then
+    if chapter == 0 then
+        layer.isTrying = true
+        layer.isGuiding = true
+        chapter = 1
+    end
     layer.coconut = {}
     layer.isFirst = {}
     layer.firstNodeArray = {}
@@ -124,6 +133,9 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
         for i = 1, #layer.wordPool[layer.currentIndex] do
             if layer.crabOnView[i] then
                 if selectWord == layer.wordPool[layer.currentIndex][i] then
+                    if layer.isTutorial and layer.isTrying then
+                        layer:stopTutorial()
+                    end
                     playWordSound(selectWord)
                     killedCrabCount = killedCrabCount + 1
                     layer.rightWord = layer.rightWord + 1
@@ -439,33 +451,11 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
         layer:checkTouchLocation(location)
 
         startNode = layer.coconut[layer.current_node_x][layer.current_node_y]
-        if startNode.isFirst > 0 and layer.crabOnView[startNode.isFirst] and layer.isTutorial then
-            layer.isTutorial = false
-            layer.tutorial:removeFromParent()
-            local bossAction = {}
-            for i = 1, 10 do
-                local stop = cc.DelayTime:create(layer.totalTime / 10 * 0.8)
-                local stopAnimation = cc.CallFunc:create(function() 
-                    layer.boss:setAnimation(0,'a2',true)
-                end,{})
-                local move = cc.MoveBy:create(layer.totalTime / 10 * 0.2,cc.p(- 0.45 * s_DESIGN_WIDTH / 10, 0))
-                local moveAnimation = cc.CallFunc:create(function() 
-                    layer.boss:setAnimation(0,'animation',false)
-                end,{})
-                bossAction[#bossAction + 1] = cc.Spawn:create(stop,stopAnimation)
-                bossAction[#bossAction + 1] = cc.Spawn:create(move,moveAnimation)
-            end
-            bossAction[#bossAction + 1] = cc.CallFunc:create(function() 
-
-                if layer.currentBlood > 0 then
-                    layer.isLose = true
-                    layer:lose(chapter,entrance,wordList)    
-                end
-            end,{})
-            layer.bossNode:runAction(cc.Sequence:create(bossAction))
+        if startNode.isFirst > 0 and layer.crabOnView[startNode.isFirst] and layer.isTutorial and not layer.isTrying then
+            layer:stopTutorial()
         end
 
-        if layer.isTutorial then
+        if layer.isTutorial and not layer.isTrying then
                 return true
             end
 
@@ -480,6 +470,9 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
             light:setVisible(true)
         end
         if layer.onNode then
+            if layer.isGuiding then
+                layer:stopGuide()
+            end
             layer.isPaused = true
             for i = 1, layer.mat_length do
                 for j = 1,layer.mat_length do
@@ -530,7 +523,7 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
     end
 
     onTouchMoved = function(touch, event)
-        if layer.currentBlood <= 0 or layer.isLose or layer.globalLock or s_SCENE.popupLayer.layerpaused or not layer.gameStart or layer.isTutorial then
+        if layer.currentBlood <= 0 or layer.isLose or layer.globalLock or s_SCENE.popupLayer.layerpaused or not layer.gameStart or (layer.isTutorial and not layer.isTrying) then
             return true
         end
     
@@ -639,7 +632,10 @@ function SummaryBossLayer.create(wordList,chapter,entrance)
                         --layer:updateWord(selectStack)
                         --slide coco
                         playSound(s_sound_slideCoconut)
-                    else 
+                    else
+                        if layer.isTrying and layer.isTutorial and currentNode:getLocalZOrder() == 0 then
+                            return
+                        end 
                         local stackTop = selectStack[#selectStack]
                         if math.abs(currentNode.logicX - stackTop.logicX) + math.abs(currentNode.logicY - stackTop.logicY) == 1 then
                             selectStack[#selectStack+1] = currentNode
@@ -816,6 +812,139 @@ function SummaryBossLayer:updateWord(selectStack,chapter)
     end
 end
 
+function SummaryBossLayer:showGuideRoute()
+    local finger = cc.Sprite:create('image/newstudy/qian.png')
+    finger:setPosition(cc.p(self.coconut[self.guidePath[1][1]][self.guidePath[1][2]]:getPosition()))
+    finger:ignoreAnchorPointForPosition(false)
+    finger:setAnchorPoint(0.2,0.8)
+    finger:setScale(1.5)
+    self:addChild(finger,1)
+    finger:setOpacity(0) 
+    self.finger = finger
+    local fingerAction = {}
+    for i = 2,#self.guidePath do
+        fingerAction[i - 1] = cc.MoveTo:create(0.3,cc.p(self.coconut[self.guidePath[i][1]][self.guidePath[i][2]]:getPosition()))
+    end
+    finger:runAction(cc.RepeatForever:create(cc.Sequence:create(
+        cc.CallFunc:create(function ()
+            finger:setTexture("image/newstudy/qian.png")
+        end),
+        cc.Spawn:create(
+            cc.FadeIn:create(0.5),
+            cc.ScaleTo:create(0.5,1)
+        ),
+        cc.DelayTime:create(0.3),
+        cc.CallFunc:create(function ()
+            finger:setTexture("image/newstudy/hou.png")
+        end),
+        cc.Sequence:create(fingerAction),
+        cc.DelayTime:create(1.0),
+        cc.CallFunc:create(function ()
+            finger:setTexture("image/newstudy/qian.png")
+        end),
+        cc.Spawn:create(
+            cc.FadeOut:create(0.2),
+            cc.ScaleTo:create(0.2,1.5)
+        ),
+        cc.Place:create(cc.p(self.coconut[self.guidePath[1][1]][self.guidePath[1][2]]:getPosition()))
+    )))
+
+    local newList = {"up"}
+    for i=1, #self.guidePath - 1 do
+        if self.guidePath[i][1] == self.guidePath[i+1][1] and self.guidePath[i][2] > self.guidePath[i+1][2] then
+            table.insert(newList,"down")
+        elseif self.guidePath[i][1] == self.guidePath[i+1][1] and self.guidePath[i][2] < self.guidePath[i+1][2] then
+            table.insert(newList,"up")
+        elseif self.guidePath[i][1] > self.guidePath[i+1][1] and self.guidePath[i][2] == self.guidePath[i+1][2] then
+            table.insert(newList,"left")
+        elseif self.guidePath[i][1] < self.guidePath[i+1][1] and self.guidePath[i][2] == self.guidePath[i+1][2] then
+            table.insert(newList,"right")
+        end
+    end
+    for i = 1, #self.guidePath do
+        local node = self.coconut[self.guidePath[i][1]][self.guidePath[i][2]]
+        local action0 = cc.DelayTime:create(0.5 + 0.3 * i)
+        local action2 = cc.DelayTime:create(1.2 + 0.3 * #self.guidePath - 0.3 * i)
+
+        node:runAction(cc.RepeatForever:create(cc.Sequence:create(action0,
+            cc.CallFunc:create(function ()
+                if newList[i] == "down" then
+                node.down()
+                elseif newList[i] == "up" then
+                node.up()
+                elseif newList[i] == "left" then
+                node.left()
+                elseif newList[i] == "right" then
+                node.right()
+                end
+            end)
+            ,action2,
+            cc.CallFunc:create(function ()
+            node.removeSelectStyle()
+            end)
+        )))
+    end
+end
+
+function SummaryBossLayer:stopGuide()
+    self.finger:stopAllActions()
+    self.finger:removeFromParent()
+    self.isGuiding = false
+    for i = 1,self.mat_length do
+        for j = 1,self.mat_length do
+            if i ~= self.current_node_x or j ~= self.current_node_y then
+                self.coconut[i][j]:removeSelectStyle()
+            end
+        end
+    end
+
+end
+
+function SummaryBossLayer:stopTutorial()
+    self.isTutorial = false
+    self.tutorial:removeFromParent()
+    local bossAction = {}
+    for i = 1, 10 do
+        local stop = cc.DelayTime:create(self.totalTime / 10 * 0.8)
+        local stopAnimation = cc.CallFunc:create(function() 
+            self.boss:setAnimation(0,'a2',true)
+        end,{})
+        local move = cc.MoveBy:create(self.totalTime / 10 * 0.2,cc.p(- 0.45 * s_DESIGN_WIDTH / 10, 0))
+        local moveAnimation = cc.CallFunc:create(function() 
+            self.boss:setAnimation(0,'animation',false)
+        end,{})
+        bossAction[#bossAction + 1] = cc.Spawn:create(stop,stopAnimation)
+        bossAction[#bossAction + 1] = cc.Spawn:create(move,moveAnimation)
+    end
+    if not self.isTrying then
+        bossAction[#bossAction + 1] = cc.CallFunc:create(function() 
+
+            if self.currentBlood > 0 then
+                self.isLose = true
+                self:lose(chapter,entrance,wordList)    
+            end
+        end,{})
+    end
+    self.bossNode:runAction(cc.Sequence:create(bossAction))
+
+    local wait = cc.DelayTime:create(0.0 + self.totalTime * 0.9)
+    local afraid = cc.CallFunc:create(function() 
+        if self.currentBlood > 0 then
+            self.girlAfraid = true
+            HINT_TIME = 4
+            self.girl:setAnimation(0,'girl-afraid',true)
+            -- deadline "Mechanical Clock Ring "
+            playSound(s_sound_Mechanical_Clock_Ring)
+            playMusic(s_sound_Get_Outside_Speedup,true)
+        end
+    end,{})
+    local blinkIn = cc.FadeTo:create(0.5,50)
+    local blinkOut = cc.FadeTo:create(0.5,0.0)
+    local blink = cc.Sequence:create(blinkIn,blinkOut)
+    local repeatBlink = cc.Repeat:create(blink,math.ceil(self.totalTime * 0.1))
+    self.blink:runAction(cc.Sequence:create(wait,afraid,repeatBlink))
+end
+
 function SummaryBossLayer:initBossLayer_back(chapter)
     self.globalLock = false
     --stage info
@@ -935,6 +1064,9 @@ function SummaryBossLayer:initBossLayer_girl(chapter)
             return
         end
         local pauseLayer = Pause.create()
+        if self.isTrying then
+            pauseLayer.inTryingLayer = true
+        end
         pauseLayer:setPosition(s_LEFT_X, 0)
         s_SCENE.popupLayer:addBackground()
         s_SCENE.popupLayer:addChild(pauseLayer)
@@ -1048,25 +1180,8 @@ function SummaryBossLayer:initBossLayer_boss(chapter,entrance,wordList)
     local blinkBack = cc.LayerColor:create(cc.c4b(0,0,0,0), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
     blinkBack:setPosition(-s_DESIGN_OFFSET_WIDTH, 0)
     self:addChild(blinkBack,0)
-    local wait = cc.DelayTime:create(0.0 + self.totalTime * 0.9)
-    local afraid = cc.CallFunc:create(function() 
-        if self.currentBlood > 0 then
-            self.girlAfraid = true
-            HINT_TIME = 4
-            self.girl:setAnimation(0,'girl-afraid',true)
-            -- deadline "Mechanical Clock Ring "
-            playSound(s_sound_Mechanical_Clock_Ring)
-            playMusic(s_sound_Get_Outside_Speedup,true)
-        end
-    end,{})
-    local blinkIn = cc.FadeTo:create(0.5,50)
-    local blinkOut = cc.FadeTo:create(0.5,0.0)
-    local blink = cc.Sequence:create(blinkIn,blinkOut)
-    local repeatBlink = cc.Repeat:create(blink,math.ceil(self.totalTime * 0.1))
-    blinkBack:runAction(cc.Sequence:create(wait,afraid,repeatBlink))
     self.blink = blinkBack
 
-    
     --add boss
     local bossNode = cc.Node:create()
     bossNode:setPosition(s_DESIGN_WIDTH * 0.65, s_DESIGN_HEIGHT * 1.15)
@@ -1092,7 +1207,24 @@ function SummaryBossLayer:initBossLayer_boss(chapter,entrance,wordList)
         -- body
         self:initMap(chapter)
     end,{})
-    if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
+    if not self.isTutorial then
+        local wait = cc.DelayTime:create(0.0 + self.totalTime * 0.9)
+        local afraid = cc.CallFunc:create(function() 
+            if self.currentBlood > 0 then
+                self.girlAfraid = true
+                HINT_TIME = 4
+                self.girl:setAnimation(0,'girl-afraid',true)
+                -- deadline "Mechanical Clock Ring "
+                playSound(s_sound_Mechanical_Clock_Ring)
+                playMusic(s_sound_Get_Outside_Speedup,true)
+            end
+        end,{})
+        local blinkIn = cc.FadeTo:create(0.5,50)
+        local blinkOut = cc.FadeTo:create(0.5,0.0)
+        local blink = cc.Sequence:create(blinkIn,blinkOut)
+        local repeatBlink = cc.Repeat:create(blink,math.ceil(self.totalTime * 0.1))
+        blinkBack:runAction(cc.Sequence:create(wait,afraid,repeatBlink))
+
         for i = 1, 10 do
             local stop = cc.DelayTime:create(self.totalTime / 10 * 0.8)
             local stopAnimation = cc.CallFunc:create(function() 
@@ -1133,15 +1265,18 @@ function SummaryBossLayer:initWordList(word)
     --if #wordList < 1 then
        -- wordList = {'apple','many','many','many','many','many','many','many','many','many','many','tea','banana','cat','dog','camel','ant'}
     --end
+    if self.isTrying then
+        wordList = {'apple','pear'}
+    end
     local index = 1
 
     self.mat_length = 5
     self.isTutorial = false
-    if s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and self.entrance then
+    if (s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and self.entrance) or self.isTrying then
         self.mat_length = 4
         self.isTutorial = true
     end
-    
+
     for i = 1, #wordList do
         local randomIndex = math.random(1,#wordList)
         local tmp = wordList[i]
@@ -1184,7 +1319,7 @@ function SummaryBossLayer:initWordList(word)
         local totalLength = 0
         local tmp = {}
         local COUNT = 3
-        if s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and self.entrance then
+        if self.isTutorial then
             COUNT = 1
         end
         for i = 1,COUNT do
@@ -1316,6 +1451,7 @@ function SummaryBossLayer:addTutorial()
     local hintboard = cc.Sprite:create('image/summarybossscene/hintboard2.png')
     hintboard:setPosition(curtain:getContentSize().width * 0.6,s_DESIGN_HEIGHT * 0.8)
     curtain:addChild(hintboard)
+    self:showGuideRoute()
 end
 
 function SummaryBossLayer:initCrab2(chapter)
@@ -1378,6 +1514,10 @@ function SummaryBossLayer:initMapInfo()
     self.isFirst = {}
     self.isCrab = {}
     self.character = {}
+    self.guidePath = {}
+    for i = 1,string.len(self.wordPool[1][1]) do
+        self.guidePath[i] = {0,0}
+    end
     self:initMapInfoByIndex(1)
 end
 
@@ -1417,6 +1557,9 @@ function SummaryBossLayer:initMapInfoByIndex(startIndex)
                         self.isCrab[k][i][j] = 1
                         if diff == 0 then
                             self.isFirst[k][i][j] = 1
+                        end
+                        if self.isTutorial and self.isTrying and k == 1 then
+                            self.guidePath[diff + 1] = {i,j}
                         end
                     else
                         local randomIndex = math.random(1, #charaster_set_filtered)
@@ -1541,6 +1684,9 @@ function SummaryBossLayer:initMap(chapter)
                 self.coconut[i][j].firstStyle()
                 self.coconut[i][j]:setLocalZOrder(1)
                 self.coconut[i][j]:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.DelayTime:create(2),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale))))
+             end
+             if self.isTrying and self.isCrab[self.currentIndex][i][j] == 1 then
+                self.coconut[i][j]:setLocalZOrder(1)
              end
            
             if self.currentIndex == 1 then
@@ -1717,6 +1863,10 @@ function SummaryBossLayer:lose(chapter,entrance,wordList)
 --    -- lose sound
 --    playSound(s_sound_fail)    
     --AnalyticsSummaryBossResult('lose')
+end
+
+function SummaryBossLayer:leaveTutorial()
+
 end
 
 function SummaryBossLayer:hint()
