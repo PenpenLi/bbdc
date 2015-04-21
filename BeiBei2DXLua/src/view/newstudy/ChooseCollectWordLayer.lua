@@ -111,10 +111,13 @@ local function createKnow(word)
             action2,
             cc.CallFunc:create(function ()
                 s_CorePlayManager.leaveStudyModel(true)
-                if todayNumber == 0 and s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat1_2 then
-                    local guideLayer = GuideLayer.create(GUIDE_CLICK_I_KNOW_BUTTON,word)
-                    s_SCENE:popup(guideLayer)             
-                end
+                -- old tutorial
+                -- if todayNumber == 0 and s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat1_2 then
+                --     local guideLayer = GuideLayer.create(GUIDE_CLICK_I_KNOW_BUTTON,word)
+                --     s_SCENE:popup(guideLayer)             
+                -- end
+                -- new tutorial
+                
             end)))  
         end
     end
@@ -296,10 +299,19 @@ function ChooseCollectWordLayer.create(wordName, wrongWordNum, preWordName, preW
 end
 
 function ChooseCollectWordLayer:ctor(wordName, wrongWordNum, preWordName, preWordNameState)
-    if s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat1_1 then
-        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_studyRepeat1_1 + 1)
+    -- old tutorial
+    -- if s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat1_1 then
+    --     s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_studyRepeat1_1 + 1)
+    --     s_SCENE:callFuncWithDelay(0.5, function()
+    --         local guideLayer = GuideLayer.create(GUIDE_ENTER_COLLECT_WORD_LAYER)
+    --             s_SCENE:popup(guideLayer)
+    --         end)
+    -- end
+    -- new tutorial
+    
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_collect_goal then
         s_SCENE:callFuncWithDelay(0.5, function()
-            local guideLayer = GuideLayer.create(GUIDE_ENTER_COLLECT_WORD_LAYER)
+                local guideLayer = GuideLayer.create(GUIDE_ENTER_COLLECT_WORD_LAYER)
                 s_SCENE:popup(guideLayer)
             end)
     end

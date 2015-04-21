@@ -55,8 +55,6 @@ s_smalltutorial_complete_timeout = 102
 
 
 -- define new tutorial state-- edit by ziaoang
-s_newtutorial_current_index         = 0
--- state
 s_newtutorial_story                 = 0
 s_newtutorial_sb_en                 = 1
 s_newtutorial_island_finger         = 2
