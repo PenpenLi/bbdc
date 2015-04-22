@@ -1746,7 +1746,7 @@ function SummaryBossLayer:checkTouchLocation(location)
     local gap       = 120
     local left      = (main_width - (self.mat_length-1)*gap) / 2
     local bottom    = 220 + (5-self.mat_length)* 100
-    local main_height   = bottom * 2 + 4 * gap 
+    local main_height   = bottom * 2 + (self.mat_length-1) * gap 
     local i = 0
     local j = 0
 
@@ -1766,6 +1766,7 @@ function SummaryBossLayer:checkTouchLocation(location)
 
         self.current_node_x = i
         self.current_node_y = j
+        --print('current_node',i,j)
 
         local node = self.coconut[i][j]
         local node_position = cc.p(node:getPosition())
