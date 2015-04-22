@@ -130,7 +130,7 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
     
     local size_big = backColor:getContentSize()
     local isNewPlayer = true
-    if s_CURRENT_USER.slideNum == 1  then
+    if s_CURRENT_USER.slideNum == 0 then
         isNewPlayer = true
     else
         isNewPlayer = false
@@ -216,10 +216,10 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
             end)))
         end
 
-        if s_CURRENT_USER.slideNum == 1 then
-            local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
-            s_SCENE:popup(CongratulationPopup)
-            s_CURRENT_USER.slideNum = 0
+        if s_CURRENT_USER.slideNum <= 1 then
+            -- local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
+            -- s_SCENE:popup(CongratulationPopup)
+            s_CURRENT_USER.slideNum = s_CURRENT_USER.slideNum + 1
             saveUserToServer({['slideNum'] = s_CURRENT_USER.slideNum})
             normal()
         else
@@ -258,9 +258,29 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
     beibei_tip_label:setColor(cc.c4b(36,63,79,255))
     beibei:addChild(beibei_tip_label)
 
-    if s_CURRENT_USER.slideNum == 1 then
+
+    if s_CURRENT_USER.slideNum == 0 then
         backColor:addChild(darkColor)
     end
+
+    if s_CURRENT_USER.slideNum == 1 then
+        local lastTouchTime = 4
+        mat.updateLastTouchTime = function()
+            lastTouchTime = 4
+        end
+        local action1 = cc.DelayTime:create(1.0)
+        local action2 = cc.CallFunc:create(function()
+            lastTouchTime = lastTouchTime - 1
+            print(lastTouchTime)
+            if lastTouchTime <= 0 then
+                mat.toNewPlayModel()
+                backColor:stopAllActions()
+            end
+        end)
+        local action3 = cc.RepeatForever:create(cc.Sequence:create(action1,action2))
+        backColor:runAction(action3)
+    end
+
 
     local onTouchBegan = function(touch, event)
         return true

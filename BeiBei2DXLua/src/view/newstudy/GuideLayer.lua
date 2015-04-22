@@ -95,7 +95,7 @@ function GuideLayer:createFromCollectWord(GUIDE_TYPE)
         back_exist = false
 
         if GUIDE_TYPE == GUIDE_ENTER_COLLECT_WORD_LAYER and s_CURRENT_USER.newTutorialStep == s_newtutorial_collect_goal then
-            s_CURRENT_USER.newTutorialStep = s_newtutorial_slide_strong
+            s_CURRENT_USER.newTutorialStep = s_newtutorial_slide
         end
     end
 

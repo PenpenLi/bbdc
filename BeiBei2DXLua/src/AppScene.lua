@@ -56,21 +56,18 @@ s_smalltutorial_complete_timeout = 102
 
 -- define new tutorial state-- edit by ziaoang
 s_newtutorial_story                 = 0
-s_newtutorial_sb_en                 = 1
-s_newtutorial_island_finger         = 2
-s_newtutorial_island_alter_finger   = 3
-s_newtutorial_collect_goal          = 4
-s_newtutorial_slide_strong          = 5
-s_newtutorial_slide_middle          = 6
-s_newtutorial_slide_little          = 7
-s_newtutorial_train_goal            = 8
-s_newtutorial_wordpool              = 9
-s_newtutorial_sb_cn                 = 10
-s_newtutorial_rb_show               = 11
-s_newtutorial_island_back           = 12
-s_newtutorial_loginreward           = 13
-s_newtutorial_shop                  = 14
-s_newtutorial_over                  = 15
+s_newtutorial_island_finger         = 1
+s_newtutorial_island_alter_finger   = 2
+s_newtutorial_collect_goal          = 3
+s_newtutorial_slide                 = 4
+s_newtutorial_train_goal            = 5
+s_newtutorial_wordpool              = 6
+s_newtutorial_sb_cn                 = 7
+s_newtutorial_rb_show               = 8
+s_newtutorial_island_back           = 9
+s_newtutorial_loginreward           = 10
+s_newtutorial_shop                  = 11
+s_newtutorial_over                  = 12
 
 
 
