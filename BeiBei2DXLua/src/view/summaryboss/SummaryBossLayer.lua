@@ -36,6 +36,7 @@ function SummaryBossLayer.create(wordList,type,entrance)
         layer.isGuiding = true
         chapter = 1
     end
+    layer.chapter = chapter
     layer.coconut = {}
     layer.isFirst = {}
     layer.firstNodeArray = {}
@@ -923,7 +924,7 @@ function SummaryBossLayer:stopTutorial()
 
             if self.currentBlood > 0 then
                 self.isLose = true
-                self:lose(chapter,entrance,wordList)    
+                self:lose(self.chapter,self.entrance,self.wordList)  
             end
         end,{})
     end
@@ -1274,6 +1275,7 @@ function SummaryBossLayer:initWordList(word)
 
     self.mat_length = 5
     self.isTutorial = false
+
     if (s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and self.entrance) or self.isTrying then
         self.mat_length = 4
         self.isTutorial = true
@@ -1863,6 +1865,7 @@ function SummaryBossLayer:lose(chapter,entrance,wordList)
 
     s_SCENE:callFuncWithDelay(2,function (  )
             -- body
+        print('chapter',chapter)
         local alter = SummaryBossAlter.create(self,false,chapter,entrance)
         alter:setPosition(0,0)
         self:addChild(alter,1000)

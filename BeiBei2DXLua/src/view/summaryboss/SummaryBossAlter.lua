@@ -233,10 +233,10 @@ function SummaryBossAlter:lose2(entrance)
 
     AnalyticsSummaryBossResult('lose')
 
-    if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
-        s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
-        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_lose)
-    end
+    -- if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
+    --     s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
+    --     s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_lose)
+    -- end
     
     playMusic(s_sound_fail,true)
 
@@ -321,7 +321,7 @@ end
 
 function SummaryBossAlter:win1(entrance)
 
-    if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
+    if s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and entrance then
         s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
         s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_win)
     end
