@@ -450,9 +450,11 @@ function SummaryBossLayer.create(wordList,type,entrance)
         
         layer:checkTouchLocation(location)
 
-        startNode = layer.coconut[layer.current_node_x][layer.current_node_y]
-        if startNode.isFirst > 0 and layer.crabOnView[startNode.isFirst] and layer.isTutorial and not layer.isTrying then
-            layer:stopTutorial()
+        if layer.onNode then
+            startNode = layer.coconut[layer.current_node_x][layer.current_node_y]
+            if startNode.isFirst > 0 and layer.crabOnView[startNode.isFirst] and layer.isTutorial and not layer.isTrying then
+                layer:stopTutorial()
+            end
         end
 
         if layer.isTutorial and not layer.isTrying then
@@ -1451,7 +1453,11 @@ function SummaryBossLayer:addTutorial()
     local hintboard = cc.Sprite:create('image/summarybossscene/hintboard2.png')
     hintboard:setPosition(curtain:getContentSize().width * 0.6,s_DESIGN_HEIGHT * 0.8)
     curtain:addChild(hintboard)
-    self:showGuideRoute()
+    if self.isTrying then
+        self:showGuideRoute()
+    end
+    self.gameStart = true
+    self.globalLock = false
 end
 
 function SummaryBossLayer:initCrab2(chapter)
@@ -1715,8 +1721,10 @@ function SummaryBossLayer:initMap(chapter)
             end
             if i == self.mat_length and j == 1 then
                 local unlock = cc.CallFunc:create(function() 
-                    self.gameStart = true
-                    self.globalLock = false
+                    if not self.isTutorial then
+                        self.gameStart = true
+                        self.globalLock = false
+                    end
                 end,{})
                 self.coconut[i][j]:runAction(cc.Sequence:create(cc.DelayTime:create(0.1 * (self.mat_length - 1 + i - j) + delaytime),cc.ScaleTo:create(0.1, scale),unlock))
             else
