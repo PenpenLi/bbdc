@@ -269,14 +269,67 @@ function HomeLayer.create()
 
     local button_shop = ccui.Button:create("image/homescene/home_page_shop_button.png","image/homescene/home_page_shop_button_press.png","")
     button_shop:setPosition(bigWidth / 2 + 1, 200)
-
     button_shop:setScale9Enabled(true)
     button_shop:setAnchorPoint(0,0.5)
-    --button_shop:setPosition(bigWidth / 2 + 1, 200)
-
     button_shop:addTouchEventListener(button_shop_clicked)
     backColor:addChild(button_shop,1) 
     layer.button_shop = button_shop
+
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_shop then
+        local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+        darkColor:setAnchorPoint(0.5,0.5)
+        darkColor:ignoreAnchorPointForPosition(false)
+        darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
+        backColor:addChild(darkColor, 3)
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
+        darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
+
+        local back = cc.Sprite:create("image/newstudy/background_word_xinshouyindao_yellow.png")
+        back:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT*0.35)
+        back:ignoreAnchorPointForPosition(false)
+        back:setAnchorPoint(0.5,0.5)
+        darkColor:addChild(back)
+
+        local title = cc.Label:createWithSystemFont('商店可以使用贝贝豆哦！','',40)
+        title:setPosition(back:getContentSize().width/2,back:getContentSize().height/2)
+        title:setColor(cc.c3b(35,181,229))
+        back:addChild(title)
+
+        local button_shop_clicked = function(sender, eventType)
+            if eventType == ccui.TouchEventType.ended then
+                s_CURRENT_USER.newTutorialStep = s_newtutorial_over
+                saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
+                darkColor:removeFromParent()
+                changeViewToFriendOrShop("ShopLayer")
+            end
+        end
+
+        local button_shop = ccui.Button:create("image/homescene/home_page_shop_button.png","image/homescene/home_page_shop_button_press.png","")
+        button_shop:setPosition(bigWidth / 2 + 1, 200)
+        button_shop:setScale9Enabled(true)
+        button_shop:setAnchorPoint(0,0.5)
+        button_shop:addTouchEventListener(button_shop_clicked)
+        darkColor:addChild(button_shop) 
+
+    elseif s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+        local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+        darkColor:setAnchorPoint(0.5,0.5)
+        darkColor:ignoreAnchorPointForPosition(false)
+        darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
+        backColor:addChild(darkColor, 3)
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
+        listener:registerScriptHandler(function(touch, event) 
+            darkColor:removeFromParent()
+        end,cc.Handler.EVENT_TOUCH_ENDED )
+        darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
+
+    end
 
     --    layer:addFriendButton(backColor)  
 
@@ -292,8 +345,6 @@ function HomeLayer.create()
 
         end
     end
-
-
 
     local button_reward = ccui.Button:create("image/homescene/home_page_medal_button.png","image/homescene/home_page_medal_button_press.png","")
     button_reward:setPosition(bigWidth / 2 + 166, 200)
