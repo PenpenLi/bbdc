@@ -315,8 +315,6 @@ function HomeLayer.create(share)
 
         local button_shop_clicked = function(sender, eventType)
             if eventType == ccui.TouchEventType.ended then
-                s_CURRENT_USER.newTutorialStep = s_newtutorial_over
-                saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
                 darkColor:removeFromParent()
                 changeViewToFriendOrShop("ShopLayer")
             end
