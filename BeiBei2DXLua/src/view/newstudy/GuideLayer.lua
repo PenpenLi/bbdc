@@ -93,10 +93,6 @@ function GuideLayer:createFromCollectWord(GUIDE_TYPE)
         end)
         back:runAction(cc.Sequence:create(action1,action3,action4))
         back_exist = false
-
-        if GUIDE_TYPE == GUIDE_ENTER_COLLECT_WORD_LAYER and s_CURRENT_USER.newTutorialStep == s_newtutorial_collect_goal then
-            s_CURRENT_USER.newTutorialStep = s_newtutorial_slide
-        end
     end
 
     s_SCENE:callFuncWithDelay(6, function ()

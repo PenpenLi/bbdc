@@ -164,12 +164,21 @@ end
 function BlacksmithLayer:ctor(wordlist)
     AnalyticsForgeIron_EnterLayer()
 
-    if s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat2_3 then
-        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_studyRepeat2_3 + 1)
+    -- if s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat2_3 then
+    --     s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_studyRepeat2_3 + 1)
+    --     s_SCENE:callFuncWithDelay(0.5, function()
+    --         local guideLayer = GuideLayer.create(GUIDE_ENTER_FORGE_IRON_LAYER)
+    --             s_SCENE:popup(guideLayer)
+    --         end)
+    -- end
+
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_train_goal then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_wordpool
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
         s_SCENE:callFuncWithDelay(0.5, function()
-            local guideLayer = GuideLayer.create(GUIDE_ENTER_FORGE_IRON_LAYER)
-                s_SCENE:popup(guideLayer)
-            end)
+        local guideLayer = GuideLayer.create(GUIDE_ENTER_FORGE_IRON_LAYER)
+            s_SCENE:popup(guideLayer) 
+        end)
     end
 
     local bigWidth = s_DESIGN_WIDTH + 2*s_DESIGN_OFFSET_WIDTH

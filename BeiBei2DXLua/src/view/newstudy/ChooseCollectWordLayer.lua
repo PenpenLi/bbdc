@@ -310,10 +310,12 @@ function ChooseCollectWordLayer:ctor(wordName, wrongWordNum, preWordName, preWor
     -- new tutorial
     
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_collect_goal then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_train_goal
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
         s_SCENE:callFuncWithDelay(0.5, function()
-                local guideLayer = GuideLayer.create(GUIDE_ENTER_COLLECT_WORD_LAYER)
-                s_SCENE:popup(guideLayer)
-            end)
+            local guideLayer = GuideLayer.create(GUIDE_ENTER_COLLECT_WORD_LAYER)
+            s_SCENE:popup(guideLayer)
+        end)
     end
 
     AnalyticsFirstDayEnterSecondIsland()
