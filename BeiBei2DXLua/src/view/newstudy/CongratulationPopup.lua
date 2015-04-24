@@ -17,6 +17,11 @@ function CongratulationPopup.create()
     back:runAction(action2)
 
     local function closeAnimation()
+        if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+            s_CURRENT_USER.newTutorialStep = s_CURRENT_USER.newTutorialStep + 1
+            saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
+        end
+
         local action1 = cc.MoveTo:create(0.5,cc.p(s_LEFT_X + bigWidth/2, s_DESIGN_HEIGHT/2*3))
         local action2 = cc.EaseBackIn:create(action1)
         local action3 = cc.CallFunc:create(function()

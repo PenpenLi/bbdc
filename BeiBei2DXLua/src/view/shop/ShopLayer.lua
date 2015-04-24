@@ -50,7 +50,13 @@ function ShopLayer.create()
 
     local button_back_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
-           layer.backToHome()
+            if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+                local HomeLayer = require("view.home.HomeLayer")
+                local HomeLayer = HomeLayer.create()  
+                s_SCENE:replaceGameLayer(HomeLayer)
+            else
+                layer.backToHome()
+            end
         end
     end
 

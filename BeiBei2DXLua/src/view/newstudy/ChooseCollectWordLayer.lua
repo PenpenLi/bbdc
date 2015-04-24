@@ -307,7 +307,6 @@ function ChooseCollectWordLayer:ctor(wordName, wrongWordNum, preWordName, preWor
     --             s_SCENE:popup(guideLayer)
     --         end)
     -- end
-    -- new tutorial
     
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_collect_goal then
         s_CURRENT_USER.newTutorialStep = s_newtutorial_train_goal

@@ -330,20 +330,8 @@ function HomeLayer.create(share)
         darkColor:addChild(button_shop) 
 
     elseif s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
-        local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
-        darkColor:setAnchorPoint(0.5,0.5)
-        darkColor:ignoreAnchorPointForPosition(false)
-        darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
-        backColor:addChild(darkColor, 3)
-
-        local listener = cc.EventListenerTouchOneByOne:create()
-        listener:setSwallowTouches(true)
-        listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
-        listener:registerScriptHandler(function(touch, event) 
-            darkColor:removeFromParent()
-        end,cc.Handler.EVENT_TOUCH_ENDED )
-        darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
-
+        local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
+        s_SCENE:popup(CongratulationPopup)
     end
 
     -- 签到领奖
