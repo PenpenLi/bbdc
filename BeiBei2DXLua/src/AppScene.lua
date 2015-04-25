@@ -144,6 +144,8 @@ local function update(dt)
         -- end
     -- end 
 
+    s_CURRENT_USER.dataShareTime = s_CURRENT_USER.dataShareTime + dt
+
     if IS_DEVELOPMENT_MODE and s_WordDictionaryDatabase and not s_WordDictionaryDatabase.allwords and s_SCENE.currentGameLayerName == 'HomeLayer' then
         print(s_WordDictionaryDatabase.nextframe, 's_WordDictionaryDatabase.nextframe')
         if s_WordDictionaryDatabase.nextframe == WDD_NEXTFRAME_STATE__RM_LOAD then
@@ -159,7 +161,7 @@ local function update(dt)
         if s_CURRENT_USER.dataDailyUsing:isToday() then
             s_CURRENT_USER.dataDailyUsing:update(dt)
             usingTimeSaveToLocalDB = usingTimeSaveToLocalDB + dt
-            if usingTimeSaveToLocalDB > 300 then -- 5 min
+            if usingTimeSaveToLocalDB > 10 then -- 10 s
                 usingTimeSaveToLocalDB = 0
                 s_LocalDatabaseManager.saveDataClassObject(s_CURRENT_USER.dataDailyUsing, s_CURRENT_USER.objectId, s_CURRENT_USER.username)
                 cx.CXAnalytics:logUsingTime(tostring(s_CURRENT_USER.objectId), tostring(s_CURRENT_USER.bookKey), s_CURRENT_USER.dataDailyUsing.startTime, s_CURRENT_USER.dataDailyUsing.usingTime)

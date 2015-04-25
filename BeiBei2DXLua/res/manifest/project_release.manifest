@@ -1,10 +1,10 @@
 
         
     { 
-        "packageUrl" : "http://123.56.84.196/AssetsManagerRelease/2.0.5",
-        "remoteManifestUrl" : "http://123.56.84.196/AssetsManagerRelease/2.0.5/project_server_release.manifest", 
-        "remoteVersionUrl" : "http://123.56.84.196/AssetsManagerRelease/2.0.5/version_release.manifest", 
-        "version" : "2.0.5.0.0.0", 
+        "packageUrl" : "http://123.56.84.196/AssetsManagerRelease/2.0.6",
+        "remoteManifestUrl" : "http://123.56.84.196/AssetsManagerRelease/2.0.6/project_server_release.manifest", 
+        "remoteVersionUrl" : "http://123.56.84.196/AssetsManagerRelease/2.0.6/version_release.manifest", 
+        "version" : "2.0.6.0.0.0", 
         "engineVersion" : "3.3 rc2"
     , 
         "assets" : {    

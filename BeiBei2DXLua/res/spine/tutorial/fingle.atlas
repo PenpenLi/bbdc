@@ -1,0 +1,20 @@
+
+fingle.png
+size: 256,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+hou
+  rotate: false
+  xy: 2, 92
+  size: 120, 152
+  orig: 120, 152
+  offset: 0, 0
+  index: -1
+qian
+  rotate: false
+  xy: 124, 92
+  size: 120, 152
+  orig: 120, 152
+  offset: 0, 0
+  index: -1

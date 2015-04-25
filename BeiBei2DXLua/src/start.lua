@@ -42,7 +42,9 @@ end
 function start.init()
     initResolution()
     initBuildTarget()
+
     --加载语言配置文件 UI上的各种文字
+
     reloadModule('common.text')
 
     NETWORK_STATUS_WIFI = 1
@@ -89,6 +91,7 @@ function start.start(hotUpdate)
     s_APP_VERSION = app_version_release -- reset
 
     initApp()   --in global.lua，初始化各种单例 层 数据什么的
+
     if IS_SNS_QQ_LOGIN_AVAILABLE or IS_SNS_QQ_SHARE_AVAILABLE then 
         cx.CXAvos:getInstance():initTencentQQ(SNS_QQ_APPID, SNS_QQ_APPKEY) 
     end

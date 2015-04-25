@@ -296,3 +296,9 @@ function onAndroidKeyPressed(node, back_func, menu_func)
     local eventDispatcher = node:getEventDispatcher()
     eventDispatcher:addEventListenerWithSceneGraphPriority(listener, node)
 end
+
+function handler(obj, method)
+    return function(...)
+        return method(obj, ...)
+    end
+end

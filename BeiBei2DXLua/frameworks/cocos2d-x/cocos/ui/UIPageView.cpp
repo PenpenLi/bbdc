@@ -422,7 +422,6 @@ void PageView::movePages(float offset)
         }
         
     }
-    CCLOG("%f",offset);
 }
 
 bool PageView::scrollPages(float touchOffset)

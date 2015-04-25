@@ -25,13 +25,13 @@ function DataShare:ctor()
 		LEARN_INDEX = 100
 	end
 	-- -- add curtain
-	local curtain = cc.LayerColor:create(cc.c4b(0,0,0,255),s_RIGHT_X - s_LEFT_X,s_DESIGN_HEIGHT)
-	curtain:ignoreAnchorPointForPosition(false)
-	curtain:setAnchorPoint(0.5,0.5)
-	curtain:setPosition((s_RIGHT_X - s_LEFT_X) / 2,s_DESIGN_HEIGHT / 2)
-	self:addChild(curtain)
-	self.curtain = curtain
-	self.curtain:setOpacity(0)
+	-- local curtain = cc.LayerColor:create(cc.c4b(0,0,0,255),s_RIGHT_X - s_LEFT_X,s_DESIGN_HEIGHT)
+	-- curtain:ignoreAnchorPointForPosition(false)
+	-- curtain:setAnchorPoint(0.5,0.5)
+	-- curtain:setPosition((s_RIGHT_X - s_LEFT_X) / 2,s_DESIGN_HEIGHT / 2)
+	-- self:addChild(curtain)
+	-- self.curtain = curtain
+	-- self.curtain:setOpacity(0)
 	-- data share UI
 	local background = cc.LayerColor:create(cc.c4b(200,240,255,255),s_RIGHT_X - s_LEFT_X,s_DESIGN_HEIGHT * 1.2)
 	background:ignoreAnchorPointForPosition(false)
@@ -40,11 +40,14 @@ function DataShare:ctor()
 	self:addChild(background)
 	self.background = background
 	--background:runAction(cc.EaseBackOut:create(cc.MoveBy:create(0.5,cc.p(0,- s_DESIGN_HEIGHT * 5 / 6))))
-	self.background = background
 	-- add label
 	self:addLabel(background,150)
 	--add medal
 	self:addMedal(background,150,true)
+
+	self.moveUp = function ()
+
+	end
 
 	--add animation
 
@@ -73,7 +76,6 @@ function DataShare:ctor()
    	girl:addChild(girlBtn)
 
    	self.girlBtn = girlBtn
-   	
 
 	self.bangle = bangle
 	self.girl = girl
@@ -82,7 +84,6 @@ function DataShare:ctor()
 	local function onBangle(sender,eventType)
 		if eventType == ccui.TouchEventType.ended then
 			self:moveDown()
-			
 		end
 	end  
 	girlBtn:addTouchEventListener(onBangle)
@@ -98,7 +99,7 @@ function DataShare:ctor()
 			self:setEnabled(false)
 			girl:setPosition(-128,-350)
 			--self.curtain:setOpacity(100)
-			self.curtain:runAction(cc.FadeOut:create(1))
+			--self.curtain:runAction(cc.FadeOut:create(1))
 			background:runAction(cc.Sequence:create(cc.EaseBackIn:create(cc.MoveBy:create(1.0,cc.p(0,s_DESIGN_HEIGHT * 1.1))),cc.CallFunc:create(function (  )
 				self:setLocalZOrder(0)
 				background:runAction(cc.MoveBy:create(0.3,cc.p(0,-s_DESIGN_HEIGHT * 0.1)))
@@ -108,6 +109,8 @@ function DataShare:ctor()
 					bangle:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.MoveBy:create(0.4,cc.p(0,-20)),cc.MoveBy:create(0.4,cc.p(0,20)),cc.DelayTime:create(2.2))))
 					self.listener:setSwallowTouches(false)
 					girl:setAnimation(0, 'animation', true)
+					self.girlBtn:setVisible(true)
+					self.moveUp()
 				end,{})))
 			end,{})))
 		end
@@ -140,17 +143,19 @@ end
 function DataShare:moveDown()
  -- print('s_CURRENT_USER.dataDailyUsing.startTime',s_CURRENT_USER.dataDailyUsing.startTime)
 	--  print('s_CURRENT_USER.dataDailyUsing.usingTime',s_CURRENT_USER.dataDailyUsing.usingTime)
-	self:setEnabled(false)
+
+	s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
+	self.girlBtn:setVisible(false)
 	self.bangle:stopAllActions()
-	self.bangle:setPosition(0,20)
+	self.bangle:setPosition(0,0)
 	self.listener:setSwallowTouches(true)
 	self.girl:setAnimation(0,'stable_girl',false)
 	self.girl:runAction(cc.Sequence:create(cc.JumpBy:create(0.3, cc.p(0,100), -70, 1),cc.CallFunc:create(function (  )
-		self.curtain:runAction(cc.EaseSineOut:create(cc.FadeTo:create(2,230)))
+		--self.curtain:runAction(cc.EaseSineOut:create(cc.FadeTo:create(2,230)))
 		self.node:runAction(cc.Sequence:create(cc.RotateBy:create(0.5,30),cc.RotateBy:create(1,-60),cc.RotateBy:create(0.5,30)))
 		self:setLocalZOrder(1)
-		self.background:runAction(cc.Sequence:create(cc.EaseSineOut:create(cc.MoveBy:create(2,cc.p(0,- s_DESIGN_HEIGHT))),cc.CallFunc:create(function (  )
-			self:setEnabled(true)
+		self.background:runAction(cc.Sequence:create(cc.EaseSineOut:create(cc.MoveBy:create(1,cc.p(0,- s_DESIGN_HEIGHT))),cc.CallFunc:create(function (  )
+			s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
 		end)))
 	end,{})))	
 end
@@ -285,6 +290,7 @@ function DataShare:addMedal(background,offset,forShare)
 
 					local ShareBottom = require('view.share.ShareBottom')
 					local shareBottomLayer = ShareBottom.create(target)
+					shareBottomLayer:setPosition(-s_LEFT_X,0)
 					self:addChild(shareBottomLayer)
 
 				end

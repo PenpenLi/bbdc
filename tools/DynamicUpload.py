@@ -9,10 +9,11 @@ import shutil
 import hashlib
 
 # tmp_assetPath = os.getcwd() + '/../tmp_asset/debug/'
-# AssetsManager = 'AssetsManagerDebug'
+# AssetsManager = 'AssetsManagerDebugTest'
 
 tmp_assetPath = os.getcwd() + '/../tmp_asset/release/'
-AssetsManager = 'AssetsManagerRelease/2.0.5'
+# AssetsManager = 'AssetsManagerRelease/2.0.7'
+AssetsManager = 'AssetsManagerDebug'
 
 for parent, dirnames, filenames in os.walk(tmp_assetPath):
     for filename in filenames:

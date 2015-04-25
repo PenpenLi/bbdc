@@ -82,9 +82,9 @@ def exportAssets(isDebug, assetsPath, tmp_assetPath, AssetsManagerReleaseFolder,
     ''' % (version, engineVersion)
     versionRelease = '''
     { 
-        "packageUrl" : "http://123.56.84.196/AssetsManagerRelease/%s",
-        "remoteManifestUrl" : "http://123.56.84.196/AssetsManagerRelease/%s/project_server_release.manifest", 
-        "remoteVersionUrl" : "http://123.56.84.196/AssetsManagerRelease/%s/version_release.manifest", 
+        "packageUrl" : "http://123.56.84.196/AssetsManagerDebug/%s",
+        "remoteManifestUrl" : "http://123.56.84.196/AssetsManagerDebug/%s/project_server_debug.manifest", 
+        "remoteVersionUrl" : "http://123.56.84.196/AssetsManagerDebug/%s/version_debug.manifest", 
         "version" : "%s", 
         "engineVersion" : "%s"
     ''' % (AssetsManagerReleaseFolder, AssetsManagerReleaseFolder, AssetsManagerReleaseFolder, version, engineVersion)
@@ -147,8 +147,8 @@ def exportAssets(isDebug, assetsPath, tmp_assetPath, AssetsManagerReleaseFolder,
 # --------------------------------------------------------------------------------
 
 assetsPath = os.getcwd() + '/../BeiBei2DXLua/frameworks/runtime-src/proj.android/assets/'
-AssetsManagerReleaseFolder = '2.0.6'
-version = '2.0.6.0.0.0'
+AssetsManagerReleaseFolder = '2.0.8'
+version = '2.0.8.0.0.0'
 engineVersion = '3.3 rc2'
 
 tmp_assetPath = os.getcwd() + '/../tmp_asset/debug/'

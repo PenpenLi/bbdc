@@ -21,7 +21,7 @@ function MissionProgressLayer.getNotContainedInLocalDatas(callback)
     end)
 end
 
-function MissionProgressLayer.create(share,dataShare)
+function MissionProgressLayer.create(share,homelayer)
     local missionCount = s_LocalDatabaseManager:getTodayTotalTaskNum()
     local completeCount = missionCount - s_LocalDatabaseManager:getTodayRemainTaskNum()
     if share ~= nil and share then
@@ -127,14 +127,7 @@ function MissionProgressLayer.create(share,dataShare)
                         if share ~= nil and share then
                             local a1 = cc.DelayTime:create(0.1)
                             local a2 = cc.CallFunc:create(function ()
-                                local Share = require('view.share.ShareCheckIn')
-                                local shareLayer = Share.create(dataShare)
-                                shareLayer:setPosition(0,-s_DESIGN_HEIGHT)
-                                local move = cc.MoveTo:create(0.3,cc.p(0,0))
-                                shareLayer:runAction(cc.Sequence:create(cc.DelayTime:create(0.5),move,cc.CallFunc:create(function ()
-                                    s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
-                                end,{})))
-                                s_GAME_LAYER:addChild(shareLayer,2)
+                                homelayer:showShareCheckIn()
                             end,{})
                             swell = cc.Spawn:create(cc.Sequence:create(a1,a2),cc.CallFunc:create(anotherSwelling))
                         end

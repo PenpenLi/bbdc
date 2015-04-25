@@ -180,9 +180,9 @@ function BookLayer.create()
     local listView = ccui.ListView:create()
     -- set list view ex direction
     listView:setDirection(ccui.ScrollViewDir.vertical)
-    listView:setBounceEnabled(true)
-    listView:setContentSize(cc.size(s_RIGHT_X - s_LEFT_X,0.85 * s_DESIGN_HEIGHT))
-    listView:setPosition(s_LEFT_X,0)
+    listView:setBounceEnabled(false)
+    listView:setContentSize(cc.size(s_RIGHT_X - s_LEFT_X,0.7 * s_DESIGN_HEIGHT))
+    listView:setPosition(s_LEFT_X,0.15 * s_DESIGN_HEIGHT)
     layer:addChild(listView)
     local count = math.ceil(bookCount / 2) + 1
     for i = 1, count do 

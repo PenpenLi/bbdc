@@ -40,7 +40,6 @@ function longButtonInStudy.create(size,color,text)
     local function onTouchBegan(touch, event)
         local location = button_back:convertToNodeSpace(touch:getLocation())
         if cc.rectContainsPoint(button_back.button_front:getBoundingBox(),location) then
-            playSound(s_sound_buttonEffect)  
             button_back.button_front:setPosition(button_back:getContentSize().width / 2,button_back:getContentSize().height / 2)
         end
         return true

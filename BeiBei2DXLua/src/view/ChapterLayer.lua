@@ -139,6 +139,18 @@ function ChapterLayer:ctor()
     self:checkUnlockLevel()
     self:addBackToHome()
     self:addBeansUI()
+
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_island_finger then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_island_alter_finger
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
+        local level0Position = self.chapterDic['chapter0']:getLevelPosition('level0')
+        -- print finger animation
+        local finger = sp.SkeletonAnimation:create('spine/tutorial/fingle.json', 'spine/tutorial/fingle.atlas',1)
+        finger:addAnimation(0, 'animation', true)
+    --    local boatPosition = cc.p(level0Position.x-100, level0Position.y+150)
+        finger:setPosition(level0Position.x, level0Position.y-70)
+        self.chapterDic['chapter0']:addChild(finger,130)
+    end  
    
 end
 
@@ -736,20 +748,9 @@ end
 function ChapterLayer:addBackToHome()
     local click_home = function(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
-            -- local curtain = cc.LayerColor:create(cc.c4b(0,0,0,150),s_RIGHT_X - s_LEFT_X,s_DESIGN_HEIGHT)
-            -- curtain:ignoreAnchorPointForPosition(false)
-            -- curtain:setAnchorPoint(0.5,0.5)
-            -- curtain:setPosition(s_DESIGN_WIDTH / 2,s_DESIGN_HEIGHT / 2)
-            -- curtain:setOpacity(0)
-            -- s_HUD_LAYER:addChild(curtain,199)
-            -- curtain:runAction(cc.Sequence:create(cc.FadeTo:create(0.5,150),cc.DelayTime:create(0.1),cc.FadeOut:create(0.5),cc.CallFunc:create(function (  )
-            --     curtain:removeFromParent()
-            -- end,{})))
-            -- sender:runAction(cc.Sequence:create(cc.Spawn:create(cc.MoveTo:create(0.5,cc.p(s_DESIGN_WIDTH / 2,s_DESIGN_HEIGHT / 2)),cc.ScaleTo:create(0.5,1)),cc.DelayTime:create(0.1),cc.CallFunc:create(function (  )
-                local IntroLayer = require("view.home.HomeLayer")
-                local introLayer = IntroLayer.create()  
-                s_SCENE:replaceGameLayer(introLayer)
-            --end,{})))
+            local IntroLayer = require("view.home.HomeLayer")
+            local introLayer = IntroLayer.create(true)  
+            s_SCENE:replaceGameLayer(introLayer)
         end
     end
 

@@ -372,7 +372,7 @@ function AnalyticsFirstDayEnterSecondIsland()
     if bossList == nil then
         return
     end
-    if #bossList == 2 and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) and  #s_LocalDatabaseManager.getBossInfo(1).rightWordList == 0 and #s_LocalDatabaseManager.getBossInfo(1).wrongWordList == 0 then
+    if #bossList == 2 and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) and  #s_LocalDatabaseManager.getBossInfo(2).rightWordList == 0 and #s_LocalDatabaseManager.getBossInfo(2).wrongWordList == 0 then
         print('Analytics', getAnalyticsPrefix() .. 'FirstDayEnterSecondIsland', 'TOUCH'); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'FirstDayEnterSecondIsland', 'TOUCH')
     end
     if #bossList == 2 then
@@ -439,8 +439,10 @@ function AnalyticsPassSecondSummaryBoss()
     local bossList = s_LocalDatabaseManager.getAllBossInfo()
         if #bossList >= 2 and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) then
             print('Analytics', getAnalyticsPrefix() .. 'PassSecondSummaryBoss_1st_day', 'SHOW'); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'PassSecondSummaryBoss_1st_day', 'SHOW')
+        elseif #bossList >= 2 then
+            print('Analytics', getAnalyticsPrefix() .. 'PassSecondSummaryBoss', 'SHOW'); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'PassSecondSummaryBoss', 'SHOW')
         end
-    print('Analytics', getAnalyticsPrefix() .. 'PassSecondSummaryBoss', 'SHOW'); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'PassSecondSummaryBoss', 'SHOW')
+    
 end
 
 function AnalyticsSummaryBossAddTime()

@@ -5,9 +5,9 @@ local ShareCheckIn = class('ShareCheckIn',function ()
 	return cc.Layer:create()
 end)
 
-function ShareCheckIn.create(dataShare)
+function ShareCheckIn.create(homelayer)
 	local layer = ShareCheckIn.new()
-	layer.dataShare = dataShare
+	layer.homelayer = homelayer
 	return layer
 end
 
@@ -67,7 +67,7 @@ function ShareCheckIn:ctor()
 
 	local function closeAnimation()
 	    local remove = cc.CallFunc:create(function ()
-	    	self.dataShare:moveDown()
+	    	self.homelayer:showDataShare()
 			self:removeFromParent()
 		end,{})
 		local move = cc.MoveBy:create(0.3,cc.p(0,-s_DESIGN_HEIGHT))

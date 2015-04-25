@@ -310,6 +310,7 @@ function ChapterLayerBase:addPopup(levelIndex)
     local levelPosition = self:getLevelPosition('level'..levelIndex)
     local function taskEvent(sender,eventType)
         if eventType == ccui.TouchEventType.ended then
+            s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
             -- TODO add response
             local info = split(sender:getName(), '|')
             local bossID = info[1] + 1
@@ -317,9 +318,7 @@ function ChapterLayerBase:addPopup(levelIndex)
             local active = info[3] + 0
             local currentTaskID = info[4] + 1
             local currentProgress = s_CURRENT_USER.levelInfo:computeCurrentProgress() + 0
-            s_SCENE:callFuncWithDelay(0.1, function()
-                s_SCENE:removeAllPopups()
-            end)
+            s_SCENE:removeAllPopups()
             
             if state >= 4 and bossID ~= currentTaskID then
 --                if true then
@@ -338,7 +337,10 @@ function ChapterLayerBase:addPopup(levelIndex)
                     local action1_2 = cc.Spawn:create(action1,action1_1)
                     tutorial_text:runAction(action1_2)
                     local action2 = cc.FadeOut:create(1.5)
-                    text:runAction(action2)
+                    local action3 = cc.CallFunc:create(function ()
+                        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch() 
+                    end)
+                    text:runAction(cc.Sequence:create(action2,action3))
  
             elseif currentTaskID ~= 0 and currentTaskID ~= (currentProgress + 1) and bossID == currentProgress + 1 then
             	local tutorial_text = cc.Sprite:create('image/tutorial/tutorial_text.png')
@@ -355,7 +357,10 @@ function ChapterLayerBase:addPopup(levelIndex)
                     local action1_2 = cc.Spawn:create(action1,action1_1)
                     tutorial_text:runAction(action1_2)
                     local action2 = cc.FadeOut:create(1.5)
-                    text:runAction(action2)
+                    local action3 = cc.CallFunc:create(function ()
+                        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch() 
+                    end)
+                    text:runAction(cc.Sequence:create(action2,action3))
             else
                 s_SCENE:callFuncWithDelay(0.1, function()
                     s_CorePlayManager.initTotalPlay()

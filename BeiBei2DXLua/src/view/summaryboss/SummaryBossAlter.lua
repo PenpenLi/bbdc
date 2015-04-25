@@ -64,10 +64,10 @@ function SummaryBossAlter.create(bossLayer,win,index,entrance)
 end
 
 function SummaryBossAlter:lose(entrance)
-    if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
-        s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
-        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_timeout)
-    end
+    -- if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
+    --     s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
+    --     s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_timeout)
+    -- end
 
     --add board
     self.loseBoard = cc.Sprite:create("image/summarybossscene/background_zjboss_tanchu.png")
@@ -101,6 +101,7 @@ function SummaryBossAlter:lose(entrance)
     self.loseBoard:addChild(giveup)
 
     local function button_giveup_func()
+        playSound(s_sound_buttonEffect)
         self:lose2(entrance)
     end
 
@@ -126,6 +127,7 @@ function SummaryBossAlter:lose(entrance)
 
 
     local function button_buyTime_func()
+        playSound(s_sound_buttonEffect)
         if s_CURRENT_USER:getBeans() >= 10 then
             s_CURRENT_USER:addBeans(-10)
             saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY]})
@@ -228,11 +230,14 @@ function SummaryBossAlter:addTime()
 end
 
 function SummaryBossAlter:lose2(entrance)
-    if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
-        s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
-        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_lose)
-    end
 
+    AnalyticsSummaryBossResult('lose')
+
+    -- if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
+    --     s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
+    --     s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_lose)
+    -- end
+    
     playMusic(s_sound_fail,true)
 
     self.loseBoard2 = cc.Sprite:create(string.format("image/summarybossscene/summaryboss_board_%d.png",self.index))
@@ -316,7 +321,7 @@ end
 
 function SummaryBossAlter:win1(entrance)
 
-    if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
+    if s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and entrance then
         s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
         s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_win)
     end
@@ -373,14 +378,21 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
     end
 
     local function button_func()
+        playSound(s_sound_buttonEffect)
+        if not s_isCheckInAnimationDisplayed then
+            if s_HUD_LAYER:getChildByName('missionCompleteCircle') ~= nil then
+                s_HUD_LAYER:getChildByName('missionCompleteCircle'):setName('missionComplete')
+            end
+        end
+        s_HUD_LAYER:removeChildByName('missionCompleteCircle')
         if entrance == ENTRANCE_WORD_LIBRARY then
             s_CorePlayManager.enterLevelLayer()
         else
-            if s_HUD_LAYER:getChildByName('missionCompleteCircle') ~= nil then
-                s_HUD_LAYER:getChildByName('missionCompleteCircle'):setVisible(false)
+            if s_HUD_LAYER:getChildByName('missionComplete') ~= nil then
+                s_HUD_LAYER:getChildByName('missionComplete'):setVisible(false)
             end
             s_CorePlayManager.enterLevelLayer()
-        end
+        end       
     end
 
     local button = Button.create("long","blue","完成")
@@ -410,7 +422,10 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
     end
 
     onAndroidKeyPressed(self, function ()
-        s_HUD_LAYER:removeChildByName('missionComplete')
+        s_HUD_LAYER:removeChildByName('missionCompleteCircle')
+        if s_HUD_LAYER:getChildByName('missionComplete') ~= nil then
+            s_HUD_LAYER:getChildByName('missionComplete'):setVisible(false)
+        end
         s_CorePlayManager.enterLevelLayer()
     end, function ()
 
