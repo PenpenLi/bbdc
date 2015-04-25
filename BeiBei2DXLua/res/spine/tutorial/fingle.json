@@ -1,0 +1,30 @@
+{
+"skeleton": { "hash": "5UmVz6bFaImqLTFpdwQT1b4QbHE", "spine": "2.1.27", "width": 150.9, "height": 190.71, "images": "" },
+"bones": [
+	{ "name": "root", "rotation": -0.29 }
+],
+"slots": [
+	{ "name": "hou", "bone": "root", "attachment": "qian" }
+],
+"skins": {
+	"default": {
+		"hou": {
+			"hou": { "width": 150, "height": 190 },
+			"qian": { "width": 150, "height": 190 }
+		}
+	}
+},
+"animations": {
+	"animation": {
+		"slots": {
+			"hou": {
+				"attachment": [
+					{ "time": 0, "name": "qian" },
+					{ "time": 0.3333, "name": "hou" },
+					{ "time": 0.6666, "name": "qian" }
+				]
+			}
+		}
+	}
+}
+}
