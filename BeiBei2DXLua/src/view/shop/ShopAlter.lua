@@ -53,7 +53,7 @@ function ShopAlter.create(itemId, location)
 
             for i=1,5 do
                 if itemId == i then
-                    s_LocalDatabaseManager.setBuy(math.pow(10,i-1))
+                    s_LocalDatabaseManager.setBuy(math.pow(2,i-1))
                 end
             end 
 
@@ -81,7 +81,7 @@ function ShopAlter.create(itemId, location)
     main.go = function ()
         for i=1,5 do
             if itemId == i then
-                s_LocalDatabaseManager.setBuy(math.pow(10,i-1))
+                s_LocalDatabaseManager.setBuy(math.pow(2,i-1))
             end
         end 
 
@@ -138,7 +138,11 @@ function ShopAlter.create(itemId, location)
         button_sure.func = function ()
             button_func()
         end
-        back:addChild(button_sure)
+
+        if i ~= 6 then
+            --vip不需要去看看这个按钮
+            back:addChild(button_sure)
+        end
     end
 
     local label_content

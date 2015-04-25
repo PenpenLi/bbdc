@@ -1,7 +1,4 @@
-
-
 local SliderView        = require("view.SliderView")
-local ScrollViewTest    = require("view.ScrollviewTest")
 
 local NewReviewBossWordInfo = class("NewReviewBossWordInfo", function()
     return cc.Layer:create()

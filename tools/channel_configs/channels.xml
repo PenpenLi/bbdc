@@ -229,7 +229,7 @@
 <channel name="360 jiagu ----------------------------------------------------------------" />
     
     <channel name="360qihu" 
-        packageName="com.beibei.wordmaster.qihu"
+        packageName="com.beibei.wordmaster.cet.beta.qihu"
 
         leanCloudAppName="bb_cet"
         leanCloudAppID="yxzeihfaednxqo94mz678pp9ms4bi1gy4vcx84533uimd5nu"
@@ -251,7 +251,7 @@
         umengAppKey="549a5eb9fd98c5b2ac00144e"/>
 
     <channel name="openQQ" 
-        packageName="com.beibei.wordmaster.tencentmyapp"
+        packageName="com.beibei.wordmaster.cet.beta.tencentmyapp"
 
         leanCloudAppName="bb_cet"
         leanCloudAppID="yxzeihfaednxqo94mz678pp9ms4bi1gy4vcx84533uimd5nu"
