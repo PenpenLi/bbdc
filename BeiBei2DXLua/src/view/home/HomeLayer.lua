@@ -20,6 +20,7 @@ local TEXT_CHANGE_ACCOUNT = '切换账号' -- "登出游戏"
 
 function HomeLayer.create(share)
     --s_CURRENT_USER:addBeans(100)
+    --数据管理
     s_CURRENT_USER.dataDailyUsing:reset()
 
     AnalyticsSecondDayBook(s_CURRENT_USER.bookKey)
@@ -62,12 +63,18 @@ function HomeLayer.create(share)
     local username = "游客"
     local logo_name = {"head","book","feedback","information","logout"}
     local label_name = {username,"选择书籍","用户反馈","完善个人信息",TEXT_CHANGE_ACCOUNT}
+    --数据管理结束
 
     s_SCENE.touchEventBlockLayer.unlockTouch()
+
+
     local layer = HomeLayer.new()
 
     local offset = 500
     local viewIndex = 1
+    --设置页面标志位
+    local isDataShow = false
+    -- 信息页面标志位
 
     local backColor = cc.LayerColor:create(cc.c4b(211,239,254,255), bigWidth, s_DESIGN_HEIGHT)  
     backColor:setAnchorPoint(0.5,0.5)
@@ -80,16 +87,8 @@ function HomeLayer.create(share)
     top:setPosition(0.5 * backColor:getContentSize().width,s_DESIGN_HEIGHT)
     backColor:addChild(top)
 
-    -- local girl = sp.SkeletonAnimation:create("res/spine/girl_wave/girl_wave.json", "res/spine/girl_wave/girl_wave.atlas", 1)
-    -- --girl:setAnchorPoint(0.9,0.7)
-    -- girl:setPosition(backColor:getContentSize().width * 0.06,s_DESIGN_HEIGHT * 0.7)
-    -- girl:setScale(0.8)
-    -- backColor:addChild(girl,0)
-    -- girl:addAnimation(0, 'animation', true)
-
     local dataShare = require('view.home.DataShare').create()
     backColor:addChild(dataShare,0,'dataShare')
-    layer.dataShare = dataShare
     
     local background = cc.Sprite:create('image/homescene/home_back.png')
     background:setAnchorPoint(0.5,0)
@@ -105,25 +104,31 @@ function HomeLayer.create(share)
     been_number:setPosition(been_number_back:getContentSize().width * 0.65 , been_number_back:getContentSize().height/2)
     been_number_back:addChild(been_number)
 
+    --更新贝贝豆数量
     local function updateBean(delta)
         been_number:setString(s_CURRENT_USER:getBeans())
     end
 
     been_number:scheduleUpdateWithPriorityLua(updateBean,0)
 
-    local setting_back
+    -- setting ui
+    local setting_back = cc.Sprite:create("image/homescene/setup_background.png")
+    setting_back:setAnchorPoint(1,0.5)
+    setting_back:setPosition(s_LEFT_X, s_DESIGN_HEIGHT/2)
+    layer:addChild(setting_back,1)
 
     --add offline
 
-
+    --判断是否是离线状态
     local online = s_SERVER.isNetworkConnectedNow() and s_SERVER.hasSessionToken()
-    --    online = false
     local offlineTipHome = OfflineTipHome.create()
     local offlineTipFriend = OfflineTipFriend.create()
 
     layer:addChild(offlineTipHome,2)
     layer:addChild(offlineTipFriend,2) 
 
+
+    -- 打卡流程结束
     local createDataShareMark 
 
     local mission_progress
@@ -144,13 +149,14 @@ function HomeLayer.create(share)
     backColor:addChild(mission_progress,1,'mission_progress')
 
 
+    --音频下载
     local downloadSoundButton = require("view.home.DownloadSoundButton").create(top)
 
     local name = cc.Sprite:create('image/homescene/BBDC_word_title.png')
     name:setPosition(bigWidth/2, s_DESIGN_HEIGHT-85)
     backColor:addChild(name)
 
-
+    --设置页面显示当前选书
     local book_name 
 
     local English_array = {'cet4','cet6','ncee','toefl','ielts','gre','gse','pro4','pro8','gmat','sat','middle','primary'}
@@ -167,59 +173,60 @@ function HomeLayer.create(share)
     currentBook:setColor(cc.c4b(255,255,255,255))
     backColor:addChild(currentBook)
 
-    local button_left_clicked = function(sender, eventType)
+    -- 从主页面切到设置页面
+
+    local function changeViewFromHomeToSetting()
+        s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
+        dataShare:setEnabled(false)
+        mission_progress.stopListener = true
+        viewIndex = 2
+        local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2+offset,s_DESIGN_HEIGHT/2))
+        backColor:runAction(action1)
+        local action2 = cc.MoveTo:create(0.5, cc.p(s_LEFT_X+offset,s_DESIGN_HEIGHT/2))
+        local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
+        setting_back:runAction(cc.Sequence:create(action2, action3))
+    end
+
+    -- 从设置页面切到主页面
+
+    local function changeViewFromSettingToHome()
+        s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
+        dataShare:setEnabled(true)
+        mission_progress.stopListener = false
+        viewIndex = 1
+        local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2,s_DESIGN_HEIGHT/2))
+        backColor:runAction(action1)
+        local action2 = cc.MoveTo:create(0.5, cc.p(s_LEFT_X,s_DESIGN_HEIGHT/2))
+        local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
+        setting_back:runAction(cc.Sequence:create(action2, action3))
+    end
+
+    --设置按钮事件
+
+    local button_setting_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.began then
-            -- button sound
             playSound(s_sound_buttonEffect)
-
         elseif eventType == ccui.TouchEventType.ended then
-
             if online == false then
                 offlineTipHome.setFalse()
                 offlineTipFriend.setFalse()
             end
 
             if viewIndex == 1 then
-                s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
-                dataShare:setEnabled(false)
-
-                mission_progress.stopListener = true
-
-                viewIndex = 2
-
-                local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2+offset,s_DESIGN_HEIGHT/2))
-                backColor:runAction(action1)
-
-                local action2 = cc.MoveTo:create(0.5, cc.p(s_LEFT_X+offset,s_DESIGN_HEIGHT/2))
-                local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
-                setting_back:runAction(cc.Sequence:create(action2, action3))
-
-                --offline tip
-
+                changeViewFromHomeToSetting()
             else
-                s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
-                dataShare:setEnabled(true)
-
-                mission_progress.stopListener = false
-
-                viewIndex = 1
-
-                local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2,s_DESIGN_HEIGHT/2))
-                backColor:runAction(action1)
-
-                local action2 = cc.MoveTo:create(0.5, cc.p(s_LEFT_X,s_DESIGN_HEIGHT/2))
-                local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
-                setting_back:runAction(cc.Sequence:create(action2, action3))
+                changeViewFromSettingToHome()
             end
-            --s_SCENE:checkInAnimation()
         end
     end
 
     local button_main = ccui.Button:create("image/homescene/home_page_setting_button.png","image/homescene/home_page_setting_button_press.png","")
     button_main:setScale9Enabled(true)
     button_main:setPosition(bigWidth / 2 - 165, 200)
-    button_main:addTouchEventListener(button_left_clicked)
+    button_main:addTouchEventListener(button_setting_clicked)
     backColor:addChild(button_main,1)
+
+    --切换到好友或商店事件
 
     local function changeViewToFriendOrShop(destination)
         local DestinationLayer
@@ -238,15 +245,11 @@ function HomeLayer.create(share)
         destinationLayer:setPosition(s_RIGHT_X, s_DESIGN_HEIGHT/2)
         backColor:removeChildByName('redHint')
         if viewIndex == 2 then
-            s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
-            mission_progress.stopListener = false
-            viewIndex = 1
-            local action2 = cc.MoveTo:create(0.5, cc.p(s_LEFT_X,s_DESIGN_HEIGHT/2))
-            local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
-            setting_back:runAction(cc.Sequence:create(action2, action3))
+            changeViewFromSettingToHome()
         end
         s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
-           local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2 - bigWidth,s_DESIGN_HEIGHT/2))
+        
+        local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2 - bigWidth,s_DESIGN_HEIGHT/2))
         backColor:runAction(action1)
         local action2 = cc.MoveTo:create(0.5, cc.p(bigWidth - bigWidth,s_DESIGN_HEIGHT/2))
         local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
@@ -278,13 +281,11 @@ function HomeLayer.create(share)
 
     button_shop:setScale9Enabled(true)
     button_shop:setAnchorPoint(0,0.5)
-    --button_shop:setPosition(bigWidth / 2 + 1, 200)
 
     button_shop:addTouchEventListener(button_shop_clicked)
     backColor:addChild(button_shop,1) 
-    layer.button_shop = button_shop
 
-    --    layer:addFriendButton(backColor)  
+    -- 签到领奖
 
     local function ClickRewardBtnFunction()
         local Loginreward = require("view.loginreward.LoginRewardPopup")
@@ -300,35 +301,25 @@ function HomeLayer.create(share)
         end
     end
 
-
-
     local button_reward = ccui.Button:create("image/homescene/home_page_medal_button.png","image/homescene/home_page_medal_button_press.png","")
     button_reward:setPosition(bigWidth / 2 + 166, 200)
-
-    --button_reward = ccui.Button:create("image/homescene/home_page_function_bg1.png","","")
     button_reward:setScale9Enabled(true)
-    --button_reward:setPosition(bigWidth / 2 + 166, 200)
     button_reward:addTouchEventListener(button_reward_clicked)
     backColor:addChild(button_reward,1)   
 
+    -- 个人信息界面
 
-    local button_data
-    local data_back
-    local isDataShow = false
-
-    button_data = cc.Sprite:create("image/homescene/main_bottom.png")
+    local button_data = cc.Sprite:create("image/homescene/main_bottom.png")
     button_data:setAnchorPoint(0.5,0)
     button_data:setPosition(bigWidth/2, 0)
-    --button_data:addTouchEventListener(button_data_clicked)
     backColor:addChild(button_data,1)
-    layer.dataButton = button_data
 
-    data_back = cc.LayerColor:create(cc.c4b(255,255,255,255), bigWidth, s_DESIGN_HEIGHT - 260)  
+    local data_back = cc.LayerColor:create(cc.c4b(255,255,255,255), bigWidth, s_DESIGN_HEIGHT - 260)  
     data_back:setAnchorPoint(0.5,1)
     data_back:ignoreAnchorPointForPosition(false)  
     data_back:setPosition(button_data:getContentSize().width/2, 0)
     button_data:addChild(data_back,2)
-    layer.dataBack = data_back
+
     local bottom = cc.LayerColor:create(cc.c4b(255,255,255,255), button_data:getContentSize().width, 100)
     bottom:setAnchorPoint(0.5,1)
     bottom:ignoreAnchorPointForPosition(false)  
@@ -343,11 +334,11 @@ function HomeLayer.create(share)
 
     -- setting ui
     setting_back = cc.Sprite:create("image/homescene/setup_background.png")
-    -- setting_back:setOpacity(0)
     setting_back:setAnchorPoint(1,0.5)
     setting_back:setPosition(s_LEFT_X, s_DESIGN_HEIGHT/2)
     layer:addChild(setting_back,1)
 
+    -- 更新设置页面选项
     local function updateSettingLayer()
         local button_back = ccui.Button:create("image/homescene/setup_button.png","image/homescene/setup_button.png","")
         button_back:setOpacity(0)
@@ -385,11 +376,14 @@ function HomeLayer.create(share)
         if sprite3 ~= nil then sprite3:removeFromParent() end
     end
 
+    -- 设置页面内容
+
     if s_CURRENT_USER.usertype ~= USER_TYPE_GUEST then
         username = s_CURRENT_USER:getNameForDisplay()
         logo_name = {"head","book","feedback","logout"}
         label_name = {username,"选择书籍","用户反馈",TEXT_CHANGE_ACCOUNT}
     end
+
     local label = {}
     local logo = {}
     local button_back = {}
@@ -504,32 +498,33 @@ function HomeLayer.create(share)
             end
         end
     end
+    -- 设置页面结束
 
+    -- 好友按钮事件
     layer.friendButtonFunc = function ()
         if  online == false then
             offlineTipFriend.setTrue()
-        else
-            if s_CURRENT_USER.usertype ~= USER_TYPE_GUEST then
-                changeViewToFriendOrShop("FriendLayer")
-            else
-                if s_CURRENT_USER.usertype == USER_TYPE_GUEST then
-                    local Item_popup = require("popup/PopupModel")
-                    local item_popup = Item_popup.create(Site_From_Friend_Guest)  
-                    s_SCENE:popup(item_popup)
+            return
+        end
 
-                    item_popup.update = function()
-                        if s_CURRENT_USER.usertype ~= USER_TYPE_GUEST then
-                            updateSettingLayer()
-                        end
+        if s_CURRENT_USER.usertype ~= USER_TYPE_GUEST then
+            changeViewToFriendOrShop("FriendLayer")
+        else
+            if s_CURRENT_USER.usertype == USER_TYPE_GUEST then
+                local Item_popup = require("popup/PopupModel")
+                local item_popup = Item_popup.create(Site_From_Friend_Guest)  
+                s_SCENE:popup(item_popup)
+
+                item_popup.update = function()
+                    if s_CURRENT_USER.usertype ~= USER_TYPE_GUEST then
+                        updateSettingLayer()
                     end
                 end
-            end   
-        end
+            end
+        end   
     end
 
-
-
-    local button_right_clicked = function(sender, eventType)
+    local button_friend_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.began then
             AnalyticsFriendBtn()
             playSound(s_sound_buttonEffect)
@@ -554,11 +549,10 @@ function HomeLayer.create(share)
     end
     button_friend:setScale9Enabled(true)
     button_friend:setAnchorPoint(1,0.5)
-    --button_friend:setPosition(bigWidth / 2 - 1, 200)
-    button_friend:addTouchEventListener(button_right_clicked)
+    button_friend:addTouchEventListener(button_friend_clicked)
     backColor:addChild(button_friend,1)   
 
-    layer.button_friend = button_friend
+    -- 好友解锁
 
     local function updateFriendButton(delta)
         if s_CURRENT_USER:getLockFunctionState(1) == 1 then
@@ -567,7 +561,6 @@ function HomeLayer.create(share)
             button_friend:setPosition(bigWidth / 2 - 1, 200)
             button_friend:setScale9Enabled(true)
             button_friend:setAnchorPoint(1,0.5)
-            --button_friend:setPosition(bigWidth / 2 - 1, 200)
             button_friend:addTouchEventListener(button_right_clicked)
             backColor:addChild(button_friend,1)   
 
@@ -604,13 +597,46 @@ function HomeLayer.create(share)
         )
     end
 
+    -- 个人信息界面弹入
 
+    local function changeViewFromHomeToInfo()
+        isDataShow = true
+        layer:setButtonEnabled(false)
+        button_data:setLocalZOrder(2)
+        button_data:runAction(cc.EaseBackOut:create(cc.MoveTo:create(0.3,cc.p(bigWidth/2, s_DESIGN_HEIGHT-260))))
+        s_SCENE:callFuncWithDelay(0.3,function ()
+            if online == false then
+                offlineTipHome.setFalse()
+                offlineTipFriend.setFalse()
+            end
+            local PersonalInfo = require("view.PersonalInfo")
+            PersonalInfo.getNotContainedInLocalDatas(function ()
+                local personalInfoLayer = PersonalInfo.create()
+                personalInfoLayer:setPosition(-s_LEFT_X,0)
+                data_back:addChild(personalInfoLayer,1,'PersonalInfo')
+                end) 
+            end) 
+    end
+
+    -- 个人信息界面弹出
+    local function changeViewFromInfoToHome()
+        isDataShow = false
+        layer:setButtonEnabled(true)
+        local action1 = cc.MoveTo:create(0.3,cc.p(bigWidth/2, 0))
+        local action2 = cc.CallFunc:create(function()
+            button_data:setLocalZOrder(1)
+            data_back:removeChildByName('PersonalInfo')
+        end)
+        button_data:runAction(cc.Sequence:create(action1, action2))
+    end
+
+
+    -- 触摸事件
     local moveLength = 100
     local moved = false
     local start_x = nil
     local start_y = nil
     local onTouchBegan = function(touch, event)
-
         local location = layer:convertToNodeSpace(touch:getLocation())
         start_x = location.x
         start_y = location.y
@@ -626,52 +652,24 @@ function HomeLayer.create(share)
         local location = layer:convertToNodeSpace(touch:getLocation())
         local now_x = location.x
         local now_y = location.y
-
+        -- 个人信息界面弹出弹入
         if start_y < 0.1 * s_DESIGN_HEIGHT and start_x > s_DESIGN_WIDTH * 0.0 and start_x < s_DESIGN_WIDTH * 2.0 then
             if now_y - moveLength > start_y and not isDataShow and viewIndex == 1 then         
-                isDataShow = true
-                layer:setButtonEnabled(false)
-                button_data:setLocalZOrder(2)
-                button_data:runAction(cc.EaseBackOut:create(cc.MoveTo:create(0.3,cc.p(bigWidth/2, s_DESIGN_HEIGHT-260))))
-                s_SCENE:callFuncWithDelay(0.3,function ()
-                    local PersonalInfo = require("view.PersonalInfo")
-                    PersonalInfo.getNotContainedInLocalDatas(function ()
-                        local personalInfoLayer = PersonalInfo.create()
-                        personalInfoLayer:setPosition(-s_LEFT_X,0)
-                        data_back:addChild(personalInfoLayer,1,'PersonalInfo') 
-                    end)
-                end)
+                    changeViewFromHomeToInfo()
                 return
             end
         end
         if start_y > s_DESIGN_HEIGHT - 260 and start_x > s_DESIGN_WIDTH * 0.0 and start_x < s_DESIGN_WIDTH * 2.0 then
             if now_y + moveLength < start_y and isDataShow and viewIndex == 1 then
-                isDataShow = false
-                layer:setButtonEnabled(true)
-                local action1 = cc.MoveTo:create(0.3,cc.p(bigWidth/2, 0))
-                local action2 = cc.CallFunc:create(function()
-                    button_data:setLocalZOrder(1)
-                    data_back:removeChildByName('PersonalInfo')
-                end)
-                button_data:runAction(cc.Sequence:create(action1, action2))
+                    changeViewFromInfoToHome()
                 return
             end
 
         end
-
+        -- 设置页面切回主界面
         if now_x + moveLength < start_x and not isDataShow then
             if viewIndex == 2 then
-                s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
-                mission_progress.stopListener = false
-                dataShare:setEnabled(true)
-                viewIndex = 1
-
-                local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2,s_DESIGN_HEIGHT/2))
-                backColor:runAction(action1)
-
-                local action2 = cc.MoveTo:create(0.5, cc.p(s_LEFT_X,s_DESIGN_HEIGHT/2))
-                local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
-                setting_back:runAction(cc.Sequence:create(action2, action3))
+                changeViewFromSettingToHome()
             end
         end
 
@@ -680,53 +678,16 @@ function HomeLayer.create(share)
     local onTouchEnded = function(touch,event)
         local location = layer:convertToNodeSpace(touch:getLocation())
         if not cc.rectContainsPoint(setting_back:getBoundingBox(),location) and viewIndex == 2 then
-            s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
-            dataShare:setEnabled(true)
-
-            mission_progress.stopListener = false
-
-            viewIndex = 1
-
-            local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2,s_DESIGN_HEIGHT/2))
-            backColor:runAction(action1)
-
-            local action2 = cc.MoveTo:create(0.5, cc.p(s_LEFT_X,s_DESIGN_HEIGHT/2))
-            local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
-            setting_back:runAction(cc.Sequence:create(action2, action3))
+            changeViewFromSettingToHome()
         end
         if not isDataShow then
             if math.abs(location.y - start_y) > 10 or math.abs(location.x - start_x) > 10 then
                 return
             elseif viewIndex == 1 and location.y < 0.1 * s_DESIGN_HEIGHT then
-                isDataShow = true
-                layer:setButtonEnabled(false)
-                button_data:setLocalZOrder(2)
-                button_data:runAction(cc.EaseBackOut:create(cc.MoveTo:create(0.3,cc.p(bigWidth/2, s_DESIGN_HEIGHT-260))))
-                s_SCENE:callFuncWithDelay(0.3,function ()
-                    if online == false then
-                        offlineTipHome.setFalse()
-                        offlineTipFriend.setFalse()
-                    end
-                    local PersonalInfo = require("view.PersonalInfo")
-                    PersonalInfo.getNotContainedInLocalDatas(function ()
-                        local personalInfoLayer = PersonalInfo.create()
-                        personalInfoLayer:setPosition(-s_LEFT_X,0)
-                        data_back:addChild(personalInfoLayer,1,'PersonalInfo')
-                    end) 
-                end) 
+                changeViewFromHomeToInfo()
             end
-
         elseif location.y >  s_DESIGN_HEIGHT-260 and (math.abs(location.y - start_y) < 10 and math.abs(location.x - start_x) < 10) and viewIndex == 1 then
-            --print('isDataShow')
-            isDataShow = false
-            layer:setButtonEnabled(true)
-            local action1 = cc.MoveTo:create(0.3,cc.p(bigWidth/2, 0))
-            local action2 = cc.CallFunc:create(function()
-                button_data:setLocalZOrder(1)
-                data_back:removeChildByName('PersonalInfo')
-            end)
-            button_data:runAction(cc.Sequence:create(action1, action2))
-
+                changeViewFromInfoToHome()
         end
     end
 
@@ -743,35 +704,27 @@ function HomeLayer.create(share)
     layer.button_sound = downloadSoundButton
     layer.button_enter = mission_progress
     layer.button_reward = button_reward
+    layer.button_shop = button_shop
+    layer.button_friend = button_friend
+    layer.dataBack = data_back
+    layer.dataButton = button_data
+    layer.dataShare = dataShare
 
+    -- 打卡
     if checkInDisplay then
         layer:showDataLayer(true)
         s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
     end
 
+    -- 购买商品后进入相应功能
     for i=1,5 do
-        if math.floor(s_LocalDatabaseManager.isBuy() / math.pow(10,i-1)) == 1 then
+        if math.floor(s_LocalDatabaseManager.isBuy() / math.pow(2,i-1)) == 1 then
             if i == 1 then
                 layer.friendButtonFunc()
                 createDataShareMark = false
-            elseif i == 2 then
+            elseif i >= 2 and i <= 5 then
                 isDataShow = true 
-                layer:showDataLayerByItem(3)
-                s_SCENE:removeAllPopups()
-                createDataShareMark = false
-            elseif i == 3 then
-                isDataShow = true 
-                layer:showDataLayerByItem(2)
-                s_SCENE:removeAllPopups()
-                createDataShareMark = false
-            elseif i == 4 then
-                isDataShow = true 
-                layer:showDataLayerByItem(1)
-                s_SCENE:removeAllPopups()
-                createDataShareMark = false
-            elseif i == 5 then
-                isDataShow = true 
-                layer:showDataLayerByItem(0)
+                layer:showDataLayerByItem(5 - i)
                 s_SCENE:removeAllPopups()
                 createDataShareMark = false
             end
@@ -787,6 +740,9 @@ function HomeLayer.create(share)
     local wordInfo = s_LocalDatabaseManager.getAllBossInfo()
     local isGotAllWord = #wordInfo[1].wrongWordList
     --print('createDataShareMark',tostring(createDataShareMark),s_CURRENT_USER.dataDailyUsing.usingTime)
+    
+
+    -- 贝贝从上拉出的页面
     if  createDataShareMark == true and s_CURRENT_USER.dataDailyUsing.usingTime >= 60 then 
         --print('dataShareTime',s_CURRENT_USER.dataShareTime)
         if s_CURRENT_USER.dataShareTime >= 300 and share ~= nil and share then
@@ -808,34 +764,13 @@ function HomeLayer.create(share)
         end
     end)
 
-
+    -- 安卓返回键功能
     onAndroidKeyPressed(layer, function ()
         local isPopup = s_SCENE.popupLayer:getChildren()
         if viewIndex == 2 and #isPopup == 0 then
-            s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
-            dataShare:setEnabled(true)
-
-            mission_progress.stopListener = false
-
-            viewIndex = 1
-
-            local action1 = cc.MoveTo:create(0.5, cc.p(s_DESIGN_WIDTH/2,s_DESIGN_HEIGHT/2))
-            backColor:runAction(action1)
-
-            local action2 = cc.MoveTo:create(0.5, cc.p(s_LEFT_X,s_DESIGN_HEIGHT/2))
-            local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
-            setting_back:runAction(cc.Sequence:create(action2, action3))
+            changeViewFromSettingToHome()
         elseif isDataShow == true and #isPopup == 0 then
-            isDataShow = false
-            layer:setButtonEnabled(true)
-
-            local action1 = cc.MoveTo:create(0.3,cc.p(bigWidth/2, 0))
-            local action2 = cc.CallFunc:create(function()
-                button_data:setLocalZOrder(1)
-                data_back:removeChildByName('PersonalInfo')
-            end)
-            button_data:runAction(cc.Sequence:create(action1, action2))
-
+            changeViewFromInfoToHome()
         elseif isDataShow == false and  viewIndex == 1 and #isPopup == 0 then
             cx.CXUtils:getInstance():shutDownApp()
         end
@@ -846,6 +781,7 @@ function HomeLayer.create(share)
     return layer
 end
 
+-- 购买商品后自动进入信息界面
 function HomeLayer:showDataLayerByItem(index)
     self:setButtonEnabled(false)
     self.dataButton:setLocalZOrder(2)
@@ -860,13 +796,14 @@ function HomeLayer:showDataLayerByItem(index)
     end)
 end
 
+-- 日常打卡后进入信息界面
 function HomeLayer:showDataLayer(checkIn)
     self.dataButton:setLocalZOrder(2)
     self.dataButton:runAction(cc.Sequence:create(cc.DelayTime:create(0.5),cc.EaseBackOut:create(cc.MoveTo:create(0.3,cc.p(s_DESIGN_WIDTH / 2 + s_DESIGN_OFFSET_WIDTH, s_DESIGN_HEIGHT-260)))))
     s_SCENE:callFuncWithDelay(0.3,function ()
         local PersonalInfo = require("view.PersonalInfo")
         PersonalInfo.getNotContainedInLocalDatas(function ()
-            local personalInfoLayer = PersonalInfo.create(true,self)
+            local personalInfoLayer = PersonalInfo.create(checkIn,self)
             personalInfoLayer:setPosition(-s_LEFT_X,0)
             self.dataBack:addChild(personalInfoLayer,1,'PersonalInfo') 
         end)
@@ -891,7 +828,6 @@ function HomeLayer:setButtonEnabled(enabled)
     self.button_enter:setEnabled(enabled)
     self.button_reward:setEnabled(enabled)
     self.dataShare:setEnabled(enabled)
-
 end
 
 function HomeLayer:showShareCheckIn()

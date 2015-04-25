@@ -626,7 +626,7 @@ function PersonalInfo:login()
     --print('loginData_array = '..#loginData)
     for i = 1,#loginData do
         loginData_array[i] = loginData[i]:getDays()
-        print_lua_table(loginData_array[i])
+        -- print_lua_table(loginData_array[i])
     end
     local calendar = {}
     local weekDay = {'SUN','MON','TUE','WED','THU','FRI','SAT'}
