@@ -64,11 +64,6 @@ function SummaryBossAlter.create(bossLayer,win,index,entrance)
 end
 
 function SummaryBossAlter:lose(entrance)
-    -- if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
-    --     s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
-    --     s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_timeout)
-    -- end
-
     --add board
     self.loseBoard = cc.Sprite:create("image/summarybossscene/background_zjboss_tanchu.png")
     self.loseBoard:setPosition(s_DESIGN_WIDTH * 0.5,s_DESIGN_HEIGHT * 1.3)
@@ -233,11 +228,6 @@ function SummaryBossAlter:lose2(entrance)
 
     AnalyticsSummaryBossResult('lose')
 
-    -- if s_CURRENT_USER.tutorialStep == s_tutorial_summary_boss then
-    --     s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
-    --     s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_lose)
-    -- end
-    
     playMusic(s_sound_fail,true)
 
     self.loseBoard2 = cc.Sprite:create(string.format("image/summarybossscene/summaryboss_board_%d.png",self.index))
@@ -321,9 +311,11 @@ end
 
 function SummaryBossAlter:win1(entrance)
 
-    if s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and entrance then
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_sb_cn and entrance then
         s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
         s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_win)
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_rb_show
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
     end
     local hasCheckedIn = s_CURRENT_USER.logInDatas[#s_CURRENT_USER.logInDatas]:isCheckIn(os.time(),s_CURRENT_USER.bookKey)
     if s_LocalDatabaseManager:getTodayRemainTaskNum() < 2 and not hasCheckedIn then
@@ -355,19 +347,6 @@ function SummaryBossAlter:win2(entrance,hasCheckedIn)
     backColor:ignoreAnchorPointForPosition(false)
     backColor:setPosition(s_DESIGN_WIDTH / 2,s_DESIGN_HEIGHT / 2)
     self:addChild(backColor)
-
-    -- local been_number_back = cc.Sprite:create("image/shop/been_number_back.png")
-    -- been_number_back:setPosition(s_RIGHT_X - s_LEFT_X -100, s_DESIGN_HEIGHT-50)
-    -- backColor:addChild(been_number_back)
-
-    -- local been = cc.Sprite:create("image/shop/been.png")
-    -- been:setPosition(0, been_number_back:getContentSize().height/2)
-    -- been_number_back:addChild(been)
-
-    -- local been_number = cc.Label:createWithSystemFont(s_CURRENT_USER:getBeans(),'',24)
-    -- been_number:setColor(cc.c4b(0,0,0,255))
-    -- been_number:setPosition(been_number_back:getContentSize().width/2 , been_number_back:getContentSize().height/2)
-    -- been_number_back:addChild(been_number)
 
     local win_back = cc.Sprite:create('image/summarybossscene/win_back.png')
     win_back:setAnchorPoint(0.5,0)

@@ -1276,7 +1276,7 @@ function SummaryBossLayer:initWordList(word)
     self.mat_length = 5
     self.isTutorial = false
 
-    if (s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and self.entrance) or self.isTrying then
+    if (s_CURRENT_USER.newTutorialStep == s_newtutorial_sb_cn and self.entrance) or self.isTrying then
         self.mat_length = 4
         self.isTutorial = true
     end
@@ -1545,7 +1545,7 @@ function SummaryBossLayer:initMapInfoByIndex(startIndex)
             charaster_set_filtered[#charaster_set_filtered+1] = char
         end
         local main_logic_mat
-        if s_CURRENT_USER.tutorialStep <= s_tutorial_summary_boss and self.entrance then
+        if s_CURRENT_USER.newTutorialStep == s_newtutorial_sb_cn and self.entrance then
             main_logic_mat = randomMat(4, 4)
         else
             main_logic_mat = getRandomBossPath()
