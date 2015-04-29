@@ -1,7 +1,6 @@
 require("cocos.init")
 require("common.global")
 local SliderView        = require("view.SliderView")
-local ScrollViewTest    = require("view.ScrollviewTest")
 
 local WordDetailInfo = class("WordDetailInfo", function()
     return cc.Layer:create()

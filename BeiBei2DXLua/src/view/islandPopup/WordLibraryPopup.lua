@@ -31,15 +31,24 @@ local function addCloseButton(top_sprite,backPopup)
     return button_close
 end 
 
-local function addBackButton(top_sprite,self,backPopup)
+local function addBackButton(top_sprite,backPopup,index)
     local button_back_clicked = function()
         playSound(s_sound_buttonEffect)
-        local action0 = cc.OrbitCamera:create(0.5,1, 0, 0, 90, 0, 0) 
-        local action1 = cc.CallFunc:create(function() 
-            self:removeFromParent()
-        end)
-        backPopup:runAction(cc.Sequence:create(action0,action1))
-        self.close()
+        local LevelProgressPopup = require("view.islandPopup.LevelProgressPopup")
+        local levelProgressPopup = LevelProgressPopup.create(index)
+        s_SCENE:popup(levelProgressPopup)  
+        -- levelProgressPopup:setVisible(false)
+        
+        -- local action0 = cc.OrbitCamera:create(0.5,1, 0, 0, 90, 0, 0) 
+        -- backPopup:runAction(action0) 
+        
+        -- local action1 = cc.DelayTime:create(0.5)
+        -- local action2 = cc.CallFunc:create(function()
+        --     levelProgressPopup:setVisible(true)
+        -- end)
+        -- local action3 = cc.OrbitCamera:create(0.5,1, 0, -90, 90, 0, 0) 
+        -- local action4 = cc.Sequence:create(action1, action2, action3)
+        -- levelProgressPopup:runAction(action4)  
     end
 
     local button_back = EnlargeTouchAreaReturnButton.create("image/islandPopup/backtopocess.png","image/islandPopup/backtopocessback.png")
@@ -144,7 +153,8 @@ local function addSummaryButton(bottom_sprite,boss)
 end
 
 function WordLibraryPopup:ctor(index)
-    local boss = s_LocalDatabaseManager.getBossInfo(index + 1)
+    self.index = index
+    local boss = s_LocalDatabaseManager.getBossInfo(index)
     
     self.backPopup = cc.Sprite:create("image/islandPopup/backforlibrary.png")
     self.backPopup:setPosition(s_DESIGN_WIDTH / 2,s_DESIGN_HEIGHT / 2 - 10)
@@ -159,7 +169,7 @@ function WordLibraryPopup:ctor(index)
     self.closeButton = addCloseButton(top_sprite,self.backPopup)
     top_sprite:addChild(self.closeButton)
     
-    self.backButton = addBackButton(top_sprite,self,self.backPopup)
+    self.backButton = addBackButton(top_sprite,self.backPopup,index)
     top_sprite:addChild(self.backButton)
     
     self.unfamiliarButton = addUnfamiliarButton(top_sprite)
