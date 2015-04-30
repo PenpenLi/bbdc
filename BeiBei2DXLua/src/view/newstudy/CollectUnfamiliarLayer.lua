@@ -5,7 +5,6 @@ local SoundMark         = require("view.newstudy.NewStudySoundMark")
 local GuessWrong        = require("view.newstudy.GuessWrongPunishPopup")
 local ProgressBar           = require("view.newstudy.NewStudyProgressBar")
 local LastWordAndTotalNumber= require("view.newstudy.LastWordAndTotalNumberTip") 
-local GuideAlter        = require("view.newstudy.NewStudyGuideAlter")
 local Button                = require("view.newstudy.BlueButtonInStudyLayer")
 
 local  CollectUnfamiliarLayer = class("CollectUnfamiliarLayer", function ()

@@ -467,19 +467,23 @@ function LevelProgressPopup:createCantPlay(text,parent)--现在不能玩，参�
 
 end
 
+function LevelProgressPopup:createSprite(titel,subtitle,rewardSprite1,rewardSprite2,parent)
+    createTitle(titel,parent)
+    createSubtitle(subtitle,parent)
+    createReviewLabel(parent)
+    createRewardLabel(parent)
+    createRewardSprite(3,parent)
+    createReviewSprite(rewardSprite1,rewardSprite2,parent)
+end
+
 function LevelProgressPopup:createCollect()
     local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
     local hammer_sprite = cc.Sprite:create("image/islandPopup/subtask_collect_word.png")
     hammer_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
     back:addChild(hammer_sprite)
-    
-    createTitle("收集生词",back)
-    createSubtitle("选择出你不会的词语",back)
-    createReviewLabel(back)
-    createRewardLabel(back)
-    createRewardSprite(3,back)
-    createReviewSprite(0,self.wordNumber,back)
+
+    self:createSprite("收集生词","选择出你不会的词语",0,self.wordNumber,back)
 
     if self.current_index == 0 then
         self:createNormalPlay("iron",self.wrongWordList,back)
@@ -495,12 +499,7 @@ function LevelProgressPopup:createStrikeIron()
     hammer_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
     back:addChild(hammer_sprite)
     
-    createTitle("趁热打铁",back)
-    createSubtitle("复习上课学过的单词",back)
-    createReviewLabel(back)
-    createRewardLabel(back)
-    createRewardSprite(3,back) 
-    createReviewSprite(0,self.wordNumber,back)
+    self:createSprite("趁热打铁","复习上课学过的单词",0,self.wordNumber,back)
 
     if self.current_index == 1 then
         self:createNormalPlay("iron",self.wrongWordList,back)
@@ -520,11 +519,7 @@ function LevelProgressPopup:createReview(playModel)
     review_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
     back:addChild(review_sprite)
 
-    createTitle("复习怪兽",back)
-    createSubtitle("挑出和给出意思对应的章鱼",back)
-    createReviewLabel(back)
-    createRewardLabel(back)
-    createRewardSprite(3,back)
+    self:createSprite("复习怪兽","挑出和给出意思对应的章鱼",0,self.wordNumber,back)
 
     if playModel == "normal" then
         self:createNormalPlay("review",self.wrongWordList,back)
@@ -548,12 +543,7 @@ function LevelProgressPopup:createSummary()
     summary_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
     back:addChild(summary_sprite)
 
-    createTitle("总结怪兽",back)
-    createSubtitle("划出给出中文对应的单词来击败boss",back)
-    createReviewLabel(back)
-    createRewardLabel(back)
-    createRewardSprite(3,back)
-    createReviewSprite(0,self.wordNumber,back)
+    self:createSprite("总结怪兽","划出给出中文对应的单词来击败boss",0,self.wordNumber,back)
 
     if self.current_index == 3 then
         self:createNormalPlay("summary",self.wrongWordList,back)
@@ -573,12 +563,7 @@ function LevelProgressPopup:createMysterious(text)
     mysterious_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
     back:addChild(mysterious_sprite)
 
-    createTitle("神秘任务",back)
-    createSubtitle("一个即将到来的神秘玩法",back)
-    createReviewLabel(back)
-    createReviewSprite("?","?",back)
-    createRewardLabel(back)
-    createRewardSprite("?",back)
+    self:createSprite("神秘任务","一个即将到来的神秘玩法","?","?",back)
 
     if text ~= "time" then
         self:createCantPlay("请先完成前边的任务",back)

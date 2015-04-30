@@ -1,7 +1,6 @@
 require("cocos.init")
 require("common.global")
 
-local GuideAlter        = require("view.newstudy.NewStudyGuideAlter")
 local SoundMark         = require("view.newstudy.NewStudySoundMark")
 local DetailInfo        = require("view.newstudy.NewStudyDetailInfo")
 local ProgressBar           = require("view.newstudy.NewStudyProgressBar")

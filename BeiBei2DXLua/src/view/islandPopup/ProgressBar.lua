@@ -25,7 +25,7 @@ function ProgressBar.create(totalIndex, currentIndex)
     progress:setMidpoint(cc.p(0, 0))
     progress:setBarChangeRate(cc.p(1, 0))
     progress:setPosition(progress_back:getPosition())
-    progress:setPercentage(100 * currentIndex / totalIndex + 2)
+    progress:setPercentage(100 * currentIndex / totalIndex)
     main:addChild(progress,1)
 
     local width = progress_back:getContentSize().width - 20

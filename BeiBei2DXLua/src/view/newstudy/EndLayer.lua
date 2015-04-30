@@ -3,7 +3,6 @@ require("common.global")
 
 local SoundMark         = require("view.newstudy.NewStudySoundMark")
 local FlipMat           = require("view.mat.FlipMat")
-local GuideAlter        = require("view.newstudy.NewStudyGuideAlter")
 local LastWordAndTotalNumber= require("view.newstudy.LastWordAndTotalNumberTip") 
 local CollectUnfamiliar = require("view.newstudy.CollectUnfamiliarLayer")
 local Button                = require("view.button.longButtonInStudy")
