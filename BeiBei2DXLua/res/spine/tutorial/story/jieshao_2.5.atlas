@@ -1,0 +1,27 @@
+
+jieshao_2.5.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+dap
+  rotate: false
+  xy: 2, 89
+  size: 683, 909
+  orig: 683, 909
+  offset: 0, 0
+  index: -1
+wenhao
+  rotate: false
+  xy: 687, 828
+  size: 170, 170
+  orig: 170, 170
+  offset: 0, 0
+  index: -1
+zenyang
+  rotate: false
+  xy: 2, 2
+  size: 180, 85
+  orig: 180, 85
+  offset: 0, 0
+  index: -1

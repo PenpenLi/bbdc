@@ -231,9 +231,16 @@ function CorePlayManager.enterHomeLayer(share)
 end
 
 function CorePlayManager.enterLevelLayer()
+    -- TODO check story tag
     local ChapterLayer = require('view.ChapterLayer')
     local chapterLayer = ChapterLayer.create()
     s_SCENE:replaceGameLayer(chapterLayer)
+end
+
+function CorePlayManager.enterStoryLayer()
+    local StoryLayer = require('view.level.StoryLayer')
+    local storyLayer = StoryLayer.create()
+    s_SCENE:replaceGameLayer(storyLayer)
 end
 
 function CorePlayManager.enterBookLayer()

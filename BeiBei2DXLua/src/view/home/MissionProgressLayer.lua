@@ -184,6 +184,7 @@ function MissionProgressLayer.create(share,homelayer)
             s_CURRENT_USER:generateChestList()
             s_CURRENT_USER:updateDataToServer()
 
+            -- TODO change analytics
             AnalyticsEnterLevelLayerBtn()
             AnalyticsFirst(ANALYTICS_FIRST_LEVEL, 'TOUCH')
 
@@ -192,6 +193,9 @@ function MissionProgressLayer.create(share,homelayer)
                 local schedule = layer:getChildByTag(8888):getScheduler()
                 schedule:unscheduleScriptEntry(schedule.schedulerEntry)
             end
+
+            -- todo check enter story layer
+            -- s_CorePlayManager.enterStoryLayer()
             s_CorePlayManager.enterLevelLayer()
         end)
     end

@@ -1,0 +1,76 @@
+
+jieshao_5.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+3
+  rotate: false
+  xy: 687, 63
+  size: 23, 40
+  orig: 23, 40
+  offset: 0, 0
+  index: -1
+b
+  rotate: false
+  xy: 2, 42
+  size: 683, 288
+  orig: 683, 288
+  offset: 0, 0
+  index: -1
+bbn
+  rotate: false
+  xy: 687, 165
+  size: 175, 394
+  orig: 175, 394
+  offset: 0, 0
+  index: -1
+bc
+  rotate: false
+  xy: 2, 332
+  size: 683, 690
+  orig: 683, 690
+  offset: 0, 0
+  index: -1
+gebo
+  rotate: false
+  xy: 687, 105
+  size: 110, 58
+  orig: 110, 58
+  offset: 0, 0
+  index: -1
+guaishou
+  rotate: true
+  xy: 857, 847
+  size: 175, 158
+  orig: 175, 158
+  offset: 0, 0
+  index: -1
+yezi2
+  rotate: false
+  xy: 857, 771
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
+yezi3
+  rotate: true
+  xy: 687, 561
+  size: 461, 168
+  orig: 461, 168
+  offset: 0, 0
+  index: -1
+ying
+  rotate: false
+  xy: 2, 2
+  size: 178, 38
+  orig: 178, 38
+  offset: 0, 0
+  index: -1
+zizhandou
+  rotate: false
+  xy: 182, 10
+  size: 73, 30
+  orig: 73, 30
+  offset: 0, 0
+  index: -1
