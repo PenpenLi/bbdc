@@ -213,12 +213,12 @@ function LevelProgressPopup:createPape(islandIndex)
         elseif i == 4 then
             local SummaryLayer = self:createSummary()
             layout:addChild(SummaryLayer)
-        elseif self.current_index <= 4 then
+        elseif self.current_index < 4 then
             if i >= 5 and i <= 8 then
                 local MysteriousLayer = self:createMysterious()
                 layout:addChild(MysteriousLayer)
             end
-        elseif self.current_index > 4 and self.current_index <= 8 then
+        elseif self.current_index >= 4 and self.current_index <= 8 then
             if i <= self.current_index then
                 local ReviewLayer = self:createReview("repeat")
                 layout:addChild(ReviewLayer)
