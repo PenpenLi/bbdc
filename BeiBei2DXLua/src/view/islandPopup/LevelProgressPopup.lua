@@ -15,6 +15,12 @@ function LevelProgressPopup.create(index,playAnimation)
     for i = 1 ,#layer.unit.wrongWordList do
         table.insert(layer.wrongWordList,layer.unit.wrongWordList[i])
     end
+-- ["proficiency"] 熟练度
+-- ["bossID"] boss编号    
+-- ["rightWordList"]    记录熟词
+-- ["wrongWordList"]    记录生词
+-- ["coolingDay"]   冷却时间
+-- ["typeIndex"]    当前小岛的任务进度
     print_lua_table(layer.unit)
     layer.wordNumber = #layer.wrongWordList
     layer.current_index = layer.unit.typeIndex
@@ -50,19 +56,19 @@ local function addBackButton(backPopup,islandIndex)
         elseif eventType == ccui.TouchEventType.ended then
             local WordLibrary = require("view.islandPopup.WordLibraryPopup")
             local wordLibrary = WordLibrary.create(islandIndex)
-            s_SCENE:popup(wordLibrary)  
-            -- wordLibrary:setVisible(false)
+            s_SCENE.popupLayer:addChild(wordLibrary)  
+            wordLibrary:setVisible(false)
             
-            -- local action0 = cc.OrbitCamera:create(0.5,1, 0, 0, 90, 0, 0) 
-            -- backPopup:runAction(action0) 
+            local action0 = cc.OrbitCamera:create(0.5,1, 0, 0, 90, 0, 0) 
+            backPopup:runAction(action0) 
             
-            -- local action1 = cc.DelayTime:create(0.5)
-            -- local action2 = cc.CallFunc:create(function()
-            --     wordLibrary:setVisible(true)
-            -- end)
-            -- local action3 = cc.OrbitCamera:create(0.5,1, 0, -90, 90, 0, 0) 
-            -- local action4 = cc.Sequence:create(action1, action2, action3)
-            -- wordLibrary:runAction(action4)  
+            local action1 = cc.DelayTime:create(0.5)
+            local action2 = cc.CallFunc:create(function()
+                wordLibrary:setVisible(true)
+            end)
+            local action3 = cc.OrbitCamera:create(0.5,1, 0, -90, 90, 0, 0) 
+            local action4 = cc.Sequence:create(action1, action2, action3)
+            wordLibrary.backPopup:runAction(action4)  
         end
     end
 
@@ -85,7 +91,7 @@ function LevelProgressPopup:ctor(index)
     end
     
     self.backPopup = cc.Sprite:create("image/islandPopup/subtask_bg.png")
-    self.backPopup:setPosition(s_DESIGN_WIDTH / 2,s_DESIGN_HEIGHT / 2 - 10)
+    self.backPopup:setPosition(s_DESIGN_WIDTH / 2,s_DESIGN_HEIGHT / 2)
     self:addChild(self.backPopup)
 
     self.closeButton = addCloseButton(self.backPopup)
