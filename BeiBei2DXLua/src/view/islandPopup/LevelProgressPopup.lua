@@ -167,8 +167,8 @@ function LevelProgressPopup:ctor(index)
 end
 
 function LevelProgressPopup:createPape(islandIndex)
-    local pageViewSize = cc.size(545, 900)
-    local backgroundSize = cc.size(545, 900)
+    local pageViewSize = cc.size(545, 1000)
+    local backgroundSize = cc.size(545, 1000)
 
     self.animationFlag = 0
     if self.current_index > 0 and self.current_index < 8 then
@@ -394,9 +394,20 @@ function LevelProgressPopup:createNormalPlay(playModel,wordList,parent)
     end
 
     local go_button = Button.create("long","blue","GO") 
-    go_button:setPosition(parent:getContentSize().width * 0.5 - 2, parent:getContentSize().height * 0.05)
+    go_button:setPosition(parent:getContentSize().width * 0.5 - 2, parent:getContentSize().height * 0.1)
     go_button.func = function ()
         button_func()
+    end
+
+    local buttonPosition = cc.p(go_button:getPosition())
+
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_island_alter_finger then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_collect_goal
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})    
+        local finger = sp.SkeletonAnimation:create('spine/tutorial/fingle.json', 'spine/tutorial/fingle.atlas',1)
+        finger:addAnimation(0, 'animation', true)
+        finger:setPosition(buttonPosition.x + 50, buttonPosition.y -100)
+        go_button:addChild(finger,130)
     end
 
     parent:addChild(go_button)
@@ -422,7 +433,7 @@ function LevelProgressPopup:createRepeatlPlay(playModel,wordList,parent)--重复
     end
 
     local go_button = Button.create("long","blue","重玩") 
-    go_button:setPosition(parent:getContentSize().width * 0.5 - 2, parent:getContentSize().height * 0.05)
+    go_button:setPosition(parent:getContentSize().width * 0.5 - 2, parent:getContentSize().height * 0.1)
     go_button.func = function ()
         button_func()
     end
@@ -431,7 +442,7 @@ end
 
 function LevelProgressPopup:createCantPlay(text,parent)--现在不能玩，参数 文字／父亲节点/是否有动画/动画之后玩什么
     local cantPlay_Sprite = cc.Sprite:create("image/button/longbluefront.png")
-    cantPlay_Sprite:setPosition(parent:getContentSize().width * 0.5 - 2, parent:getContentSize().height * 0.05)
+    cantPlay_Sprite:setPosition(parent:getContentSize().width * 0.5 - 2, parent:getContentSize().height * 0.1)
     cantPlay_Sprite:setColor(cc.c4b(199,199,193,255))
     parent:addChild(cantPlay_Sprite)
     
@@ -451,7 +462,7 @@ function LevelProgressPopup:createCantPlay(text,parent)--现在不能玩，参�
 end
 
 function LevelProgressPopup:createCollect()
-    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 900)
+    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
     local hammer_sprite = cc.Sprite:create("image/islandPopup/subtask_collect_word.png")
     hammer_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
@@ -472,7 +483,7 @@ function LevelProgressPopup:createCollect()
 end
 
 function LevelProgressPopup:createStrikeIron()
-    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 900)
+    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
     local hammer_sprite = cc.Sprite:create("image/islandPopup/subtask_hammer.png")
     hammer_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
@@ -497,7 +508,7 @@ function LevelProgressPopup:createStrikeIron()
 end
 
 function LevelProgressPopup:createReview(playModel)
-    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 900)
+    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
     local review_sprite = cc.Sprite:create("image/islandPopup/subtask_review_boss.png")
     review_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
@@ -525,7 +536,7 @@ function LevelProgressPopup:createReview(playModel)
 end
 
 function LevelProgressPopup:createSummary()
-    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 900)
+    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
     local summary_sprite = cc.Sprite:create("image/islandPopup/subtask_summary_boss.png")
     summary_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
@@ -550,7 +561,7 @@ function LevelProgressPopup:createSummary()
 end
 
 function LevelProgressPopup:createMysterious(text)
-    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 900)
+    local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
     local mysterious_sprite = cc.Sprite:create("image/islandPopup/subtask_mysterious_task.png")
     mysterious_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
