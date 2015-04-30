@@ -1,0 +1,55 @@
+
+jieshao1.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arm
+  rotate: false
+  xy: 855, 587
+  size: 101, 85
+  orig: 101, 85
+  offset: 0, 0
+  index: -1
+bac
+  rotate: false
+  xy: 2, 103
+  size: 683, 909
+  orig: 683, 909
+  offset: 0, 0
+  index: -1
+bac_white
+  rotate: true
+  xy: 687, 674
+  size: 338, 289
+  orig: 338, 289
+  offset: 0, 0
+  index: -1
+bb
+  rotate: false
+  xy: 687, 266
+  size: 166, 406
+  orig: 166, 406
+  offset: 0, 0
+  index: -1
+tal_1
+  rotate: false
+  xy: 2, 22
+  size: 144, 79
+  orig: 144, 79
+  offset: 0, 0
+  index: -1
+tal_2
+  rotate: false
+  xy: 687, 186
+  size: 142, 78
+  orig: 142, 78
+  offset: 0, 0
+  index: -1
+yingzi
+  rotate: true
+  xy: 978, 847
+  size: 165, 34
+  orig: 165, 34
+  offset: 0, 0
+  index: -1

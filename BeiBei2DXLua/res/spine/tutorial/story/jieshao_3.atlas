@@ -1,0 +1,62 @@
+
+jieshao_3.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1
+  rotate: false
+  xy: 2, 302
+  size: 17, 38
+  orig: 17, 38
+  offset: 0, 0
+  index: -1
+1_Zi
+  rotate: false
+  xy: 2, 342
+  size: 286, 30
+  orig: 286, 30
+  offset: 0, 0
+  index: -1
+1_daizi
+  rotate: false
+  xy: 687, 800
+  size: 170, 174
+  orig: 170, 174
+  offset: 0, 0
+  index: -1
+1_daizi_yz
+  rotate: false
+  xy: 687, 771
+  size: 130, 27
+  orig: 130, 27
+  offset: 0, 0
+  index: -1
+bccbcbcbbc
+  rotate: false
+  xy: 2, 391
+  size: 683, 211
+  orig: 683, 211
+  offset: 0, 0
+  index: -1
+vvv
+  rotate: false
+  xy: 2, 374
+  size: 683, 15
+  orig: 683, 15
+  offset: 0, 0
+  index: -1
+w
+  rotate: false
+  xy: 859, 944
+  size: 115, 30
+  orig: 115, 30
+  offset: 0, 0
+  index: -1
+yun
+  rotate: false
+  xy: 2, 604
+  size: 683, 370
+  orig: 683, 370
+  offset: 0, 0
+  index: -1
