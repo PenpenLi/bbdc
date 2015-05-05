@@ -6,6 +6,7 @@ local ImproveInfo = require("view.home.ImproveInfo")
 local MissionProgress = require("view.home.MissionProgressLayer")
 local OfflineTipHome = require("view.offlinetip.OfflineTipForHome")
 local OfflineTipFriend = require("view.offlinetip.OfflineTipForFriend")
+local SmallAlter = require("view.alter.SmallAlter")
 
 local HomeLayer = class("HomeLayer", function ()
     return cc.Layer:create()
@@ -227,12 +228,14 @@ function HomeLayer.create(share)
     backColor:addChild(button_main,1)
 
     --切换到好友或商店事件
-
+    local changeView = "home"
     local function changeViewToFriendOrShop(destination)
         local DestinationLayer
         if destination == "ShopLayer" then
+            changeView = "shop"
             DestinationLayer = require("view.shop."..destination)
         elseif destination == "FriendLayer" then
+            changeView = "friend"
             DestinationLayer = require("view.friend."..destination)
         else
             return
@@ -263,6 +266,7 @@ function HomeLayer.create(share)
             local action3 = cc.CallFunc:create(s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch)
             local action4 = cc.CallFunc:create(function ()
                 destinationLayer:removeFromParent()
+                changeView = "home"
             end)
             destinationLayer:runAction(cc.Sequence:create(action2, action3,action4))
         end  
@@ -766,13 +770,26 @@ function HomeLayer.create(share)
 
     -- 安卓返回键功能
     onAndroidKeyPressed(layer, function ()
-        local isPopup = s_SCENE.popupLayer:getChildren()
-        if viewIndex == 2 and #isPopup == 0 then
-            changeViewFromSettingToHome()
-        elseif isDataShow == true and #isPopup == 0 then
-            changeViewFromInfoToHome()
-        elseif isDataShow == false and  viewIndex == 1 and #isPopup == 0 then
-            cx.CXUtils:getInstance():shutDownApp()
+        if changeView == "home" then
+        --如果是主页面，调用返回键方法
+            local isPopup = s_SCENE.popupLayer:getChildren()
+            if viewIndex == 2 and #isPopup == 0 then
+                changeViewFromSettingToHome()
+            elseif isDataShow == true and #isPopup == 0 then
+                changeViewFromInfoToHome()
+            elseif isDataShow == false and  viewIndex == 1 and #isPopup == 0 then
+                -- 弹出退出面板
+                local shutDownPopup = SmallAlter.create("要和贝贝说再见了吗？")
+                s_SCENE:popup(shutDownPopup)
+                shutDownPopup.affirm = function ()
+                    cx.CXUtils:getInstance():shutDownApp()
+                end    
+                shutDownPopup.close = function ()
+                    s_SCENE:removeAllPopups()
+                end        
+            end
+        else
+            return
         end
     end, function ()
 

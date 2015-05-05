@@ -8,6 +8,7 @@ function SmallAlter.create(info)
     local main = cc.Layer:create()
     main:setContentSize(s_DESIGN_WIDTH,s_DESIGN_HEIGHT)
     main:setAnchorPoint(0.5,0.5)
+    main:setPosition(s_DESIGN_WIDTH / 2,s_DESIGN_HEIGHT / 2)
     main:ignoreAnchorPointForPosition(false)
 
     main.affirm = function()
@@ -16,7 +17,7 @@ function SmallAlter.create(info)
     end
 
     main.close = function()
-        main:removeFromParent()
+    
     end
 
     local back = cc.Sprite:create("image/alter/tanchu_board_small_white.png")
@@ -63,17 +64,36 @@ function SmallAlter.create(info)
     button_right:addTouchEventListener(button_right_clicked)
     back:addChild(button_right)
 
-    -- local onTouchBegan = function(touch, event)
-    --     --s_logd("touch began on block layer")
-    --     return true
-    -- end
+    local function closeAnimation()
+        local action1 = cc.MoveTo:create(0.5,cc.p(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT/2*3))
+        local action2 = cc.EaseBackIn:create(action1)
+        back:runAction(cc.Sequence:create(action2,cc.CallFunc:create(function()main.close()end)))
+    end
 
-    -- local listener = cc.EventListenerTouchOneByOne:create()
-    -- listener:setSwallowTouches(true)
+    local onTouchBegan = function(touch, event)
+        return true
+    end
 
-    -- listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
-    -- local eventDispatcher = main:getEventDispatcher()
-    -- eventDispatcher:addEventListenerWithSceneGraphPriority(listener, main)
+    local onTouchEnded = function(touch, event)
+        local location = main:convertToNodeSpace(touch:getLocation())
+        if not cc.rectContainsPoint(back:getBoundingBox(),location) then
+            closeAnimation()
+        end
+    end
+
+    local listener = cc.EventListenerTouchOneByOne:create()
+    listener:setSwallowTouches(true)
+
+    listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+    listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+    local eventDispatcher = main:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, main) 
+
+    onAndroidKeyPressed(main, function ()
+        closeAnimation()
+    end, function ()
+
+    end)
 
     return main    
 end
