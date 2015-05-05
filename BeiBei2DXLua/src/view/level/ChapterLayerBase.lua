@@ -291,9 +291,9 @@ function ChapterLayerBase:checkLevelStateBeforePopup(levelIndex)
     end
 end
 
-function ChapterLayerBase:addPopup(levelIndex)
+function ChapterLayerBase:addPopup(levelIndex,isAnimation)
     local LevelProgressPopup = require("view.islandPopup.LevelProgressPopup")
-    local levelProgressPopup = LevelProgressPopup.create(levelIndex + 1)
+    local levelProgressPopup = LevelProgressPopup.create(levelIndex + 1,isAnimation)
     s_SCENE:popup(levelProgressPopup)  
 end
 

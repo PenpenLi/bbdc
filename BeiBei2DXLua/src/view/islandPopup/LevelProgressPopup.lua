@@ -24,7 +24,11 @@ function LevelProgressPopup.create(index,playAnimation)
     print_lua_table(layer.unit)
     layer.wordNumber = #layer.wrongWordList
     layer.current_index = layer.unit.typeIndex
-    layer.coolingDay = layer.unit.coolingDay
+    layer.coolingDay = layer.unit.coolingDay    
+    layer.animation = -1
+    if playAnimation == true then
+        layer.animation = layer.current_index
+    end
     layer:createPape(islandIndex)
     return layer
 end
@@ -85,10 +89,6 @@ function LevelProgressPopup:ctor(index)
     end
     self.islandIndex = tonumber(index)
     self.total_index = 8
-
-    self.animation = function ()
-
-    end
     
     self.backPopup = cc.Sprite:create("image/islandPopup/subtask_bg.png")
     self.backPopup:setPosition(s_DESIGN_WIDTH / 2,s_DESIGN_HEIGHT / 2)
@@ -176,12 +176,6 @@ function LevelProgressPopup:createPape(islandIndex)
     local pageViewSize = cc.size(545, 1000)
     local backgroundSize = cc.size(545, 1000)
 
-    self.animationFlag = 0
-    if self.current_index > 0 and self.current_index < 8 then
-        self.animationFlag = self.current_index
-        --动画位置在前一页
-    end
-
     local pageView = ccui.PageView:create()
     pageView:setTouchEnabled(true)
     pageView:setContentSize(pageViewSize)
@@ -243,7 +237,7 @@ function LevelProgressPopup:createPape(islandIndex)
     end
 
     -- change to current index
-    if self.current_index > 0 and self.current_index < 3 then
+    if self.animation > 0 and self.animation < 4 then
         pageView:scrollToPage(self.current_index - 1)
         --如果进入的不是第一页，跳转到上一页，播放动画
         local backColor = cc.LayerColor:create(cc.c4b(0,0,0,0), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
@@ -346,7 +340,7 @@ local function createRewardLabel(parent)
     parent:addChild(reward_label)
 end
 
-local function createRewardSprite(num,parent)
+local function createRewardSprite(num,parent,isAnimation)
     local reward_sprite = cc.Sprite:create("image/islandPopup/subtask_beibeibean.png")
     reward_sprite:setPosition(cc.p(parent:getContentSize().width * 0.8,parent:getContentSize().height * 0.3))
     parent:addChild(reward_sprite)
@@ -355,6 +349,13 @@ local function createRewardSprite(num,parent)
     reward_num:setColor(cc.c4b(255,255,255,255))
     reward_num:setPosition(cc.p(reward_sprite:getContentSize().width * 0.75,reward_sprite:getContentSize().height * 0.5))
     reward_sprite:addChild(reward_num)
+
+    if isAnimation == true then
+        local rightSign_sprite = cc.Sprite:create("image/islandPopup/duigo_green_xiaoguan_tanchu.png")
+        rightSign_sprite:setPosition(cc.p(reward_sprite:getContentSize().width * 0.3 ,reward_sprite:getContentSize().height * 0.5)) 
+        rightSign_sprite:setScale(2)
+        reward_sprite:addChild(rightSign_sprite)
+    end
 end
 
 function LevelProgressPopup:createNormalPlay(playModel,wordList,parent)
@@ -468,11 +469,15 @@ function LevelProgressPopup:createCantPlay(text,parent)--现在不能玩，参�
 end
 
 function LevelProgressPopup:createSprite(titel,subtitle,rewardSprite1,rewardSprite2,parent)
+    local isAnimation = false
     createTitle(titel,parent)
     createSubtitle(subtitle,parent)
     createReviewLabel(parent)
     createRewardLabel(parent)
-    createRewardSprite(3,parent)
+    if rewardSprite1 == rewardSprite2 and rewardSprite2 ~= 0 then
+        isAnimation = true
+    end  
+    createRewardSprite(3,parent,isAnimation)
     createReviewSprite(rewardSprite1,rewardSprite2,parent)
 end
 
@@ -483,10 +488,11 @@ function LevelProgressPopup:createCollect()
     hammer_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
     back:addChild(hammer_sprite)
 
-    self:createSprite("收集生词","选择出你不会的词语",0,self.wordNumber,back)
-
     if self.current_index == 0 then
+        self:createSprite("收集生词","选择出你不会的词语",0,self.wordNumber,back)
         self:createNormalPlay("iron",self.wrongWordList,back)
+    else
+        self:createSprite("收集生词","选择出你不会的词语",self.wordNumber,self.wordNumber,back)     
     end
     
     return back
@@ -498,14 +504,15 @@ function LevelProgressPopup:createStrikeIron()
     local hammer_sprite = cc.Sprite:create("image/islandPopup/subtask_hammer.png")
     hammer_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
     back:addChild(hammer_sprite)
-    
-    self:createSprite("趁热打铁","复习上课学过的单词",0,self.wordNumber,back)
 
     if self.current_index == 1 then
+        self:createSprite("趁热打铁","复习上课学过的单词",0,self.wordNumber,back)
         self:createNormalPlay("iron",self.wrongWordList,back)
     elseif self.current_index > 1 then
+        self:createSprite("趁热打铁","复习上课学过的单词",self.wordNumber,self.wordNumber,back)
         self:createRepeatlPlay("iron",self.wrongWordList,back)
     else
+        self:createSprite("趁热打铁","复习上课学过的单词",0,self.wordNumber,back)
         self:createCantPlay("请先完成前边的任务",back)
     end
     
@@ -519,18 +526,21 @@ function LevelProgressPopup:createReview(playModel)
     review_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
     back:addChild(review_sprite)
 
-    self:createSprite("复习怪兽","挑出和给出意思对应的章鱼",0,self.wordNumber,back)
-
     if playModel == "normal" then
+        self:createSprite("复习怪兽","挑出和给出意思对应的章鱼",0,self.wordNumber,back)
         self:createNormalPlay("review",self.wrongWordList,back)
     elseif playModel == "repeat" then
+        self:createSprite("复习怪兽","挑出和给出意思对应的章鱼",self.wordNumber,self.wordNumber,back)
         self:createRepeatlPlay("review",self.wrongWordList,back)
     elseif self.current_index < 2 then
+        self:createSprite("复习怪兽","挑出和给出意思对应的章鱼",0,self.wordNumber,back)
         self:createCantPlay("请先完成前边的任务",back)
     elseif self.current_index == 2 then
+        self:createSprite("复习怪兽","挑出和给出意思对应的章鱼",0,self.wordNumber,back)
         self:createNormalPlay("review",self.wrongWordList,back)
     elseif self.current_index > 2 then
-        self:createCantPlay("请先完成前边的任务",back)
+        self:createSprite("复习怪兽","挑出和给出意思对应的章鱼",self.wordNumber,self.wordNumber,back)
+        self:createRepeatlPlay("review",self.wrongWordList,back)
     end
     
     return back
@@ -543,13 +553,14 @@ function LevelProgressPopup:createSummary()
     summary_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
     back:addChild(summary_sprite)
 
-    self:createSprite("总结怪兽","划出给出中文对应的单词来击败boss",0,self.wordNumber,back)
-
     if self.current_index == 3 then
+        self:createSprite("总结怪兽","划出给出中文对应的单词来击败boss",0,self.wordNumber,back)
         self:createNormalPlay("summary",self.wrongWordList,back)
-    elseif self.current_index > 2 then
+    elseif self.current_index > 3 then
+        self:createSprite("总结怪兽","划出给出中文对应的单词来击败boss",self.wordNumber,self.wordNumber,back)
         self:createRepeatlPlay("summary",self.wrongWordList,back)
     elseif self.current_index < 3 then
+        self:createSprite("总结怪兽","划出给出中文对应的单词来击败boss",0,self.wordNumber,back)
         self:createCantPlay("请先完成前边的任务",back)
     end
     
