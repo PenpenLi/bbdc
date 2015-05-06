@@ -23,16 +23,28 @@ function LevelProgressPopup.create(index,playAnimation)
 -- ["typeIndex"]    当前小岛的任务进度
     print_lua_table(layer.unit)
     layer.wordNumber = #layer.wrongWordList
+    -- 错词表，用于重玩
     layer.current_index = layer.unit.typeIndex
-    layer.coolingDay = layer.unit.coolingDay    
+    -- 当前小岛进度
+    -- 0 未开始
+    -- 1 收集生词结束
+    -- 2 趁热打铁结束
+    -- 3 总结boss结束
+    -- 4 复习boss结束
+    -- 5，6，7，8 对应的神秘任务结束
+    layer.coolingDay = layer.unit.coolingDay  
+    -- 神秘任务冷却时间 单位是天 
     layer.animation = -1
     if playAnimation == true then
         layer.animation = layer.current_index
     end
+    -- 出现动画的条件
     layer:createPape(islandIndex)
+    -- 产生小岛的各个页面
     return layer
 end
 
+-- 关闭按钮
 local function addCloseButton(backPopup)
     local button_close_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.began then
@@ -53,26 +65,29 @@ local function addCloseButton(backPopup)
     return button_close
 end 
 
+-- 切换到词库
 local function addBackButton(backPopup,islandIndex)
+    local click = 0
     local button_back_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.began then
             playSound(s_sound_buttonEffect)
         elseif eventType == ccui.TouchEventType.ended then
-            local WordLibrary = require("view.islandPopup.WordLibraryPopup")
-            local wordLibrary = WordLibrary.create(islandIndex)
-            s_SCENE.popupLayer:addChild(wordLibrary)  
-            wordLibrary:setVisible(false)
-            
-            local action0 = cc.OrbitCamera:create(0.5,1, 0, 0, 90, 0, 0) 
-            backPopup:runAction(action0) 
-            
-            local action1 = cc.DelayTime:create(0.5)
-            local action2 = cc.CallFunc:create(function()
-                wordLibrary:setVisible(true)
-            end)
-            local action3 = cc.OrbitCamera:create(0.5,1, 0, -90, 90, 0, 0) 
-            local action4 = cc.Sequence:create(action1, action2, action3)
-            wordLibrary.backPopup:runAction(action4)  
+        -- 三维翻转效果
+            if click == 0 then
+                click = 1
+                local action0 = cc.CallFunc:create(function()
+                    backPopup:runAction(cc.OrbitCamera:create(0.4,1, 0, 0, 90, 0, 0))
+                end)
+                local action2 = cc.DelayTime:create(0.4)
+                local action3 = cc.CallFunc:create(function()
+                    local WordLibrary = require("view.islandPopup.WordLibraryPopup")
+                    local wordLibrary = WordLibrary.create(islandIndex)
+                    s_SCENE:popup(wordLibrary)  
+                    wordLibrary.backPopup:runAction(cc.OrbitCamera:create(0.5,1, 0, -90, 90, 0, 0))  
+                end)
+                local action4 = cc.Sequence:create(action0,action2,action3)
+                s_SCENE:runAction(action4)
+            end
         end
     end
 
@@ -80,7 +95,41 @@ local function addBackButton(backPopup,islandIndex)
     button_back:setScale9Enabled(true)
     button_back:setPosition(backPopup:getContentSize().width *0.1 , backPopup:getContentSize().height *0.95 )
     button_back:addTouchEventListener(button_back_clicked)
-    return button_back
+    backPopup:addChild(button_back,5)
+
+    local backColor = cc.LayerColor:create(cc.c4b(0,0,0,100), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+    -- 引导内容
+    backColor:setPosition(backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
+        -- backPopup:addChild(backColor,3)
+    end
+
+    local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+    beibei:setPosition(backColor:getContentSize().width *0.5, backColor:getContentSize().height *0.7)
+    backColor:addChild(beibei)
+
+    local beibei_tip_label = cc.Label:createWithSystemFont("刚学的单词都在这里哦！","",32)
+    beibei_tip_label:setPosition(beibei:getContentSize().width *0.5, beibei:getContentSize().height *0.5)
+    beibei_tip_label:setColor(cc.c4b(36,63,79,255))
+    beibei:addChild(beibei_tip_label)
+
+    local onTouchBegan = function(touch, event)
+        return true  
+    end
+
+    local onTouchEnded = function(touch, event)
+        local location = backPopup:convertToNodeSpace(touch:getLocation())
+        if not cc.rectContainsPoint(button_back:getBoundingBox(),location) then
+            backColor:removeFromParent()
+        end
+    end
+
+    local listener = cc.EventListenerTouchOneByOne:create()
+    listener:setSwallowTouches(true)
+    listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+    listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+    local eventDispatcher = backColor:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, backColor) 
 end
 
 function LevelProgressPopup:ctor(index)
@@ -89,7 +138,8 @@ function LevelProgressPopup:ctor(index)
     end
     self.islandIndex = tonumber(index)
     self.total_index = 8
-    
+    -- 8个页面 1～8 
+
     self.backPopup = cc.Sprite:create("image/islandPopup/subtask_bg.png")
     self.backPopup:setPosition(s_DESIGN_WIDTH / 2,s_DESIGN_HEIGHT / 2)
     self:addChild(self.backPopup)
@@ -97,14 +147,16 @@ function LevelProgressPopup:ctor(index)
     self.closeButton = addCloseButton(self.backPopup)
     self.backPopup:addChild(self.closeButton,2)
 
-    self.backBtn = addBackButton(self.backPopup,self.islandIndex)
-    self.backPopup:addChild(self.backBtn,2)
+    addBackButton(self.backPopup,self.islandIndex)
 
     local popup_title = cc.Label:createWithSystemFont('夏威夷-'..self.islandIndex,'Verdana-Bold',38)
     popup_title:setPosition(self.backPopup:getContentSize().width/2,self.backPopup:getContentSize().height-50)
     popup_title:setColor(cc.c3b(255,255,255))
-    self.backPopup:addChild(popup_title,20)
+    self.backPopup:addChild(popup_title)
 
+    -- 小岛内容切换方式
+    -- 点击前进后退按钮
+    -- 直接手滑
     local last_button_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.began then
             playSound(s_sound_buttonEffect)
@@ -159,7 +211,7 @@ function LevelProgressPopup:ctor(index)
     local eventDispatcher = self:getEventDispatcher()
     eventDispatcher:addEventListenerWithSceneGraphPriority(listener, self) 
 
-
+    -- 安卓返回键功能 关闭面板
     onAndroidKeyPressed(self, function ()
         local move = cc.EaseBackIn:create(cc.MoveTo:create(0.3, cc.p(s_DESIGN_WIDTH / 2, s_DESIGN_HEIGHT * 1.5)))
         local remove = cc.CallFunc:create(function() 
@@ -189,14 +241,21 @@ function LevelProgressPopup:createPape(islandIndex)
         (backgroundSize.height - pageView:getContentSize().height) / 2 + 80 ))
 
     local progress_index = self.current_index
-
+    -- 小岛进度为8时，小岛完成
     if self.current_index >= 7 then
         progress_index = 7
     end
-
+    -- 小岛进度条
     local progressBar = ProgressBar.create(7,progress_index)
     progressBar:setPosition(self.backPopup:getContentSize().width * 0.5,self.backPopup:getContentSize().height * 0.25)
     self.backPopup:addChild(progressBar)
+
+    -- 生成页面
+    -- 1～4 收集生词，趁热打铁，复习boss，总结boss，
+    -- 如果小岛进度小于4 ，后四个全是神秘任务，锁定中
+    -- 如果小岛进度大于4 ，对应的神秘任务变成复习boss（冷却时间为0，不为0还是神秘任务）
+    -- 玩过一次的任务变成重玩模式
+    -- 不能玩的任务显示锁定
 
     for i=1,8 do
         local layout = ccui.Layout:create()
@@ -209,7 +268,7 @@ function LevelProgressPopup:createPape(islandIndex)
             layout:addChild(StrikeLayer)
         elseif i == 3 then
             local ReviewLayer = self:createReview()
-            layout:addChild(ReviewLayer)
+            layout:addChild(ReviewLayer)          
         elseif i == 4 then
             local SummaryLayer = self:createSummary()
             layout:addChild(SummaryLayer)
@@ -243,7 +302,7 @@ function LevelProgressPopup:createPape(islandIndex)
         local backColor = cc.LayerColor:create(cc.c4b(0,0,0,0), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
         backColor:setPosition(-s_DESIGN_OFFSET_WIDTH, 0)
         self:addChild(backColor,10)
-
+        -- 点击任意地点或1秒之后，页面跳到下一页
         local action0 = cc.DelayTime:create(1)
         local action1 = cc.CallFunc:create(function ()
             if backColor ~= nil then
@@ -277,7 +336,7 @@ function LevelProgressPopup:createPape(islandIndex)
         pageView:scrollToPage(progress_index)
     end
 
-
+    -- 按钮跳转方式
     self.changeToPage = function (bool) 
         if bool == true then
             local target = pageView:getCurPageIndex()
@@ -294,37 +353,38 @@ function LevelProgressPopup:createPape(islandIndex)
 
     local function pageViewEvent(sender, eventType)
         if eventType == ccui.PageViewEventType.turning then
+            -- 移动进度条
            progressBar.moveLightCircle(pageView:getCurPageIndex())
         end
     end 
     pageView:addEventListener(pageViewEvent)
     self.backPopup:addChild(pageView)
 end
-
+-- 页面标题
 local function createTitle(Text,parent)
     local title = cc.Label:createWithSystemFont(Text,"",36)
     title:setColor(cc.c4b(50,60,64,255))
     title:setPosition(cc.p(parent:getContentSize().width * 0.5,parent:getContentSize().height * 0.75))
     parent:addChild(title)
 end
-
+-- 页面副标题
 local function createSubtitle(Text,parent)
     local subtitle = cc.Label:createWithSystemFont(Text,"",18)
     subtitle:setColor(cc.c4b(108,108,108,255))
     subtitle:setPosition(cc.p(parent:getContentSize().width * 0.5,parent:getContentSize().height * 0.7))
     parent:addChild(subtitle)
 end
-
+-- 复习生词进度
 local function createReviewLabel(parent)
     local review_label = cc.Label:createWithSystemFont("复习生词","",25)
     review_label:setColor(cc.c4b(98,98,98,255))
-    review_label:setPosition(cc.p(parent:getContentSize().width * 0.2,parent:getContentSize().height * 0.3))
+    review_label:setPosition(cc.p(parent:getContentSize().width * 0.2,parent:getContentSize().height * 0.32))
     parent:addChild(review_label)
 end
 
 local function createReviewSprite(current,total,parent)
     local review_sprite = cc.Sprite:create("image/islandPopup/subtask_number_bg.png")
-    review_sprite:setPosition(cc.p(parent:getContentSize().width * 0.4,parent:getContentSize().height * 0.3))
+    review_sprite:setPosition(cc.p(parent:getContentSize().width * 0.4,parent:getContentSize().height * 0.32))
     parent:addChild(review_sprite)
 
     local review_num = cc.Label:createWithSystemFont(current.." / "..total,"",24)
@@ -332,17 +392,17 @@ local function createReviewSprite(current,total,parent)
     review_num:setPosition(cc.p(review_sprite:getContentSize().width * 0.5,review_sprite:getContentSize().height * 0.5))
     review_sprite:addChild(review_num)
 end
-
+-- 获得贝贝豆显示内容
 local function createRewardLabel(parent)
     local reward_label = cc.Label:createWithSystemFont("奖励","",25)
     reward_label:setColor(cc.c4b(98,98,98,255))
-    reward_label:setPosition(cc.p(parent:getContentSize().width * 0.6,parent:getContentSize().height * 0.3))
+    reward_label:setPosition(cc.p(parent:getContentSize().width * 0.6,parent:getContentSize().height * 0.32))
     parent:addChild(reward_label)
 end
 
 local function createRewardSprite(num,parent,isAnimation)
     local reward_sprite = cc.Sprite:create("image/islandPopup/subtask_beibeibean.png")
-    reward_sprite:setPosition(cc.p(parent:getContentSize().width * 0.8,parent:getContentSize().height * 0.3))
+    reward_sprite:setPosition(cc.p(parent:getContentSize().width * 0.8,parent:getContentSize().height * 0.32))
     parent:addChild(reward_sprite)
 
     local reward_num = cc.Label:createWithSystemFont(num,"",24)
@@ -357,14 +417,14 @@ local function createRewardSprite(num,parent,isAnimation)
         reward_sprite:addChild(rightSign_sprite)
     end
 end
-
+-- 正常玩，完后更新小岛进度
 function LevelProgressPopup:createNormalPlay(playModel,wordList,parent)
     local button_func = function()
         playSound(s_sound_buttonEffect) 
 
         local bossList = s_LocalDatabaseManager.getAllBossInfo()
         local taskIndex = -2
-
+        -- 获取之前所有的关卡信息，如果有冷却好的boss，只能先进行boss任务
         for bossID, bossInfo in pairs(bossList) do
             if bossInfo["coolingDay"] == 0 and bossInfo["typeIndex"] - 4 >= 0 and taskIndex == -2 and bossInfo["typeIndex"] - 8 < 0 then
                 taskIndex = bossID
@@ -380,6 +440,7 @@ function LevelProgressPopup:createNormalPlay(playModel,wordList,parent)
             s_SCENE:removeAllPopups() 
             print("按顺序打第一个boss") 
         else
+            -- 弹出提示
             s_TOUCH_EVENT_BLOCK_LAYER.lockTouch() 
             local tutorial_text = cc.Sprite:create('image/tutorial/tutorial_text.png')
             tutorial_text:setPosition(parent:getContentSize().width * 0.5 + 45,300)
@@ -406,8 +467,8 @@ function LevelProgressPopup:createNormalPlay(playModel,wordList,parent)
         button_func()
     end
 
+    -- 手指引导
     local buttonPosition = cc.p(go_button:getPosition())
-
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_island_alter_finger then
         s_CURRENT_USER.newTutorialStep = s_newtutorial_collect_goal
         saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})    
@@ -419,7 +480,7 @@ function LevelProgressPopup:createNormalPlay(playModel,wordList,parent)
 
     parent:addChild(go_button)
 end
-
+-- 重玩模式，不更新进度
 function LevelProgressPopup:createRepeatlPlay(playModel,wordList,parent)--重复玩，参数 玩法／要玩的词／父亲节点/是否有动画
     local button_func = function()
         playSound(s_sound_buttonEffect)           
@@ -446,7 +507,7 @@ function LevelProgressPopup:createRepeatlPlay(playModel,wordList,parent)--重复
     end
     parent:addChild(go_button)
 end
-
+-- 锁定状态
 function LevelProgressPopup:createCantPlay(text,parent)--现在不能玩，参数 文字／父亲节点/是否有动画/动画之后玩什么
     local cantPlay_Sprite = cc.Sprite:create("image/button/longbluefront.png")
     cantPlay_Sprite:setPosition(parent:getContentSize().width * 0.5 - 2, parent:getContentSize().height * 0.1)
@@ -457,30 +518,30 @@ function LevelProgressPopup:createCantPlay(text,parent)--现在不能玩，参�
     cantPlay_Label:setPosition(cc.p(cantPlay_Sprite:getContentSize().width / 2 ,cantPlay_Sprite:getContentSize().height / 2))
     cantPlay_Sprite:addChild(cantPlay_Label)
     
-    -- if text == "" then
-    --     local time = s_LocalDatabaseManager.getUnitCoolingSeconds(self.islandIndex)
-    --     if time > 24 * 60 * 60 then
-    --         cantPlay_Label:setString("剩余时间"..math.ceil(time/(24*60*60)).."天")
-    --     else
-    --         cantPlay_Label:setString("剩余时间"..math.ceil(time/(60*60)).."小时")
-    --     end
-    -- end
+    if text == "" then
+        local time = self.coolingDay
+        cantPlay_Label:setString("剩余时间"..time.."天")
+    end
 
 end
-
+-- 生成界面细节
 function LevelProgressPopup:createSprite(titel,subtitle,rewardSprite1,rewardSprite2,parent)
     local isAnimation = false
     createTitle(titel,parent)
     createSubtitle(subtitle,parent)
     createReviewLabel(parent)
     createRewardLabel(parent)
-    if rewardSprite1 == rewardSprite2 and rewardSprite2 ~= 0 then
+    if rewardSprite1 == rewardSprite2 and rewardSprite2 ~= 0 and rewardSprite2 ~= "?" then
         isAnimation = true
     end  
-    createRewardSprite(3,parent,isAnimation)
+    if rewardSprite2 == "?" then
+        createRewardSprite("?",parent,isAnimation)
+    else
+        createRewardSprite(3,parent,isAnimation)
+    end
     createReviewSprite(rewardSprite1,rewardSprite2,parent)
 end
-
+-- 收集生词
 function LevelProgressPopup:createCollect()
     local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
@@ -492,12 +553,13 @@ function LevelProgressPopup:createCollect()
         self:createSprite("收集生词","选择出你不会的词语",0,self.wordNumber,back)
         self:createNormalPlay("iron",self.wrongWordList,back)
     else
-        self:createSprite("收集生词","选择出你不会的词语",self.wordNumber,self.wordNumber,back)     
+        self:createSprite("收集生词","选择出你不会的词语",self.wordNumber,self.wordNumber,back)  
+        self:createCantPlay("生词只能收集一次",back)   
     end
     
     return back
 end
-
+-- 趁热打铁
 function LevelProgressPopup:createStrikeIron()
     local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
@@ -518,7 +580,7 @@ function LevelProgressPopup:createStrikeIron()
     
     return back
 end
-
+-- 复习boss
 function LevelProgressPopup:createReview(playModel)
     local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
@@ -545,7 +607,7 @@ function LevelProgressPopup:createReview(playModel)
     
     return back
 end
-
+-- 总结boss
 function LevelProgressPopup:createSummary()
     local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
@@ -566,20 +628,137 @@ function LevelProgressPopup:createSummary()
     
     return back
 end
+function LevelProgressPopup:addGuide2()
+    -- 第二步引导
+    local backColor = cc.LayerColor:create(cc.c4b(0,0,0,30), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+    backColor:setPosition(self.backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, self.backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
+    self.backPopup:addChild(backColor,5)
 
+    local tip_Sprite = cc.Sprite:create("image/button/longbluefront.png")
+    tip_Sprite:setPosition(backColor:getContentSize().width * 0.5 - 5, backColor:getContentSize().height * 0.32 - 1)
+    tip_Sprite:setColor(cc.c4b(199,199,193,255))
+    backColor:addChild(tip_Sprite)
+
+    local label = cc.Label:createWithSystemFont("新玩法：复习怪兽明天开启","",30)
+    label:setPosition(tip_Sprite:getContentSize().width *0.5,tip_Sprite:getContentSize().height *0.5)
+    label:setColor(cc.c4b(255,255,255,255))
+    label:enableOutline(cc.c4b(255,255,255,255),1)
+    tip_Sprite:addChild(label)
+
+    local cantPlay_Sprite = cc.Sprite:create("image/button/longbluefront.png")
+    cantPlay_Sprite:setPosition(backColor:getContentSize().width * 0.5 - 5, backColor:getContentSize().height * 0.22 - 1)
+    cantPlay_Sprite:setColor(cc.c4b(199,199,193,255))
+    backColor:addChild(cantPlay_Sprite)
+    
+    local cantPlay_Label = cc.Label:createWithSystemFont("","",30)
+    cantPlay_Label:setPosition(cc.p(cantPlay_Sprite:getContentSize().width / 2 ,cantPlay_Sprite:getContentSize().height / 2))
+    cantPlay_Sprite:addChild(cantPlay_Label)
+
+    local time = self.coolingDay
+    cantPlay_Label:setString("剩余时间"..time.."天")
+
+    local action0 = cc.DelayTime:create(3)
+    local action1 = cc.CallFunc:create(function ()
+        if backColor ~= nil then
+            backColor:removeFromParent()
+            backColor = nil
+        end
+    end)
+    local action2 = cc.Sequence:create(action0,action1)
+    backColor:runAction(action2)
+
+    local onTouchBegan = function(touch, event)
+        return true  
+    end
+
+    local onTouchEnded = function(touch, event)
+        if backColor ~= nil then
+            backColor:removeFromParent()
+            backColor = nil
+        end
+    end
+
+    local listener = cc.EventListenerTouchOneByOne:create()
+    listener:setSwallowTouches(true)
+    listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+    listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+    local eventDispatcher = backColor:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, backColor) 
+end
+function LevelProgressPopup:addGuide1()
+    -- 第一步引导
+    local backColor = cc.LayerColor:create(cc.c4b(0,0,0,30), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+    backColor:setPosition(self.backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, self.backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
+    self.backPopup:addChild(backColor,5)
+
+    local label = cc.Label:createWithSystemFont("新玩法！","",48)
+    label:setPosition(backColor:getContentSize().width *0.5,backColor:getContentSize().height *0.75)
+    label:setColor(cc.c4b(255,255,255,255))
+    label:enableOutline(cc.c4b(255,255,255,255),1)
+    backColor:addChild(label)
+
+    local sprite = cc.Sprite:create("image/islandPopup/subtask_review_boss.png")
+    sprite:setPosition(backColor:getContentSize().width *0.5,backColor:getContentSize().height *0.55)
+    sprite:setScale(1.2)
+    backColor:addChild(sprite)
+
+    local shine1 = cc.Sprite:create("image/loginreward/shine_complete_studys.png")
+    shine1:setPosition(sprite:getContentSize().width / 2 ,sprite:getContentSize().height / 2)
+    sprite:addChild(shine1,-1)
+
+    local action1 = cc.RotateBy:create(0.5,20)
+    shine1:runAction(cc.RepeatForever:create(action1))
+
+    local action0 = cc.DelayTime:create(3)
+    local action1 = cc.CallFunc:create(function ()
+        if backColor ~= nil then
+            backColor:removeFromParent()
+            backColor = nil
+            self:addGuide2()
+        end
+    end)
+    local action2 = cc.Sequence:create(action0,action1)
+    backColor:runAction(action2)
+
+    local onTouchBegan = function(touch, event)
+        return true  
+    end
+
+    local onTouchEnded = function(touch, event)
+        if backColor ~= nil then
+            backColor:removeFromParent()
+            backColor = nil
+            self:addGuide2()
+        end
+    end
+
+    local listener = cc.EventListenerTouchOneByOne:create()
+    listener:setSwallowTouches(true)
+    listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+    listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+    local eventDispatcher = backColor:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, backColor) 
+end
+-- 神秘任务
 function LevelProgressPopup:createMysterious(text)
     local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
-    local mysterious_sprite = cc.Sprite:create("image/islandPopup/subtask_mysterious_task.png")
-    mysterious_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
-    back:addChild(mysterious_sprite)
-
-    self:createSprite("神秘任务","一个即将到来的神秘玩法","?","?",back)
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_rb_show and self.current_index == 4 then
+        self:addGuide1()
+    end
 
     if text ~= "time" then
+        self:createSprite("神秘任务","一个即将到来的神秘玩法","?","?",back)
         self:createCantPlay("请先完成前边的任务",back)
+        local mysterious_sprite = cc.Sprite:create("image/islandPopup/subtask_mysterious_task.png")
+        mysterious_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
+        back:addChild(mysterious_sprite)
     else
+        self:createSprite("复习怪兽","挑出和给出意思对应的章鱼",0,self.wordNumber,back)
         self:createCantPlay("",back)
+        local review_sprite = cc.Sprite:create("image/islandPopup/subtask_review_boss.png")
+        review_sprite:setPosition(back:getContentSize().width / 2,back:getContentSize().height / 2)
+        back:addChild(review_sprite)
     end
     
     return back

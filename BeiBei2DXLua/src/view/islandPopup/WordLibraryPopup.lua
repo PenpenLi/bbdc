@@ -1,6 +1,7 @@
+--词库界面
 local WordLibraryPopup = class ("WordLibraryPopup",function ()
     return cc.Layer:create()
-end) 
+end)
 
 local Listview         = require("view.islandPopup.WordLibraryListview")
 local Button                = require("view.button.longButtonInStudy")
@@ -10,7 +11,7 @@ function WordLibraryPopup.create(index)
     local layer = WordLibraryPopup.new(index)
     return layer
 end
-
+-- 关闭功能
 local function addCloseButton(top_sprite,backPopup)
     local button_close_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.began then
@@ -30,37 +31,71 @@ local function addCloseButton(top_sprite,backPopup)
     button_close:addTouchEventListener(button_close_clicked)
     return button_close
 end 
-
+-- 切换到小岛弹出面板
 local function addBackButton(top_sprite,backPopup,index)
+    local click = 0 
     local button_back_clicked = function()
-        playSound(s_sound_buttonEffect)
-        local LevelProgressPopup = require("view.islandPopup.LevelProgressPopup")
-        local levelProgressPopup = LevelProgressPopup.create(index)
-        s_SCENE.popupLayer:addChild(levelProgressPopup)  
-        levelProgressPopup:setVisible(false)
-        
-        local action0 = cc.OrbitCamera:create(0.5,1, 0, 0, 90, 0, 0) 
-        backPopup:runAction(action0) 
-        
-        local action1 = cc.DelayTime:create(0.5)
-        local action2 = cc.CallFunc:create(function()
-            levelProgressPopup:setVisible(true)
-        end)
-        local action3 = cc.OrbitCamera:create(0.5,1, 0, -90, 90, 0, 0) 
-        local action4 = cc.Sequence:create(action1, action2, action3)
-        levelProgressPopup.backPopup:runAction(action4)  
+        if click == 0 then
+            click = 1
+            playSound(s_sound_buttonEffect)
+            local action0 = cc.CallFunc:create(function()
+                backPopup:runAction(cc.OrbitCamera:create(0.4,1, 0, 0, 90, 0, 0))
+            end)
+            local action2 = cc.DelayTime:create(0.4)
+            local action3 = cc.CallFunc:create(function()
+                local LevelProgressPopup = require("view.islandPopup.LevelProgressPopup")
+                local levelProgressPopup = LevelProgressPopup.create(index)
+                s_SCENE:popup(levelProgressPopup) 
+                levelProgressPopup.backPopup:runAction(cc.OrbitCamera:create(0.5,1, 0, -90, 90, 0, 0))   
+            end)
+            local action4 = cc.Sequence:create(action0,action2,action3)
+            s_SCENE:runAction(action4)
+        end
     end
 
     local button_back = EnlargeTouchAreaReturnButton.create("image/islandPopup/backtopocess.png","image/islandPopup/backtopocessback.png")
-    button_back:setPosition(top_sprite:getContentSize().width *0.1 , top_sprite:getContentSize().height *0.5 )
+    button_back:setPosition(backPopup:getContentSize().width *0.1 , backPopup:getContentSize().height *0.95 )
+    backPopup:addChild(button_back,5)
 
     button_back.func = function ()
        button_back_clicked()
     end
-    
-    return button_back
-end
 
+    local backColor = cc.LayerColor:create(cc.c4b(0,0,0,100), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+    -- 引导内容
+    backColor:setPosition(backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
+        backPopup:addChild(backColor,3)
+    end
+
+    local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+    beibei:setPosition(backColor:getContentSize().width *0.5, backColor:getContentSize().height *0.7)
+    backColor:addChild(beibei)
+
+    local beibei_tip_label = cc.Label:createWithSystemFont("点击这里返回任务面板","",32)
+    beibei_tip_label:setPosition(beibei:getContentSize().width *0.5, beibei:getContentSize().height *0.5)
+    beibei_tip_label:setColor(cc.c4b(36,63,79,255))
+    beibei:addChild(beibei_tip_label)
+
+    local onTouchBegan = function(touch, event)
+        return true  
+    end
+
+    local onTouchEnded = function(touch, event)
+        local location = backPopup:convertToNodeSpace(touch:getLocation())
+        if not cc.rectContainsPoint(button_back:getBoundingBox(),location) then
+           button_back_clicked()    
+        end 
+    end
+
+    local listener = cc.EventListenerTouchOneByOne:create()
+    listener:setSwallowTouches(true)
+    listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+    listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+    local eventDispatcher = backColor:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, backColor) 
+end
+-- 切换到生词
 local function addUnfamiliarButton(top_sprite)
     local unfamiliar_button = cc.Sprite:create("image/islandPopup/unfamiliarwordend.png")
     unfamiliar_button:setPosition(top_sprite:getContentSize().width * 0.5 - unfamiliar_button:getContentSize().width * 0.6 + 8,top_sprite:getContentSize().height * 0.5)
@@ -73,7 +108,7 @@ local function addUnfamiliarButton(top_sprite)
     
     return unfamiliar_button
 end
-
+-- 切换到熟词
 local function addfamiliarButton(top_sprite)
     local familiar_button = cc.Sprite:create("image/islandPopup/familiarwordbegin.png")
     familiar_button:setPosition(top_sprite:getContentSize().width * 0.5 + familiar_button:getContentSize().width * 0.6 - 9,top_sprite:getContentSize().height * 0.5)
@@ -86,7 +121,7 @@ local function addfamiliarButton(top_sprite)
 
     return familiar_button
 end
-
+-- 词库进入复习怪兽
 local function addReviewButton(bottom_sprite,boss)
 
     local button_func = function()
@@ -109,7 +144,7 @@ local function addReviewButton(bottom_sprite,boss)
     
     return review_button
 end
-
+-- 词库进入总结怪兽
 local function addSummaryButton(bottom_sprite,boss)
     local wordList = function (initWordList)
         local temp = {}
@@ -151,6 +186,68 @@ local function addSummaryButton(bottom_sprite,boss)
     
     return summary_button
 end
+-- 词库引导
+
+local function addGuideLayer(parent,func)
+    local backColor = cc.LayerColor:create(cc.c4b(0,0,0,0), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+    backColor:setPosition(parent:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, parent:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
+    parent:addChild(backColor,3)
+
+    local transparent_sprite = cc.Sprite:create("image/islandPopup/transparent.png")
+    transparent_sprite:setPosition(backColor:getContentSize().width *0.45, backColor:getContentSize().height *0.6)
+    backColor:addChild(transparent_sprite)
+
+    for i = -10,parent:getContentSize().width / 25 + 10 do
+        for j = -10,parent:getContentSize().height / 25 + 10 do
+            if not cc.rectContainsPoint(transparent_sprite:getBoundingBox(),cc.p(i*25 - parent:getContentSize().width *0.5 + (s_RIGHT_X - s_LEFT_X)/2,j*25 - parent:getContentSize().height * 0.5 + s_DESIGN_HEIGHT/2)) then
+               local pointColor = cc.LayerColor:create(cc.c4b(0,0,0,50), 25, 25)
+               pointColor:ignoreAnchorPointForPosition(false)
+               pointColor:setAnchorPoint(1,1) 
+               pointColor:setPosition(i*25 - parent:getContentSize().width *0.5 + (s_RIGHT_X - s_LEFT_X)/2,j*25 - parent:getContentSize().height * 0.5 + s_DESIGN_HEIGHT/2)
+               backColor:addChild(pointColor,4)
+           end
+        end
+    end
+
+    local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+    beibei:setPosition(backColor:getContentSize().width *0.5, backColor:getContentSize().height *0.3)
+    backColor:addChild(beibei,5)
+
+    local beibei_tip_label = cc.Label:createWithSystemFont("看，刚收集的生词","",32)
+    beibei_tip_label:setPosition(beibei:getContentSize().width *0.6, beibei:getContentSize().height *0.5)
+    beibei_tip_label:setColor(cc.c4b(36,63,79,255))
+    beibei:addChild(beibei_tip_label)
+
+    local action0 = cc.DelayTime:create(6)
+    local action1 = cc.CallFunc:create(function ()
+        if backColor ~= nil then 
+            backColor:removeFromParent()
+            backColor = nil
+            if func ~= nil then func() end
+        end
+    end)
+    local action2 = cc.Sequence:create(action0,action1)
+    backColor:runAction(action2)
+
+    local onTouchBegan = function(touch, event)
+        return true  
+    end
+
+    local onTouchEnded = function(touch, event)
+        if backColor ~= nil then
+            backColor:removeFromParent()
+            backColor = nil
+            if func ~= nil then func() end
+        end
+    end
+
+    local listener = cc.EventListenerTouchOneByOne:create()
+    listener:setSwallowTouches(true)
+    listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+    listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+    local eventDispatcher = backColor:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, backColor) 
+end
 
 function WordLibraryPopup:ctor(index)
     self.index = index
@@ -168,9 +265,6 @@ function WordLibraryPopup:ctor(index)
     
     self.closeButton = addCloseButton(top_sprite,self.backPopup)
     top_sprite:addChild(self.closeButton)
-    
-    self.backButton = addBackButton(top_sprite,self.backPopup,index)
-    top_sprite:addChild(self.backButton)
     
     self.unfamiliarButton = addUnfamiliarButton(top_sprite)
     top_sprite:addChild(self.unfamiliarButton)
@@ -236,7 +330,7 @@ function WordLibraryPopup:ctor(index)
         self.listview = Listview.create(boss.wrongWordList)  
         self.familiarButton:setTexture("image/islandPopup/familiarwordbegin.png")
         self.unfamiliarButton:setTexture("image/islandPopup/unfamiliarwordend.png") 
-        local number = getMaxNumEveryLevel(tonumber(index) + 1)
+        local number = getMaxNumEveryLevel(tonumber(index))
         if #boss.wrongWordList >= number then
             self.reviewButton:setVisible(true)
             self.summaryButton:setVisible(true)
@@ -269,7 +363,7 @@ function WordLibraryPopup:ctor(index)
             self.listview = Listview.create(boss.wrongWordList) 
             self.listview:setPosition(2,70)
             self.backPopup:addChild(self.listview)
-            local number = getMaxNumEveryLevel(tonumber(index) + 1)
+            local number = getMaxNumEveryLevel(tonumber(index))
             if #boss.wrongWordList >= number then
                 self.reviewButton:setVisible(true)
                 self.summaryButton:setVisible(true)
@@ -286,6 +380,14 @@ function WordLibraryPopup:ctor(index)
             end)
             self.backPopup:runAction(cc.Sequence:create(move,remove))
         end
+    end
+
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
+        addGuideLayer(self.backPopup,function ()
+            addBackButton(top_sprite,self.backPopup,index)
+        end)
+    else
+        addBackButton(top_sprite,self.backPopup,index)
     end
     
     local listener = cc.EventListenerTouchOneByOne:create()
