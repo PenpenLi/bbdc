@@ -25,6 +25,31 @@ function ChapterLayer:ctor()
         s_CURRENT_USER:setTutorialStep(s_tutorial_level_select+1)
         s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_level_select+1)
     end
+
+    -- back tutorial 
+
+    -- if true then
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_island_back then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_loginreward
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
+
+        -- plot ui
+        local back = cc.Layer:create()
+        back:setContentSize(s_DESIGN_WIDTH, s_DESIGN_HEIGHT)
+
+        local tutorial_text = cc.Sprite:create('image/tutorial/tutorial_text.png')
+        tutorial_text:setPosition(back:getContentSize().width/2,back:getContentSize().height/2 + 300)
+        back:addChild(tutorial_text,520)
+        local text = cc.Label:createWithSystemFont('完成了今日任务\n回主页打卡吧','',28)
+        text:setPosition(tutorial_text:getContentSize().width/2,tutorial_text:getContentSize().height/2)
+        text:setColor(cc.c3b(0,0,0))
+        tutorial_text:addChild(text)
+        s_SCENE:popup(back)
+        s_SCENE:callFuncWithDelay(1, function()
+            s_SCENE:removeAllPopups()
+        end)
+    end
+
     playMusic(s_sound_bgm1,true)
 
     -- show repeat chapter list

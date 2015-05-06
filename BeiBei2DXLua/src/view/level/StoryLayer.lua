@@ -86,6 +86,10 @@ function StoryLayer:directStory(requestTag)   -- request tag:发起切换剧情�
 	elseif self.tag == 7 then
 		-- enter level layer
 		self.tag = self.tag + 1
+		if s_CURRENT_USER.newTutorialStep == s_newtutorial_story then
+	        s_CURRENT_USER.newTutorialStep = s_newtutorial_island_finger
+	        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})   
+    	end
 		s_CorePlayManager.enterLevelLayer() 
 	end
 end

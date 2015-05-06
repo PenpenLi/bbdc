@@ -194,8 +194,11 @@ function MissionProgressLayer.create(share,homelayer)
                 schedule:unscheduleScriptEntry(schedule.schedulerEntry)
             end
             -- todo check enter story layer
-            -- s_CorePlayManager.enterStoryLayer()
-            s_CorePlayManager.enterLevelLayer()
+            if s_CURRENT_USER.newTutorialStep == s_newtutorial_story then
+                s_CorePlayManager.enterStoryLayer()
+            else
+                s_CorePlayManager.enterLevelLayer()
+            end
         end)
     end
 
