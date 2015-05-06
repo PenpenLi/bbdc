@@ -216,15 +216,22 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
         end
 
 
-        if s_CURRENT_USER.slideNum == 1 then
-            -- local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
-            -- s_SCENE:popup(CongratulationPopup)
-            s_CURRENT_USER.slideNum = 0
+        -- if s_CURRENT_USER.slideNum == 1 then
+        --     -- local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
+        --     -- s_SCENE:popup(CongratulationPopup)
+        --     s_CURRENT_USER.slideNum = 0
+        --     saveUserToServer({['slideNum'] = s_CURRENT_USER.slideNum})
+        --     normal()
+        -- else
+        --     normal()
+        -- end
+
+        if s_CURRENT_USER.slideNum < 3 then
+            s_CURRENT_USER.slideNum = s_CURRENT_USER.slideNum + 1
             saveUserToServer({['slideNum'] = s_CURRENT_USER.slideNum})
-            normal()
-        else
-            normal()
         end
+
+        normal()
 
     end
     
