@@ -193,7 +193,6 @@ function MissionProgressLayer.create(share,homelayer)
                 local schedule = layer:getChildByTag(8888):getScheduler()
                 schedule:unscheduleScriptEntry(schedule.schedulerEntry)
             end
-
             -- todo check enter story layer
             -- s_CorePlayManager.enterStoryLayer()
             s_CorePlayManager.enterLevelLayer()
@@ -208,7 +207,7 @@ function MissionProgressLayer.create(share,homelayer)
                 local action1 = cc.MoveTo:create(0.5,cc.p(60  , s_DESIGN_HEIGHT - 60))
                 local action2 = cc.ScaleTo:create(0.5,0.15)
                 local action3 = cc.EaseSineIn:create(cc.Spawn:create(action1,action2))
-                backProgress:runAction(cc.Sequence:create(action3, cc.CallFunc:create(enterGame)))
+                backProgress:runAction(cc.Sequence:create(action3,cc.DelayTime:create(0.1), cc.CallFunc:create(enterGame)))
             end
         else
             return

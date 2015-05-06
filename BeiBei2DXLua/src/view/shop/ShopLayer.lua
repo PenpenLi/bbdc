@@ -50,7 +50,13 @@ function ShopLayer.create()
 
     local button_back_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
-           layer.backToHome()
+            if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+                local HomeLayer = require("view.home.HomeLayer")
+                local HomeLayer = HomeLayer.create()  
+                s_SCENE:replaceGameLayer(HomeLayer)
+            else
+                layer.backToHome()
+            end
         end
     end
 
@@ -130,6 +136,63 @@ function ShopLayer.create()
     end, function ()
 
     end)
+
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_shop then
+        local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+        darkColor:setAnchorPoint(0.5,0.5)
+        darkColor:ignoreAnchorPointForPosition(false)
+        darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
+        layer:addChild(darkColor, 2)
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
+        darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
+
+        local back = cc.Sprite:create("image/newstudy/background_word_xinshouyindao_yellow.png")
+        back:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT*0.4)
+        back:ignoreAnchorPointForPosition(false)
+        back:setAnchorPoint(0.5,0.5)
+        darkColor:addChild(back)
+
+        local title = cc.Label:createWithSystemFont('买一个试试！','',40)
+        title:setPosition(back:getContentSize().width/2,back:getContentSize().height/2)
+        title:setColor(cc.c3b(35,181,229))
+        back:addChild(title)
+
+        local i = 2
+        local x = s_DESIGN_WIDTH/2+150*(1-2*(i%2))
+        local y = bigHeight-height*(math.floor((i-1)/2))-435
+
+        local item_clicked = function(sender, eventType)
+            if eventType == ccui.TouchEventType.ended then
+                s_CURRENT_USER.newTutorialStep = s_newtutorial_over
+                saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
+                darkColor:removeFromParent()
+                local shopAlter = ShopAlter.create(i, 'in')
+                s_SCENE:popup(shopAlter)
+            end
+        end
+
+        local item = ccui.Button:create("image/shop/item"..i..".png","image/shop/item"..i..".png","")
+        item:setPosition(x, y+150)
+        item:addTouchEventListener(item_clicked)
+        darkColor:addChild(item)
+
+        local item_name_back = cc.Sprite:create("image/shop/item_name_back.png")
+        item_name_back:setPosition(x+15, y)
+        darkColor:addChild(item_name_back) 
+    
+        local item_name = cc.Label:createWithSystemFont(s_DataManager.product[i].productValue,'',28)
+        item_name:setColor(cc.c4b(0,0,0,255))
+        item_name:setPosition(item_name_back:getContentSize().width/2-10, item_name_back:getContentSize().height/2-5)
+        item_name_back:addChild(item_name)
+
+        local been_small = cc.Sprite:create("image/shop/been_small.png")
+        been_small:setPosition(40, item_name_back:getContentSize().height/2-5)
+        item_name_back:addChild(been_small)
+
+    end
     
     return layer
 end

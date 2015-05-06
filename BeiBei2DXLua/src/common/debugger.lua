@@ -1,5 +1,5 @@
 -- debugger
-
+-- lua报错显示，日志打印
 local mEnableLog = true
 local mEnableLogDebug = false
 
@@ -27,6 +27,9 @@ function debugger.glogd(group, ...)
     end
 end
 
+--配置log打印规则
+--isEnableLog       允许debugger.log输出
+--isEnalbeLogDebug  允许debugger.logd debugger.logdStr打印
 function debugger.configLog(isEnableLog, isEnalbeLogDebug)
     mEnableLog = isEnableLog
     mEnableLogDebug = isEnalbeLogDebug

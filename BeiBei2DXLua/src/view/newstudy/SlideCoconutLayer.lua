@@ -129,14 +129,14 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
     
     local size_big = backColor:getContentSize()
     local isNewPlayer = true
-    if s_CURRENT_USER.slideNum == 1  then
+    if s_CURRENT_USER.slideNum == 0 then
         isNewPlayer = true
     else
         isNewPlayer = false
     end
     
-    self.lastButton = createLastButton(word,wrongNum,wrongWordList)
-    backColor:addChild(self.lastButton)
+    lastButton = createLastButton(word,wrongNum,wrongWordList)
+    backColor:addChild(lastButton)
 
     mat = FlipMat.create(self.wordInfo[2],4,4,isNewPlayer,"coconut_light")
     mat:setPosition(size_big.width/2, 200)
@@ -215,6 +215,7 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
             end)))
         end
 
+
         if s_CURRENT_USER.slideNum == 1 then
             -- local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
             -- s_SCENE:popup(CongratulationPopup)
@@ -231,14 +232,21 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
     mat.rightLock = true
     mat.wrongLock = false
 
-    local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
-    darkColor:setAnchorPoint(0.5,0)
-    darkColor:ignoreAnchorPointForPosition(false)
-    darkColor:setPosition(backColor:getContentSize().width / 2, 0)
 
-    local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
-    beibei:setPosition(cc.p(darkColor:getContentSize().width / 2 , 170))
-    darkColor:addChild(beibei)
+
+    -- local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+    -- darkColor:setAnchorPoint(0.5,0)
+    -- darkColor:ignoreAnchorPointForPosition(false)
+    -- darkColor:setPosition(backColor:getContentSize().width / 2, 0)
+
+    -- local listener = cc.EventListenerTouchOneByOne:create()
+    -- listener:setSwallowTouches(true)
+    -- listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
+    -- darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
+
+    -- local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+    -- beibei:setPosition(cc.p(darkColor:getContentSize().width / 2 , 170))
+    -- darkColor:addChild(beibei)
 
     -- local beibei_hand = cc.Sprite:create("image/newstudy/yindao_huaci_gril_arm_background.png")
     -- beibei_hand:setPosition(cc.p(beibei:getContentSize().width * 0.4 , beibei:getContentSize().height * 0.4))
@@ -252,33 +260,105 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
 
     -- beibei_hand:runAction(action3)
     
-    local beibei_tip_label = cc.Label:createWithSystemFont("划一划 !","",48)
-    beibei_tip_label:setPosition(beibei:getContentSize().width /2, beibei:getContentSize().height * 0.5)
-    beibei_tip_label:setColor(cc.c4b(36,63,79,255))
-    beibei:addChild(beibei_tip_label)
+    -- local beibei_tip_label = cc.Label:createWithSystemFont("划一划 !","",48)
+    -- beibei_tip_label:setPosition(beibei:getContentSize().width /2, beibei:getContentSize().height * 0.5)
+    -- beibei_tip_label:setColor(cc.c4b(36,63,79,255))
+    -- beibei:addChild(beibei_tip_label)
 
-    if s_CURRENT_USER.slideNum == 1 then
+
+    if s_CURRENT_USER.slideNum == 0 then
+        local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+        darkColor:setAnchorPoint(0.5,0)
+        darkColor:ignoreAnchorPointForPosition(false)
+        darkColor:setPosition(backColor:getContentSize().width / 2, 0)
         backColor:addChild(darkColor)
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
+        darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
+
+        local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+        beibei:setPosition(cc.p(darkColor:getContentSize().width / 2 , 170))
+        darkColor:addChild(beibei)
+
+        local beibei_tip_label = cc.Label:createWithSystemFont("划一划 !","",48)
+        beibei_tip_label:setPosition(beibei:getContentSize().width /2, beibei:getContentSize().height * 0.5)
+        beibei_tip_label:setColor(cc.c4b(36,63,79,255))
+        beibei:addChild(beibei_tip_label)
+    elseif s_CURRENT_USER.slideNum == 1 then
+        local lastTouchTime = 4
+        mat.updateLastTouchTime = function()
+            lastTouchTime = 4
+        end
+        local action1 = cc.DelayTime:create(1.0)
+        local action2 = cc.CallFunc:create(function()
+            lastTouchTime = lastTouchTime - 1
+            if lastTouchTime <= 0 then
+                mat.toNewPlayModel()
+                backColor:stopAllActions()
+
+                local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+                darkColor:setAnchorPoint(0.5,0)
+                darkColor:ignoreAnchorPointForPosition(false)
+                darkColor:setPosition(backColor:getContentSize().width / 2, 0)
+                backColor:addChild(darkColor)
+
+                local listener = cc.EventListenerTouchOneByOne:create()
+                listener:setSwallowTouches(true)
+                listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
+                darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
+
+                local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+                beibei:setPosition(cc.p(darkColor:getContentSize().width / 2 , 170))
+                darkColor:addChild(beibei)
+
+                local beibei_tip_label = cc.Label:createWithSystemFont("划一划 !","",48)
+                beibei_tip_label:setPosition(beibei:getContentSize().width /2, beibei:getContentSize().height * 0.5)
+                beibei_tip_label:setColor(cc.c4b(36,63,79,255))
+                beibei:addChild(beibei_tip_label)
+            end
+        end)
+        local action3 = cc.RepeatForever:create(cc.Sequence:create(action1,action2))
+        backColor:runAction(action3)
+    elseif s_CURRENT_USER.slideNum == 2 then
+        local lastTouchTime = 4
+        mat.updateLastTouchTime = function()
+            lastTouchTime = 4
+        end
+        local action1 = cc.DelayTime:create(1.0)
+        local action2 = cc.CallFunc:create(function()
+            lastTouchTime = lastTouchTime - 1
+            if lastTouchTime <= 0 then
+                backColor:stopAllActions()
+
+                local lastButton = createLastButton(word,wrongNum,wrongWordList)
+                backColor:addChild(lastButton, 3)
+
+                local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+                darkColor:setAnchorPoint(0.5,0)
+                darkColor:ignoreAnchorPointForPosition(false)
+                darkColor:setPosition(backColor:getContentSize().width / 2, 0)
+                backColor:addChild(darkColor, 2)
+
+                local listener = cc.EventListenerTouchOneByOne:create()
+                listener:setSwallowTouches(true)
+                listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
+                darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
+
+                local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+                beibei:setPosition(cc.p(darkColor:getContentSize().width / 2 , 250))
+                darkColor:addChild(beibei)
+
+                local beibei_tip_label = cc.Label:createWithSystemFont("不记得就再看一遍","",48)
+                beibei_tip_label:setPosition(beibei:getContentSize().width /2, beibei:getContentSize().height /2)
+                beibei_tip_label:setColor(cc.c4b(36,63,79,255))
+                beibei:addChild(beibei_tip_label)
+            end
+        end)
+        local action3 = cc.RepeatForever:create(cc.Sequence:create(action1,action2))
+        backColor:runAction(action3)
     end
-
-    local onTouchBegan = function(touch, event)
-        return true
-    end
-
-    local onTouchEnded = function(touch, event)
-
-    end
-
-    local listener = cc.EventListenerTouchOneByOne:create()
-    listener:setSwallowTouches(true)
-
-    listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
-    listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
-    local eventDispatcher = darkColor:getEventDispatcher()
-    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, darkColor)
-
-
-    
 end
 
 return SlideCoconutLayer

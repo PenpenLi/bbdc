@@ -16,7 +16,7 @@ end
 
 function DataShare:ctor()
 	
-	LEARN_TIME = math.ceil(s_CURRENT_USER.dataDailyUsing.usingTime / 60.0)
+	LEARN_TIME = math.floor(s_CURRENT_USER.dataDailyUsing.usingTime / 60.0)
 	LEARN_INDEX = math.ceil(LEARN_TIME * 2.5)
 	LEARN_COUNT = s_LocalDatabaseManager.getStudyWordsNum(os.date('%x',os.time()))
 	-- LEARN_TIME = 23
@@ -96,7 +96,7 @@ function DataShare:ctor()
 
 	local function onBtnClicked(sender,eventType)
 		if eventType == ccui.TouchEventType.ended then
-			s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
+			self:setEnabled(false)
 			girl:setPosition(-128,-350)
 			--self.curtain:setOpacity(100)
 			--self.curtain:runAction(cc.FadeOut:create(1))
@@ -104,7 +104,7 @@ function DataShare:ctor()
 				self:setLocalZOrder(0)
 				background:runAction(cc.MoveBy:create(0.3,cc.p(0,-s_DESIGN_HEIGHT * 0.1)))
 				girl:runAction(cc.Sequence:create(cc.JumpBy:create(0.3, cc.p(0,0), 170, 1),cc.CallFunc:create(function (  )
-					s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
+					self:setEnabled(true)
 					bangle:setPosition(0,40)
 					bangle:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.MoveBy:create(0.4,cc.p(0,-20)),cc.MoveBy:create(0.4,cc.p(0,20)),cc.DelayTime:create(2.2))))
 					self.listener:setSwallowTouches(false)
@@ -143,6 +143,7 @@ end
 function DataShare:moveDown()
  -- print('s_CURRENT_USER.dataDailyUsing.startTime',s_CURRENT_USER.dataDailyUsing.startTime)
 	--  print('s_CURRENT_USER.dataDailyUsing.usingTime',s_CURRENT_USER.dataDailyUsing.usingTime)
+
 	s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
 	self.girlBtn:setVisible(false)
 	self.bangle:stopAllActions()
@@ -332,6 +333,7 @@ end
 function DataShare:setEnabled(enable)
 	self.girlBtn:setEnabled(enable)
 	self.bangle:setEnabled(enable)
+	self.close_button:setEnabled(enable)
 end
 
 return DataShare

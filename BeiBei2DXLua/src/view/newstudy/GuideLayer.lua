@@ -97,7 +97,7 @@ function GuideLayer:createFromCollectWord(GUIDE_TYPE)
         back_exist = false
     end
 
-    s_SCENE:callFuncWithDelay(2.5,function ()
+    s_SCENE:callFuncWithDelay(6, function ()
         if closeAnimation() ~= nil then closeAnimation() end
         s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     end)

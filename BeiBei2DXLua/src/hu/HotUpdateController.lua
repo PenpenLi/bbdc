@@ -1,3 +1,4 @@
+--热更新控制器 热更
 
 local HotUpdateController = {}
 
@@ -18,6 +19,7 @@ local message = ""
 --     return updateInfo
 -- end
 
+--初始化热更新控制器
 function HotUpdateController.init()
     print("The HotUpdateController.storagePath is " .. storagePath)
     print("The HotUpdateController.searchPath is " .. searchPath)
@@ -28,6 +30,8 @@ function HotUpdateController.getInfoMsg()
     return message
 end
 
+--完成热更新回调函数
+--
 function HotUpdateController.onCompleted()
     reloadModule('common.utils')
     hideProgressHUD(true)
@@ -35,6 +39,7 @@ function HotUpdateController.onCompleted()
     start.start(true)
 end
 
+--启动热更新逻辑
 function HotUpdateController.start()
     
     if BUILD_TARGET == BUILD_TARGET_DEBUG or BUILD_TARGET == BUILD_TARGET_RELEASE_TEST   then

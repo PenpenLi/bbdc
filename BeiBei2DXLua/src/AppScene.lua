@@ -53,7 +53,22 @@ s_smalltutorial_complete_win = 100
 s_smalltutorial_complete_lose = 101
 s_smalltutorial_complete_timeout = 102
 
--- define review boss tutorial
+
+-- define new tutorial state-- edit by ziaoang
+s_newtutorial_story                 = 0
+s_newtutorial_island_finger         = 1
+s_newtutorial_island_alter_finger   = 2
+s_newtutorial_collect_goal          = 3
+s_newtutorial_train_goal            = 4
+s_newtutorial_wordpool              = 5
+s_newtutorial_sb_cn                 = 6
+s_newtutorial_rb_show               = 7
+s_newtutorial_island_back           = 8
+s_newtutorial_loginreward           = 9
+s_newtutorial_shop                  = 10
+s_newtutorial_over                  = 11
+
+
 
 local AppScene = class("AppScene", function()
     return cc.Scene:create()
@@ -142,13 +157,14 @@ local function update(dt)
         end
     end
 
-    if s_CURRENT_USER ~= nil and s_CURRENT_USER.dataDailyUsing:isInited() then
+    if s_CURRENT_USER ~= nil and s_CURRENT_USER.dataDailyUsing ~= nil and s_CURRENT_USER.dataDailyUsing:isInited() then
         if s_CURRENT_USER.dataDailyUsing:isToday() then
             s_CURRENT_USER.dataDailyUsing:update(dt)
             usingTimeSaveToLocalDB = usingTimeSaveToLocalDB + dt
             if usingTimeSaveToLocalDB > 10 then -- 10 s
                 usingTimeSaveToLocalDB = 0
                 s_LocalDatabaseManager.saveDataClassObject(s_CURRENT_USER.dataDailyUsing, s_CURRENT_USER.objectId, s_CURRENT_USER.username)
+                cx.CXAnalytics:logUsingTime(tostring(s_CURRENT_USER.objectId), tostring(s_CURRENT_USER.bookKey), s_CURRENT_USER.dataDailyUsing.startTime, s_CURRENT_USER.dataDailyUsing.usingTime)
             end
         else
             s_CURRENT_USER.dataDailyUsing:reset()
@@ -272,6 +288,7 @@ end
 function applicationDidEnterBackgroundLua()
     if s_CURRENT_USER ~= nil and s_CURRENT_USER.dataDailyUsing:isInited() and s_CURRENT_USER.dataDailyUsing:isToday() then
         s_LocalDatabaseManager.saveDataClassObject(s_CURRENT_USER.dataDailyUsing, s_CURRENT_USER.objectId, s_CURRENT_USER.username)
+        cx.CXAnalytics:logUsingTime(tostring(s_CURRENT_USER.objectId), tostring(s_CURRENT_USER.bookKey), s_CURRENT_USER.dataDailyUsing.startTime, s_CURRENT_USER.dataDailyUsing.usingTime)
     end
     Analytics_applicationDidEnterBackground( s_SCENE.currentGameLayerName )
 end

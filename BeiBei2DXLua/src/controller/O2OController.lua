@@ -1,4 +1,5 @@
-
+--数据同步控制器
+--登陆 取数据 推送数据等等
 local DataEverydayInfo -- = require('model.user.DataEverydayInfo')
 local DataDailyStudyInfo -- = require('model.user.DataDailyStudyInfo')
 
@@ -61,7 +62,7 @@ end
 
 ----------------------------------------------------------------------------------------------------------------
 -- start
-
+--热更结束之后，就到这里了
 function O2OController.start()
     DataEverydayInfo = require('model.user.DataEverydayInfo')
     DataEverydayInfo.initCheckedInMask()
@@ -82,6 +83,7 @@ function O2OController.start()
     if not s_SERVER.isNetworkConnectedWhenInited() or not s_SERVER.isNetworkConnectedNow() then
         if hasUserInLocalDB then
             s_CURRENT_USER = tmpUser
+            --调用logInOffline会进入HomeLayer
             O2OController.logInOffline()
         else
             -- remove IntroLayer
@@ -204,11 +206,11 @@ function O2OController.startLoadingData(userStartType, username, password)
                     print ('isLocalNewerThenServer <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n\n')
 
                     s_LocalDatabaseManager.saveDataClassObject(s_CURRENT_USER, nil, username)
-                    O2OController.getUserDatasOnline()
+                    O2OController.getUserDatasOnline()      --进游戏
                 end)
                 
             else
-                O2OController.getUserDatasOnline()
+                O2OController.getUserDatasOnline()          --进游戏
             end
         end
         

@@ -38,6 +38,7 @@ function FlipMat.create(word, m ,n, isNewPlayerModel, spineName)
     end
     main.endPosition = 0
 
+    main.updateLastTouchTime = function()end
 
     math.randomseed(os.time())
 
@@ -286,6 +287,34 @@ function FlipMat.create(word, m ,n, isNewPlayerModel, spineName)
         firstFlipNode:stopAllActions()
     end
 
+    main.toNewPlayModel = function()
+        for i = 1, main_m do
+            for j = 1, main_n do
+                local diff = main_logic_mat[i][j] - randomStartIndex
+                if diff < 0 or diff >= string.len(main_word) then
+                    local node = main_mat[i][j]
+                    node:setPosition(320, -1136)
+
+                    local tmp_sprite = cc.Sprite:create("image/coconut_font.png")
+                    tmp_sprite:setPosition(left+gap*(i-1), bottom+gap*(j-1))
+                    tmp_sprite:setOpacity(120)
+                    main:addChild(tmp_sprite)
+
+                    local tmp_label = cc.Label:createWithTTF(main_mat[i][j].main_character_content,'font/CenturyGothic.ttf',60)
+                    tmp_label:setColor(cc.c3b(20,20,20))
+                    tmp_label:setOpacity(120)
+                    tmp_label:setPosition(tmp_sprite:getContentSize().width/2 + 3, tmp_sprite:getContentSize().height/2 + 3)
+                    tmp_sprite:addChild(tmp_label)
+                end
+            end
+        end
+        main.guidePoint()
+        main.cocoAnimation() 
+        main.finger_action()
+        firstFlipNode:stopAllActions()
+        isNewPlayerModel = true
+    end
+
     local guideLineLayer = GuideLine:createLayer(main)
     guideLineLayer:setPosition(main:getContentSize().width/2,0)
     main:addChild(guideLineLayer,-1)
@@ -358,6 +387,8 @@ function FlipMat.create(word, m ,n, isNewPlayerModel, spineName)
 
     -- local function
     local checkTouchLocation = function(location)
+        main.updateLastTouchTime()
+
         for i = 1, main_m do
             for j = 1, main_n do
                 local node = main_mat[i][j]

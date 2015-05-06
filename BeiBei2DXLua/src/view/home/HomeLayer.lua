@@ -21,8 +21,13 @@ local TEXT_CHANGE_ACCOUNT = '切换账号' -- "登出游戏"
 
 function HomeLayer.create(share)
     --s_CURRENT_USER:addBeans(100)
+
+    --Analytics.lua
+    --打印bookKey
+
     --数据管理
     s_CURRENT_USER.dataDailyUsing:reset()
+
 
     AnalyticsSecondDayBook(s_CURRENT_USER.bookKey)
     local showDataShare = true
@@ -62,8 +67,10 @@ function HomeLayer.create(share)
     -- data end
 
     local username = "游客"
-    local logo_name = {"head","book","feedback","information","logout"}
-    local label_name = {username,"选择书籍","用户反馈","完善个人信息",TEXT_CHANGE_ACCOUNT}
+
+    local logo_name = {"head","book","information","logout"}
+    local label_name = {username,"选择书籍","完善个人信息",TEXT_CHANGE_ACCOUNT}
+
     --数据管理结束
 
     s_SCENE.touchEventBlockLayer.unlockTouch()
@@ -282,12 +289,52 @@ function HomeLayer.create(share)
 
     local button_shop = ccui.Button:create("image/homescene/home_page_shop_button.png","image/homescene/home_page_shop_button_press.png","")
     button_shop:setPosition(bigWidth / 2 + 1, 200)
-
     button_shop:setScale9Enabled(true)
     button_shop:setAnchorPoint(0,0.5)
-
     button_shop:addTouchEventListener(button_shop_clicked)
     backColor:addChild(button_shop,1) 
+
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_shop then
+        local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+        darkColor:setAnchorPoint(0.5,0.5)
+        darkColor:ignoreAnchorPointForPosition(false)
+        darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
+        backColor:addChild(darkColor, 3)
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
+        darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
+
+        local back = cc.Sprite:create("image/newstudy/background_word_xinshouyindao_yellow.png")
+        back:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT*0.35)
+        back:ignoreAnchorPointForPosition(false)
+        back:setAnchorPoint(0.5,0.5)
+        darkColor:addChild(back)
+
+        local title = cc.Label:createWithSystemFont('商店可以使用贝贝豆哦！','',40)
+        title:setPosition(back:getContentSize().width/2,back:getContentSize().height/2)
+        title:setColor(cc.c3b(35,181,229))
+        back:addChild(title)
+
+        local button_shop_clicked = function(sender, eventType)
+            if eventType == ccui.TouchEventType.ended then
+                darkColor:removeFromParent()
+                changeViewToFriendOrShop("ShopLayer")
+            end
+        end
+
+        local button_shop = ccui.Button:create("image/homescene/home_page_shop_button.png","image/homescene/home_page_shop_button_press.png","")
+        button_shop:setPosition(bigWidth / 2 + 1, 200)
+        button_shop:setScale9Enabled(true)
+        button_shop:setAnchorPoint(0,0.5)
+        button_shop:addTouchEventListener(button_shop_clicked)
+        darkColor:addChild(button_shop) 
+
+    elseif s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+        local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
+        s_SCENE:popup(CongratulationPopup)
+    end
 
     -- 签到领奖
 
@@ -380,12 +427,56 @@ function HomeLayer.create(share)
         if sprite3 ~= nil then sprite3:removeFromParent() end
     end
 
+    local follow_button_clicked = function(sender, eventType)
+        if eventType == ccui.TouchEventType.ended then
+            -- popup layer
+
+            local back = cc.Sprite:create("image/homescene/background_ciku_white.png")
+            back:setPosition(cc.p(s_DESIGN_WIDTH/2, 550))
+            local info = cc.Sprite:create('image/homescene/Phone-Hook1.png')
+            info:setPosition(back:getContentSize().width/2, back:getContentSize().height/2)
+            back:addChild(info)
+
+            local close_button_clicked = function(sender, eventType)
+                if eventType == ccui.TouchEventType.ended then
+                    s_SCENE:removeAllPopups()
+                end
+            end
+            local closeButton = ccui.Button:create("image/popupwindow/closeButtonRed.png","image/popupwindow/closeButtonRed.png","")
+            closeButton:setPosition(back:getContentSize().width-30, back:getContentSize().height-30)
+            closeButton:addTouchEventListener(close_button_clicked)
+            back:addChild(closeButton)
+
+            local label2 = cc.Label:createWithSystemFont("V2.0.6","",25)
+            label2:setColor(cc.c4b(36,61,78,255))
+            label2:setPosition(back:getContentSize().width/2+45, back:getContentSize().height/2+75)
+            info:addChild(label2)
+
+            local layer = cc.Layer:create()
+            layer:addChild(back)
+
+            s_SCENE:popup(layer)
+        end
+    end
+    local followButton = ccui.Button:create("image/homescene/attention_button.png","image/homescene/attention_button_press.png","image/setting/attention_button_press.png")
+    followButton:setAnchorPoint(0,1)
+    followButton:setPosition(400,190)
+    setting_back:addChild(followButton,10)
+    local deco = cc.Sprite:create("image/homescene/attention_beibei1.png")
+    deco:setPosition(750,100)
+    setting_back:addChild(deco, 10)
+    local text = cc.Label:createWithSystemFont("关注贝贝","",36)
+    text:setColor(cc.c4b(255,255,255,255))
+    -- text:setAnchorPoint(0, 0)
+    text:setPosition(followButton:getContentSize().width/2, followButton:getContentSize().height/2)
+    followButton:addChild(text)
+    followButton:addTouchEventListener(follow_button_clicked)
     -- 设置页面内容
 
     if s_CURRENT_USER.usertype ~= USER_TYPE_GUEST then
         username = s_CURRENT_USER:getNameForDisplay()
-        logo_name = {"head","book","feedback","logout"}
-        label_name = {username,"选择书籍","用户反馈",TEXT_CHANGE_ACCOUNT}
+        logo_name = {"head","book","logout"}
+        label_name = {username,"选择书籍",TEXT_CHANGE_ACCOUNT}
     end
 
     local label = {}
@@ -398,13 +489,6 @@ function HomeLayer.create(share)
                 if label_name[i] == "选择书籍" then
                     AnalyticsChangeBookBtn()
                     s_CorePlayManager.enterBookLayer()
-                elseif label_name[i] == "用户反馈" then
-                    if  online == false then
-                        offlineTipHome.setTrue(OfflineTipForHome_Feedback)
-                    else
-                        local alter = AlterI.create("用户反馈")
-                        s_SCENE:popup(alter)
-                    end
                 elseif label_name[i] == "完善个人信息" then
                     if  online == false then
                         offlineTipHome.setTrue(OfflineTipForHome_ImproveInformation)

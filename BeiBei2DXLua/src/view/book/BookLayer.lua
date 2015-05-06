@@ -48,7 +48,7 @@ function BookLayer.create()
     backColor:addChild(hint) 
     local name_array = {}
     local full_name_array = {}
-    local key_array = {'cet4','cet6'}--,'ncee','toefl','ielts','gre','gse','pro4','pro8','gmat','sat','middle','primary'}
+    local key_array = {'cet4','cet6','ncee','toefl','ielts','gre','gse','pro4','pro8','gmat','sat','middle','primary'}
     --local key_array = g_BOOKKEYS
     for i = 1, #key_array do
         name_array[i] = string.upper(key_array[i])
@@ -79,7 +79,7 @@ function BookLayer.create()
                 AnalyticsFirst(ANALYTICS_FIRST_BOOK, key)
                 
                 s_CorePlayManager.enterHomeLayer()
-                -- s_O2OController.getBulletinBoard()
+                s_O2OController.getBulletinBoard()
             
                 playSound(s_sound_buttonEffect)   
 
@@ -192,27 +192,23 @@ function BookLayer.create()
 
         local custom_item = ccui.Layout:create()
         custom_item:setTouchEnabled(true)
-        custom_item:setContentSize(cc.size(s_RIGHT_X - s_LEFT_X,0.35 * s_DESIGN_HEIGHT))
+        custom_item:setContentSize(cc.size(s_RIGHT_X - s_LEFT_X,0.26 * s_DESIGN_HEIGHT))
         shelf:setPosition(cc.p(custom_item:getContentSize().width / 2.0, custom_item:getContentSize().height * 0.2))
         custom_item:addChild(shelf,0,'shelf')
 
         listView:insertCustomItem(custom_item,i - 1)
-        if i == 1 then
+        if i == 1 and bookCount%2 == 1 then
             layer.book[i]:setPosition(0.5 * custom_item:getContentSize().width,custom_item:getContentSize().height * 0.2 + 0.25 * shelf:getContentSize().height)
             custom_item:addChild(layer.book[i])
             local flower = cc.Sprite:create('image/book/flower_choose_book.png')
             flower:setAnchorPoint(0.5,0)
             flower:setPosition(0.75 * shelf:getContentSize().width,0.75 * shelf:getContentSize().height)
             shelf:addChild(flower)
-            
         elseif i < count then
             layer.book[2 * (i - 1) + bookCount%2 - 1]:setPosition(custom_item:getContentSize().width / 2.0 - 0.2 * shelf:getContentSize().width,custom_item:getContentSize().height * 0.2 + 0.25 * shelf:getContentSize().height)
             layer.book[2 * (i - 1) + bookCount%2]:setPosition(custom_item:getContentSize().width / 2.0 + 0.2 * shelf:getContentSize().width,custom_item:getContentSize().height * 0.2 + 0.25 * shelf:getContentSize().height)
             custom_item:addChild(layer.book[2 * (i - 1) + bookCount%2 - 1])
             custom_item:addChild(layer.book[2 * (i - 1) + bookCount%2])
-        elseif bookCount <= 2 and i == 2 then
-            layer.book[2]:setPosition(0.5 * custom_item:getContentSize().width,custom_item:getContentSize().height * 0.2 + 0.25 * shelf:getContentSize().height)
-            custom_item:addChild(layer.book[2])
         end
 
     end

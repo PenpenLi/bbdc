@@ -1,4 +1,5 @@
-require("cocos.init")
+--热更新的场景
+require("cocos.init") --初始化cocos的lua框架
 
 local HotUpdateScene = class("HotUpdateScene", function()
     return cc.Scene:create()

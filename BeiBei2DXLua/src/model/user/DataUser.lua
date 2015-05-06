@@ -39,6 +39,7 @@ function DataUser:ctor()
     self.appVersion                        = s_APP_VERSION 
     self.tutorialStep                      = 0 
     self.tutorialSmallStep                 = 0 
+    self.newTutorialStep                   = s_newtutorial_story
     self.isSoundAm                         = 1 
 --    self.reviewBossTutorialStep            = 0 
     self.bookKey                           = ''
@@ -98,7 +99,7 @@ function DataUser:ctor()
     self.lockFunction                      = 8
 
     self.isAlterOn                         = 1
-    self.slideNum                          = 1
+    self.slideNum                          = 0
     self.familiarOrUnfamiliar              = 1 -- 0 for choose familiar ,1 for choose unfamiliar
     self.beanRewardForCollect              = 3 -- if begin a new mission ,bean = 3 ; if guess wrong word ,bean = 2 ,1 ,0
     self.beanRewardForIron                 = 3
