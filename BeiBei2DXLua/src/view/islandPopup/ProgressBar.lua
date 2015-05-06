@@ -15,6 +15,10 @@ function ProgressBar.create(totalIndex, currentIndex)
 
     local local_size = main:getContentSize()
 
+    if currentIndex > 3 then
+        currentIndex = currentIndex - 1
+    end
+
     -- init framework
     local progress_back = cc.Sprite:create(backImageName)
     progress_back:setPosition(local_size.width/2, local_size.height/2)
@@ -55,7 +59,7 @@ function ProgressBar.create(totalIndex, currentIndex)
 
     for i=0,totalIndex do
         local point_sprite 
-        if i == 3 then
+        if i == 2 then
             point_sprite = cc.Sprite:create("image/islandPopup/subtask_progress_bar_milestone.png")
         else
             point_sprite = cc.Sprite:create("image/islandPopup/subtask_progress_bar_unfinished_circle.png")

@@ -101,7 +101,7 @@ local function addBackButton(backPopup,islandIndex)
     -- 引导内容
     backColor:setPosition(backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
-        -- backPopup:addChild(backColor,3)
+        backPopup:addChild(backColor,3)
     end
 
     local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
@@ -243,10 +243,10 @@ function LevelProgressPopup:createPape(islandIndex)
     local progress_index = self.current_index
     -- 小岛进度为8时，小岛完成
     if self.current_index >= 7 then
-        progress_index = 7
+        progress_index = 6
     end
     -- 小岛进度条
-    local progressBar = ProgressBar.create(7,progress_index)
+    local progressBar = ProgressBar.create(6,progress_index)
     progressBar:setPosition(self.backPopup:getContentSize().width * 0.5,self.backPopup:getContentSize().height * 0.25)
     self.backPopup:addChild(progressBar)
 
@@ -292,12 +292,19 @@ function LevelProgressPopup:createPape(islandIndex)
                 layout:addChild(MysteriousLayer) 
             end
         end
-        pageView:addPage(layout)
+        if i ~= 3 then
+            pageView:addPage(layout)
+        end
     end
 
     -- change to current index
     if self.animation > 0 and self.animation < 4 then
-        pageView:scrollToPage(self.current_index - 1)
+        if self.animation > 3 then
+            pageView:scrollToPage(self.current_index - 2)
+        else
+            pageView:scrollToPage(self.current_index - 1)
+        end 
+        
         --如果进入的不是第一页，跳转到上一页，播放动画
         local backColor = cc.LayerColor:create(cc.c4b(0,0,0,0), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
         backColor:setPosition(-s_DESIGN_OFFSET_WIDTH, 0)
@@ -333,14 +340,14 @@ function LevelProgressPopup:createPape(islandIndex)
         local eventDispatcher = self:getEventDispatcher()
         eventDispatcher:addEventListenerWithSceneGraphPriority(listener, backColor)
     else
-        pageView:scrollToPage(progress_index)
+        pageView:scrollToPage(self.current_index - 1)
     end
 
     -- 按钮跳转方式
     self.changeToPage = function (bool) 
         if bool == true then
             local target = pageView:getCurPageIndex()
-            if target ~= 7 then
+            if target ~= 6 then
                 pageView:scrollToPage(target + 1)
             end
         elseif bool == false then
@@ -630,12 +637,12 @@ function LevelProgressPopup:createSummary()
 end
 function LevelProgressPopup:addGuide2()
     -- 第二步引导
-    local backColor = cc.LayerColor:create(cc.c4b(0,0,0,30), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+    local backColor = cc.LayerColor:create(cc.c4b(0,0,0,80), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
     backColor:setPosition(self.backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, self.backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
     self.backPopup:addChild(backColor,5)
 
     local tip_Sprite = cc.Sprite:create("image/button/longbluefront.png")
-    tip_Sprite:setPosition(backColor:getContentSize().width * 0.5 - 5, backColor:getContentSize().height * 0.32 - 1)
+    tip_Sprite:setPosition(backColor:getContentSize().width * 0.5 - 6, backColor:getContentSize().height * 0.32 - 2)
     tip_Sprite:setColor(cc.c4b(199,199,193,255))
     backColor:addChild(tip_Sprite)
 
@@ -646,7 +653,7 @@ function LevelProgressPopup:addGuide2()
     tip_Sprite:addChild(label)
 
     local cantPlay_Sprite = cc.Sprite:create("image/button/longbluefront.png")
-    cantPlay_Sprite:setPosition(backColor:getContentSize().width * 0.5 - 5, backColor:getContentSize().height * 0.22 - 1)
+    cantPlay_Sprite:setPosition(backColor:getContentSize().width * 0.5 - 6, backColor:getContentSize().height * 0.22 - 2)
     cantPlay_Sprite:setColor(cc.c4b(199,199,193,255))
     backColor:addChild(cantPlay_Sprite)
     
@@ -687,7 +694,7 @@ function LevelProgressPopup:addGuide2()
 end
 function LevelProgressPopup:addGuide1()
     -- 第一步引导
-    local backColor = cc.LayerColor:create(cc.c4b(0,0,0,30), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+    local backColor = cc.LayerColor:create(cc.c4b(0,0,0,80), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
     backColor:setPosition(self.backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, self.backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
     self.backPopup:addChild(backColor,5)
 
@@ -709,12 +716,15 @@ function LevelProgressPopup:addGuide1()
     local action1 = cc.RotateBy:create(0.5,20)
     shine1:runAction(cc.RepeatForever:create(action1))
 
+    local guideStep = 0
+
     local action0 = cc.DelayTime:create(3)
     local action1 = cc.CallFunc:create(function ()
-        if backColor ~= nil then
+        if backColor ~= nil and guideStep == 0 then
             backColor:removeFromParent()
             backColor = nil
             self:addGuide2()
+            guideStep = 1
         end
     end)
     local action2 = cc.Sequence:create(action0,action1)
@@ -725,10 +735,11 @@ function LevelProgressPopup:addGuide1()
     end
 
     local onTouchEnded = function(touch, event)
-        if backColor ~= nil then
+        if backColor ~= nil and guideStep == 0 then
             backColor:removeFromParent()
             backColor = nil
             self:addGuide2()
+            guideStep = 1
         end
     end
 
@@ -743,7 +754,7 @@ end
 function LevelProgressPopup:createMysterious(text)
     local back = cc.LayerColor:create(cc.c4b(0,0,0,0), 545, 1000)
 
-    if s_CURRENT_USER.newTutorialStep == s_newtutorial_rb_show and self.current_index == 4 then
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_rb_show and text == "time" then
         self:addGuide1()
     end
 
