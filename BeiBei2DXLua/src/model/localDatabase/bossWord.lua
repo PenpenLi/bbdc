@@ -409,6 +409,9 @@ function M.updateTypeIndex(bossID)
 
     for row in Manager.database:nrows("SELECT * FROM DataBossWord WHERE "..condition.." and bossID = "..bossID.." ;") do
         local newTypeIndex = row.typeIndex + 1
+        if newTypeIndex == 2 then
+            newTypeIndex = newTypeIndex + 1
+        end 
         local lastWordIndex = row.lastWordIndex
 
         local query = "UPDATE DataBossWord SET lastUpdate = '"..time.."' , typeIndex = "..newTypeIndex.." WHERE "..condition.." and bossID = "..bossID.." ;"

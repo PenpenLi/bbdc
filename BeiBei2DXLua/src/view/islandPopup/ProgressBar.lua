@@ -15,7 +15,7 @@ function ProgressBar.create(totalIndex, currentIndex)
 
     local local_size = main:getContentSize()
 
-    if currentIndex > 3 then
+    if currentIndex > 2 then
         currentIndex = currentIndex - 1
     end
 

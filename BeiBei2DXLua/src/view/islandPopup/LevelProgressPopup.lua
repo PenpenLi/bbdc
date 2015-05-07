@@ -121,6 +121,10 @@ local function addBackButton(backPopup,islandIndex)
         local location = backPopup:convertToNodeSpace(touch:getLocation())
         if not cc.rectContainsPoint(button_back:getBoundingBox(),location) then
             backColor:removeFromParent()
+            if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
+                s_CURRENT_USER.newTutorialStep = s_newtutorial_sb_cn
+                saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
+            end
         end
     end
 
@@ -299,7 +303,7 @@ function LevelProgressPopup:createPape(islandIndex)
 
     -- change to current index
     if self.animation > 0 and self.animation < 4 then
-        if self.animation > 3 then
+        if self.animation > 2 then
             pageView:scrollToPage(self.current_index - 2)
         else
             pageView:scrollToPage(self.current_index - 1)
@@ -313,7 +317,11 @@ function LevelProgressPopup:createPape(islandIndex)
         local action0 = cc.DelayTime:create(1)
         local action1 = cc.CallFunc:create(function ()
             if backColor ~= nil then
-                pageView:scrollToPage(self.current_index)
+                if self.current_index > 2 then
+                    pageView:scrollToPage(self.current_index - 1)
+                else
+                    pageView:scrollToPage(self.current_index)
+                end 
                 backColor:removeFromParent()
                 backColor = nil
             end
@@ -327,7 +335,11 @@ function LevelProgressPopup:createPape(islandIndex)
 
         local onTouchEnded = function(touch, event)
             if backColor ~= nil then
-                pageView:scrollToPage(self.current_index)
+                if self.current_index > 2 then
+                    pageView:scrollToPage(self.current_index - 1)
+                else
+                    pageView:scrollToPage(self.current_index)
+                end 
                 backColor:removeFromParent()
                 backColor = nil
             end
@@ -340,7 +352,11 @@ function LevelProgressPopup:createPape(islandIndex)
         local eventDispatcher = self:getEventDispatcher()
         eventDispatcher:addEventListenerWithSceneGraphPriority(listener, backColor)
     else
-        pageView:scrollToPage(self.current_index - 1)
+        if self.current_index > 2 then
+            pageView:scrollToPage(self.current_index - 1)
+        else
+            pageView:scrollToPage(self.current_index)
+        end 
     end
 
     -- 按钮跳转方式
@@ -637,6 +653,12 @@ function LevelProgressPopup:createSummary()
 end
 function LevelProgressPopup:addGuide2()
     -- 第二步引导
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_rb_show then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_island_back
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
+    end
+    -- 更新引导tag
+
     local backColor = cc.LayerColor:create(cc.c4b(0,0,0,80), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
     backColor:setPosition(self.backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, self.backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
     self.backPopup:addChild(backColor,5)
