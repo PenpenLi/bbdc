@@ -7,6 +7,7 @@ local MissionProgress = require("view.home.MissionProgressLayer")
 local OfflineTipHome = require("view.offlinetip.OfflineTipForHome")
 local OfflineTipFriend = require("view.offlinetip.OfflineTipForFriend")
 local SmallAlter = require("view.alter.SmallAlter")
+local SmallAlterWithOneButton = require("view.alter.SmallAlterWithOneButton")
 
 local HomeLayer = class("HomeLayer", function ()
     return cc.Layer:create()
@@ -339,9 +340,18 @@ function HomeLayer.create(share)
     -- 签到领奖
 
     local function ClickRewardBtnFunction()
-        local Loginreward = require("view.loginreward.LoginRewardPopup")
-        local loginreward = Loginreward.create()
-        s_SCENE:popup(loginreward) 
+        if s_CURRENT_USER.newTutorialStep >= s_newtutorial_loginreward then
+            -- 打卡之前，每日领奖功能锁定
+            local Loginreward = require("view.loginreward.LoginRewardPopup")
+            local loginreward = Loginreward.create()
+            s_SCENE:popup(loginreward)
+        else
+            local tipPopup =  SmallAlterWithOneButton.create("您现在不能自动领取签到奖励。")
+            s_SCENE:popup(tipPopup)
+            tipPopup.affirm = function ()
+                s_SCENE:removeAllPopups()
+            end
+        end
     end
 
     local button_reward_clicked = function(sender, eventType)

@@ -255,6 +255,8 @@ end
 function ChapterLayer:checkUnlockLevel()
     -- get state --
     local progress = s_CURRENT_USER.levelInfo:getLevelInfo(s_CURRENT_USER.bookKey)
+    -- 小岛进度
+
     -- check state
     local bossList = s_LocalDatabaseManager.getAllBossInfo()
     print('---BOSS list')
@@ -267,9 +269,11 @@ function ChapterLayer:checkUnlockLevel()
         if bossInfo["coolingDay"] - 0 == 0 and bossInfo["typeIndex"] - 4 >= 0 and taskIndex == -2 and bossInfo["typeIndex"] - 8 < 0 then
             taskIndex = bossID - 1
             taskState = bossInfo["typeIndex"]
+            -- 寻找以前打过的复习 boss
         end
         if (progressIndex + 1) == bossID then
             progressState = bossInfo["typeIndex"]
+            -- 当前小岛的进度
         end
     end
     -- get state --
