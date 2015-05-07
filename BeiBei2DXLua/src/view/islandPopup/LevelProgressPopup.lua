@@ -108,6 +108,14 @@ local function addBackButton(backPopup,islandIndex)
     beibei:setPosition(backColor:getContentSize().width *0.5, backColor:getContentSize().height *0.7)
     backColor:addChild(beibei)
 
+    local head = cc.Sprite:create("image/guide/beibei_xinshouyindao_newwords.png")
+    head:setPosition(beibei:getContentSize().width *0.5, 200)
+    beibei:addChild(head)
+
+    local finger = cc.Sprite:create("image/guide/beibei_hand2_xinshouyindao_newwords.png")
+    finger:setPosition(beibei:getContentSize().width *0.3, beibei:getContentSize().height + 10)
+    beibei:addChild(finger)
+
     local beibei_tip_label = cc.Label:createWithSystemFont("刚学的单词都在这里哦！","",32)
     beibei_tip_label:setPosition(beibei:getContentSize().width *0.5, beibei:getContentSize().height *0.5)
     beibei_tip_label:setColor(cc.c4b(36,63,79,255))

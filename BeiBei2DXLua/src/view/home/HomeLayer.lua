@@ -363,6 +363,10 @@ function HomeLayer.create(share)
     end
 
     local button_reward = ccui.Button:create("image/homescene/home_page_medal_button.png","image/homescene/home_page_medal_button_press.png","")
+    if s_CURRENT_USER.newTutorialStep < s_newtutorial_loginreward then
+        button_reward:loadTextureNormal("image/guide/Rewardlocked.png")
+        button_reward:loadTexturePressed("image/guide/Rewardlocked.png")
+    end
     button_reward:setPosition(bigWidth / 2 + 166, 200)
     button_reward:setScale9Enabled(true)
     button_reward:addTouchEventListener(button_reward_clicked)
