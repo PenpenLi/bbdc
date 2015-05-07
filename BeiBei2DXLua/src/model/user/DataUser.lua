@@ -39,7 +39,7 @@ function DataUser:ctor()
     self.appVersion                        = s_APP_VERSION 
     self.tutorialStep                      = 0 
     self.tutorialSmallStep                 = 0 
-    self.newTutorialStep                   = s_newtutorial_island_finger  --s_newtutorial_collect_goal
+    self.newTutorialStep                   = s_newtutorial_story --s_newtutorial_island_finger  --s_newtutorial_collect_goal
     self.isSoundAm                         = 1 
 --    self.reviewBossTutorialStep            = 0 
     self.bookKey                           = ''
