@@ -197,8 +197,8 @@ function MissionProgressLayer.create(share,homelayer)
             if s_CURRENT_USER.newTutorialStep == s_newtutorial_story then
                 s_CorePlayManager.enterStoryLayer()
             else
-                --s_CorePlayManager.enterLevelLayer()
-                s_CorePlayManager.enterStoryLayer()
+                s_CorePlayManager.enterLevelLayer()
+                --s_CorePlayManager.enterStoryLayer()
 
             end
         end)
