@@ -1433,8 +1433,13 @@ function SummaryBossLayer:initCrab1()
             --delaytime = 1.5
         end
         self.crab[i]:runAction(cc.Sequence:create(cc.DelayTime:create(1.1 + delaytime),appear))
-        self.ccbcrab[i]['meaningSmall']:setString(s_LocalDatabaseManager.getWordInfoFromWordName(self.wordPool[self.currentIndex][i]).wordMeaningSmall)
-        self.ccbcrab[i]['meaningBig']:setString(s_LocalDatabaseManager.getWordInfoFromWordName(self.wordPool[self.currentIndex][i]).wordMeaningSmall)
+        if self.isTrying then
+            self.ccbcrab[i]['meaningSmall']:setString(self.wordPool[self.currentIndex][i])
+            self.ccbcrab[i]['meaningBig']:setString(self.wordPool[self.currentIndex][i])
+        else
+            self.ccbcrab[i]['meaningSmall']:setString(s_LocalDatabaseManager.getWordInfoFromWordName(self.wordPool[self.currentIndex][i]).wordMeaningSmall)
+            self.ccbcrab[i]['meaningBig']:setString(s_LocalDatabaseManager.getWordInfoFromWordName(self.wordPool[self.currentIndex][i]).wordMeaningSmall)
+        end
     end
     self.crab[self.firstIndex]:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.DelayTime:create(2),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale))))
     --print('s_tutorial_summary_boss',s_tutorial_summary_boss,s_CURRENT_USER.tutorialStep)
@@ -1457,6 +1462,7 @@ function SummaryBossLayer:addTutorial()
     curtain:addChild(hintboard)
     if self.isTrying then
         self:showGuideRoute()
+        hintboard:setTexture('image/summarybossscene/hintboard1.png')
     end
     self.gameStart = true
     self.globalLock = false
