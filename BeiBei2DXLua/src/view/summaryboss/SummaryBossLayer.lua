@@ -1551,7 +1551,7 @@ function SummaryBossLayer:initMapInfoByIndex(startIndex)
             charaster_set_filtered[#charaster_set_filtered+1] = char
         end
         local main_logic_mat
-        if s_CURRENT_USER.newTutorialStep == s_newtutorial_sb_cn and self.entrance then
+        if (s_CURRENT_USER.newTutorialStep == s_newtutorial_sb_cn and self.entrance) or self.isTrying then
             main_logic_mat = randomMat(4, 4)
         else
             main_logic_mat = getRandomBossPath()
@@ -1820,6 +1820,10 @@ end
 
 function SummaryBossLayer:win(chapter,entrance,wordList)
     self.globalLock = true
+    if self.isTrying then
+        self:leaveTutorial()
+        return
+    end
 
     self.failTime = 0
     if self.leftTime < 10 or self.useItem then
@@ -1884,7 +1888,9 @@ function SummaryBossLayer:lose(chapter,entrance,wordList)
 end
 
 function SummaryBossLayer:leaveTutorial()
-
+    local StoryLayer = require('view.level.StoryLayer')
+    local storyLayer = StoryLayer.create(7)
+    s_SCENE:replaceGameLayer(storyLayer)
 end
 
 function SummaryBossLayer:hint()

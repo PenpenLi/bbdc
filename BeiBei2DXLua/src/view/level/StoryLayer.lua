@@ -5,14 +5,28 @@ local StoryLayer = class("StoryLayer", function()
 	return cc.Layer:create()
 end)
 
-function StoryLayer.create()
-	return StoryLayer.new()
+function StoryLayer.create(tag)
+	return StoryLayer.new(tag)
 end
 
-function StoryLayer:ctor()
-	self.tag = 1
+function StoryLayer:ctor(tag)
+	self.tag = tag
 	self.skip = false
-	self:addIntroduction1()
+	if tag == 1 then
+		self:addIntroduction1()
+	elseif tag == 2 then
+		self:addIntroduction2()
+	elseif tag == 3 then
+		self:addIntroduction3()
+	elseif tag == 4 then
+		self:addIntroduction4()
+	elseif tag == 5 then
+		self:addIntroduction5()
+	elseif tag == 6 then
+		self:addIntroduction6()
+	else
+		self:addIntroduction7()
+	end
 	self:addSkipButton()
 end
 
@@ -161,9 +175,19 @@ function StoryLayer:addIntroduction6()
 	drama:addAnimation(0, 'animation', true)
 	drama:setName("drama6")
 	self:addChild(drama)
-	self:callFuncWithDelay(2.5, function()
-		self:directStory(6)
-	end)
+	-- self:callFuncWithDelay(2.5, function()
+	-- 	self:directStory(6)
+	-- end)
+	local button = require("view.button.longButtonInStudy").create("giveup","blue","试玩")
+	button:setPosition(0,-s_DESIGN_HEIGHT / 2.6)
+	drama:addChild(button)
+
+	button.func = function ()
+
+		local SummaryBossLayer = require('view.summaryboss.SummaryBossLayer')
+        local summaryBossLayer = SummaryBossLayer.create(nil,0,true)
+        s_SCENE:replaceGameLayer(summaryBossLayer) 
+	end
 end
 
 function StoryLayer:addIntroduction7()
