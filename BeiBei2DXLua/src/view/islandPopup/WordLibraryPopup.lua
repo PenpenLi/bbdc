@@ -36,6 +36,11 @@ local function addBackButton(top_sprite,backPopup,index)
     local click = 0 
     local button_back_clicked = function()
         if click == 0 then
+            --更新引导tag
+            if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
+                s_CURRENT_USER.newTutorialStep = s_newtutorial_sb_cn
+                saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
+            end
             click = 1
             playSound(s_sound_buttonEffect)
             local action0 = cc.CallFunc:create(function()
