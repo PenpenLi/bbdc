@@ -239,7 +239,7 @@ end
 
 function CorePlayManager.enterStoryLayer()
     local StoryLayer = require('view.level.StoryLayer')
-    local storyLayer = StoryLayer.create()
+    local storyLayer = StoryLayer.create(1)
     s_SCENE:replaceGameLayer(storyLayer)
 end
 

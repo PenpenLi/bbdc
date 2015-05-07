@@ -198,6 +198,8 @@ function MissionProgressLayer.create(share,homelayer)
                 s_CorePlayManager.enterStoryLayer()
             else
                 s_CorePlayManager.enterLevelLayer()
+                --s_CorePlayManager.enterStoryLayer()
+
             end
         end)
     end

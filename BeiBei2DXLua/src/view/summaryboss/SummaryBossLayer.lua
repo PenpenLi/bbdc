@@ -1433,8 +1433,13 @@ function SummaryBossLayer:initCrab1()
             --delaytime = 1.5
         end
         self.crab[i]:runAction(cc.Sequence:create(cc.DelayTime:create(1.1 + delaytime),appear))
-        self.ccbcrab[i]['meaningSmall']:setString(s_LocalDatabaseManager.getWordInfoFromWordName(self.wordPool[self.currentIndex][i]).wordMeaningSmall)
-        self.ccbcrab[i]['meaningBig']:setString(s_LocalDatabaseManager.getWordInfoFromWordName(self.wordPool[self.currentIndex][i]).wordMeaningSmall)
+        if self.isTrying then
+            self.ccbcrab[i]['meaningSmall']:setString(self.wordPool[self.currentIndex][i])
+            self.ccbcrab[i]['meaningBig']:setString(self.wordPool[self.currentIndex][i])
+        else
+            self.ccbcrab[i]['meaningSmall']:setString(s_LocalDatabaseManager.getWordInfoFromWordName(self.wordPool[self.currentIndex][i]).wordMeaningSmall)
+            self.ccbcrab[i]['meaningBig']:setString(s_LocalDatabaseManager.getWordInfoFromWordName(self.wordPool[self.currentIndex][i]).wordMeaningSmall)
+        end
     end
     self.crab[self.firstIndex]:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.DelayTime:create(2),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale),cc.ScaleTo:create(0.5,1.15 * scale),cc.ScaleTo:create(0.5,1.0 * scale))))
     --print('s_tutorial_summary_boss',s_tutorial_summary_boss,s_CURRENT_USER.tutorialStep)
@@ -1457,6 +1462,7 @@ function SummaryBossLayer:addTutorial()
     curtain:addChild(hintboard)
     if self.isTrying then
         self:showGuideRoute()
+        hintboard:setTexture('image/summarybossscene/hintboard1.png')
     end
     self.gameStart = true
     self.globalLock = false
@@ -1545,7 +1551,7 @@ function SummaryBossLayer:initMapInfoByIndex(startIndex)
             charaster_set_filtered[#charaster_set_filtered+1] = char
         end
         local main_logic_mat
-        if s_CURRENT_USER.newTutorialStep == s_newtutorial_sb_cn and self.entrance then
+        if (s_CURRENT_USER.newTutorialStep == s_newtutorial_sb_cn and self.entrance) or self.isTrying then
             main_logic_mat = randomMat(4, 4)
         else
             main_logic_mat = getRandomBossPath()
@@ -1814,6 +1820,10 @@ end
 
 function SummaryBossLayer:win(chapter,entrance,wordList)
     self.globalLock = true
+    if self.isTrying then
+        self:leaveTutorial()
+        return
+    end
 
     self.failTime = 0
     if self.leftTime < 10 or self.useItem then
@@ -1878,7 +1888,9 @@ function SummaryBossLayer:lose(chapter,entrance,wordList)
 end
 
 function SummaryBossLayer:leaveTutorial()
-
+    local StoryLayer = require('view.level.StoryLayer')
+    local storyLayer = StoryLayer.create(7)
+    s_SCENE:replaceGameLayer(storyLayer)
 end
 
 function SummaryBossLayer:hint()
