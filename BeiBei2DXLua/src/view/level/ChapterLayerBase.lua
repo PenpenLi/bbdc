@@ -210,7 +210,7 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
 
 
     elseif levelState == 2 or (levelState >= 4 and levelIndex == currentTaskBossIndex) then
-        if s_level_popup_state ~= 0 then
+        if s_level_popup_state ~= 0 and levelState < 4 then
             local deco = sp.SkeletonAnimation:create("spine/chapterlevel/chuizi.json","spine/chapterlevel/chuizi.atlas",1)
             deco:setPosition(levelPosition.x-60,levelPosition.y-10)
             deco:setAnchorPoint(1,1)

@@ -38,6 +38,10 @@ function SummaryBossAlter.create(bossLayer,win,index,entrance)
             s_CURRENT_USER:addBeans(3)
             saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY]})
         end
+
+        -- auto popup
+        s_level_popup_state = 1
+
         layer:win1(entrance)  
         cc.SimpleAudioEngine:getInstance():stopMusic()
 
