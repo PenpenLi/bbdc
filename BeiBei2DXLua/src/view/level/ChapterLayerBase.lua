@@ -175,9 +175,6 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
         -- deco:setPosition(levelPosition.x,levelPosition.y+20)
         -- self:addChild(deco, 130)
     elseif levelState == 1 then
-        local deco = cc.Sprite:create('image/chapter/elements/tubiao_chuizi_tanchu_xiaoguan.png')
-        deco:setPosition(levelPosition.x,levelPosition.y+20)
-        self:addChild(deco, 130)
         if s_level_popup_state ~= 0 then
             local deco = sp.SkeletonAnimation:create("spine/chapterlevel/beibeidaizi.json","spine/chapterlevel/beibeidaizi.atlas",1)
             deco:setPosition(levelPosition.x-60,levelPosition.y-10)
@@ -201,7 +198,8 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
         end
 
 
-    elseif levelState == 2 or (levelState >= 4 and levelIndex == currentTaskBossIndex) then
+    --elseif levelState == 2 or (levelState >= 4 and levelIndex == currentTaskBossIndex) then
+    elseif levelState == 2 or (levelState >= 4) then
         if s_level_popup_state ~= 0 and levelState < 4 then
             local deco = sp.SkeletonAnimation:create("spine/chapterlevel/chuizi.json","spine/chapterlevel/chuizi.atlas",1)
             deco:setPosition(levelPosition.x-60,levelPosition.y-10)

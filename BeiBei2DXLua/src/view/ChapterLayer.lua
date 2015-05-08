@@ -287,16 +287,6 @@ function ChapterLayer:checkUnlockLevel()
     -- unlock chapter
         self:plotUnlockCloudAnimation()
         local currentChapterKey = 'chapter'..math.floor(currentProgress / s_islands_per_page)
---        
---        local delay = 0.5
---        local func = function()
---            self:addChapterIntoListView(currentChapterKey)
---        end
---
---        local delayAction = cc.DelayTime:create(delay)
---        local callAction = cc.CallFunc:create(func)
---        local sequence = cc.Sequence:create(delayAction, callAction)
---        self:runAction(sequence)
         self:callFuncWithDelay(0.1, function() 
             self:addChapterIntoListView(currentChapterKey)
             self.activeChapterEndIndex = self.activeChapterEndIndex + 1
@@ -326,17 +316,27 @@ function ChapterLayer:checkUnlockLevel()
     elseif currentProgress - oldProgress > 0 then   -- unlock level
         local chapterKey = 'chapter'..math.floor(oldProgress / s_islands_per_page)
         local delayTime = 0
---        self:callFuncWithDelay(delayTime, 
---            function()
---                -- add notification
---                self:addPlayerNotification(false) 
---            end
---        )  
-        self.chapterDic[chapterKey]:plotUnlockLevelAnimation('level'..currentProgress)
 
         self:callFuncWithDelay(1, function()
             self:scrollLevelLayer(currentProgress, 1)
         end)
+
+        local chapterKey = 'chapter'..math.floor(oldProgress / s_islands_per_page)
+        if taskIndex == -2 and s_level_popup_state == 1 then
+            s_level_popup_state = 2
+                s_SCENE.touchEventBlockLayer.lockTouch()
+                self:callFuncWithDelay(1.1, function()
+                    s_SCENE.touchEventBlockLayer.unlockTouch()
+                end)
+            self:callFuncWithDelay(1.0, function()
+                local isAnimation = true
+                self.chapterDic[chapterKey]:addPopup(oldProgress,isAnimation)
+            end)
+        end
+        self:callFuncWithDelay(5.0, function()
+            self.chapterDic[chapterKey]:plotUnlockLevelAnimation('level'..currentProgress)
+        end)
+
 --        if taskIndex == -2 then
 --            self:callFuncWithDelay(1.3, function() 
 --                self.chapterDic[chapterKey]:addPopup(currentProgress)
@@ -595,6 +595,7 @@ function ChapterLayer:addPlayerNotification(isRunScale)  -- notification
         button_title:setAnchorPoint(0.5,0.5)
         button_title:setPosition(start:getContentSize().width/2,start:getContentSize().height/2)
         start:addChild(button_title)
+    end
 end
 
 function ChapterLayer:addPlayer()
