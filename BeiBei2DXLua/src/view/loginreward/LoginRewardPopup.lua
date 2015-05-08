@@ -8,6 +8,7 @@ function LoginRewardPopup.create()
 end
 
 local function numberToSprite(number)
+        print("rewardtutorial"..s_CURRENT_USER.newTutorialStep)
     if number >= 1 and number <= 5 then
         local shadow_sprite = cc.Sprite:create("image/loginreward/back"..number..".png")
         for i = 1,number do
@@ -50,6 +51,7 @@ function LoginRewardPopup:ctor()
         local remove = cc.CallFunc:create(function() 
              s_SCENE:removeAllPopups()
              s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
+             s_CorePlayManager.enterHomeLayer()
         end)
         backPopup:runAction(cc.Sequence:create(move,remove))
     end
@@ -235,7 +237,6 @@ function LoginRewardPopup:ctor()
             if s_CURRENT_USER.newTutorialStep == s_newtutorial_loginreward then
                 s_CURRENT_USER.newTutorialStep = s_newtutorial_shop
                 saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
-                s_CURRENT_USER:addBeans(10)
             end
             -- 每日登陆引导
             s_CURRENT_USER:addBeans(getBeanNum)

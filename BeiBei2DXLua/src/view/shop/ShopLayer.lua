@@ -150,10 +150,20 @@ function ShopLayer.create()
         darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
 
         local back = cc.Sprite:create("image/newstudy/background_word_xinshouyindao_yellow.png")
-        back:setPosition(bigWidth/2, s_DESIGN_HEIGHT*0.4)
+        back:setPosition(bigWidth/2, s_DESIGN_HEIGHT*0.5)
         back:ignoreAnchorPointForPosition(false)
         back:setAnchorPoint(0.5,0.5)
         darkColor:addChild(back)
+
+        local body = cc.Sprite:create("image/guide/beibei_xinshouyindao_buy.png")
+        body:setPosition(150, 250)
+        back:addChild(body)
+
+        local beibei_arm = cc.Sprite:create("image/guide/beibei_hand2_xinshouyindao_buy.png")
+        beibei_arm:setPosition(body:getContentSize().width/2 + 80,body:getContentSize().height/2 - 115)
+        beibei_arm:ignoreAnchorPointForPosition(false)
+        beibei_arm:setAnchorPoint(0,0)
+        body:addChild(beibei_arm,-1)
 
         local title = cc.Label:createWithSystemFont('买一个试试！','',40)
         title:setPosition(back:getContentSize().width/2,back:getContentSize().height/2)
