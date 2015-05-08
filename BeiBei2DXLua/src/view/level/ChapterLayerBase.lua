@@ -163,15 +163,7 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
 --    if levelConfig['type'] == 1 then
     local currentProgress = s_CURRENT_USER.levelInfo:computeCurrentProgress() + 0
     local currentChapterKey = 'chapter'..math.floor(currentProgress/10)
-    
-    
-    -- TODO add review boss position
-    -- TODO check level state
-----    local levelState = math.random(0, 3)
---    levelState = 5
 
-    -- levelState = 3
-    -- s_level_popup_state = 1
 
     if levelState == 0 then
         local deco = sp.SkeletonAnimation:create("spine/chapterlevel/beibeidaizi.json","spine/chapterlevel/beibeidaizi.atlas",1)
@@ -183,9 +175,9 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
         -- deco:setPosition(levelPosition.x,levelPosition.y+20)
         -- self:addChild(deco, 130)
     elseif levelState == 1 then
-        -- local deco = cc.Sprite:create('image/chapter/elements/tubiao_chuizi_tanchu_xiaoguan.png')
-        -- deco:setPosition(levelPosition.x,levelPosition.y+20)
-        -- self:addChild(deco, 130)
+        local deco = cc.Sprite:create('image/chapter/elements/tubiao_chuizi_tanchu_xiaoguan.png')
+        deco:setPosition(levelPosition.x,levelPosition.y+20)
+        self:addChild(deco, 130)
         if s_level_popup_state ~= 0 then
             local deco = sp.SkeletonAnimation:create("spine/chapterlevel/beibeidaizi.json","spine/chapterlevel/beibeidaizi.atlas",1)
             deco:setPosition(levelPosition.x-60,levelPosition.y-10)

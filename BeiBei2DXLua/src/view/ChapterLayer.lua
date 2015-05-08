@@ -595,14 +595,6 @@ function ChapterLayer:addPlayerNotification(isRunScale)  -- notification
         button_title:setAnchorPoint(0.5,0.5)
         button_title:setPosition(start:getContentSize().width/2,start:getContentSize().height/2)
         start:addChild(button_title)
-    elseif type == 'complete' then
-        local title = cc.Label:createWithSystemFont(' 今日目标已达成\n明天要再接再厉哦','',22)
-        title:setColor(cc.c3b(74,136,184))
-        title:ignoreAnchorPointForPosition(false)
-        title:setAnchorPoint(0,0)
-        title:setPosition(20,60)
-        notification:addChild(title)
-    end
 end
 
 function ChapterLayer:addPlayer()
