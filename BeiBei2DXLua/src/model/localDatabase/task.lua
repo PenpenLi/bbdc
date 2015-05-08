@@ -41,9 +41,9 @@ function M.updateEveryDay()
 
         local todayTotalTaskNum = nil
         if boss.typeIndex == 0 then
-            todayTotalTaskNum = todayTotalBossNum + 4
+            todayTotalTaskNum = todayTotalBossNum + 3
         elseif boss.typeIndex >= 1 and boss.typeIndex <= 3 then
-            todayTotalTaskNum = todayTotalBossNum + 8 - boss.typeIndex
+            todayTotalTaskNum = todayTotalBossNum + 7 - boss.typeIndex
         else
             todayTotalTaskNum = todayTotalBossNum
         end

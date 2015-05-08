@@ -6,6 +6,7 @@ end)
 
 local Button                = require("view.button.longButtonInStudy")
 local ProgressBar           = require("view.islandPopup.ProgressBar")
+local ChapterLayer          = require("view.ChapterLayer")
 
 function LevelProgressPopup.create(index,playAnimation)
     local layer = LevelProgressPopup.new(index)
@@ -660,6 +661,7 @@ function LevelProgressPopup:createSummary()
     return back
 end
 function LevelProgressPopup:addGuide2()
+        print("backtutorial"..s_CURRENT_USER.newTutorialStep)
     -- 第二步引导
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_rb_show then
         s_CURRENT_USER.newTutorialStep = s_newtutorial_island_back
@@ -698,8 +700,8 @@ function LevelProgressPopup:addGuide2()
     local action1 = cc.CallFunc:create(function ()
         if backColor ~= nil then
             backColor:removeFromParent()
-            s_SCENE:removeAllPopups()
             backColor = nil
+            ChapterLayer:createGuideLayer()
         end
     end)
     local action2 = cc.Sequence:create(action0,action1)
@@ -712,8 +714,8 @@ function LevelProgressPopup:addGuide2()
     local onTouchEnded = function(touch, event)
         if backColor ~= nil then
             backColor:removeFromParent()
-            s_SCENE:removeAllPopups()
             backColor = nil
+            ChapterLayer:createGuideLayer()
         end
     end
 

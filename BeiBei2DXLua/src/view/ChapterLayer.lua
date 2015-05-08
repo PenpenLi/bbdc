@@ -18,19 +18,13 @@ function ChapterLayer.create()
     return layer
 end
 
-function ChapterLayer:ctor()
-    AnalyticsTutorialLevelSelect()
-    
-    if s_CURRENT_USER.tutorialStep == s_tutorial_level_select then
-        s_CURRENT_USER:setTutorialStep(s_tutorial_level_select+1)
-        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_level_select+1)
-    end
+function ChapterLayer:createGuideLayer()
 
     -- back tutorial 
 
     -- if true then
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_island_back then
-        s_CURRENT_USER.newTutorialStep = s_newtutorial_loginreward
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_over
         saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
 
         -- plot ui
@@ -45,11 +39,51 @@ function ChapterLayer:ctor()
         text:setColor(cc.c3b(0,0,0))
         tutorial_text:addChild(text)
         s_SCENE:popup(back)
-        s_SCENE:callFuncWithDelay(1, function()
-            s_SCENE:removeAllPopups()
+        
+        local action0 = cc.DelayTime:create(3)
+        local action1 = cc.CallFunc:create(function ()
+            if back ~= nil then
+                back:removeFromParent()
+                s_SCENE:removeAllPopups()
+                back = nil
+                s_CorePlayManager.enterHomeLayer()
+            end
         end)
+        local action2 = cc.Sequence:create(action0,action1)
+        back:runAction(action2)
+
+        local onTouchBegan = function(touch, event)
+            return true  
+        end
+
+        local onTouchEnded = function(touch, event)
+            if back ~= nil then
+                back:removeFromParent()
+                s_SCENE:removeAllPopups()
+                back = nil
+                s_CorePlayManager.enterHomeLayer()
+            end
+        end
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+        listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+        local eventDispatcher = back:getEventDispatcher()
+        eventDispatcher:addEventListenerWithSceneGraphPriority(listener, back) 
     end
 
+end
+
+function ChapterLayer:ctor()
+        print("chaptutorial"..s_CURRENT_USER.newTutorialStep)
+    AnalyticsTutorialLevelSelect()
+
+    if s_CURRENT_USER.tutorialStep == s_tutorial_level_select then
+        s_CURRENT_USER:setTutorialStep(s_tutorial_level_select+1)
+        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_level_select+1)
+    end
+    
     playMusic(s_sound_bgm1,true)
 
     -- show repeat chapter list
