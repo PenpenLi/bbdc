@@ -663,7 +663,7 @@ function LevelProgressPopup:addGuide2()
     -- 第二步引导
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_rb_show then
         s_CURRENT_USER.newTutorialStep = s_newtutorial_island_back
-        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep}) 
     end
     -- 更新引导tag
 
@@ -698,6 +698,7 @@ function LevelProgressPopup:addGuide2()
     local action1 = cc.CallFunc:create(function ()
         if backColor ~= nil then
             backColor:removeFromParent()
+            s_SCENE:removeAllPopups()
             backColor = nil
         end
     end)
@@ -711,6 +712,7 @@ function LevelProgressPopup:addGuide2()
     local onTouchEnded = function(touch, event)
         if backColor ~= nil then
             backColor:removeFromParent()
+            s_SCENE:removeAllPopups()
             backColor = nil
         end
     end

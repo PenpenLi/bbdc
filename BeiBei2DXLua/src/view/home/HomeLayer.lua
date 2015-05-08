@@ -295,12 +295,14 @@ function HomeLayer.create(share)
     button_shop:addTouchEventListener(button_shop_clicked)
     backColor:addChild(button_shop,1) 
 
+    -- 新手引导
+
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_shop then
         local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
         darkColor:setAnchorPoint(0.5,0.5)
         darkColor:ignoreAnchorPointForPosition(false)
         darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
-        backColor:addChild(darkColor, 3)
+        layer:addChild(darkColor, 3)
 
         local listener = cc.EventListenerTouchOneByOne:create()
         listener:setSwallowTouches(true)

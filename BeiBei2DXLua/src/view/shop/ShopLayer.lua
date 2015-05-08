@@ -138,10 +138,10 @@ function ShopLayer.create()
     end)
 
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_shop then
-        local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
+        local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), bigWidth, s_DESIGN_HEIGHT)
         darkColor:setAnchorPoint(0.5,0.5)
         darkColor:ignoreAnchorPointForPosition(false)
-        darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
+        darkColor:setPosition(s_DESIGN_WIDTH / 2 ,s_DESIGN_HEIGHT/2)
         layer:addChild(darkColor, 2)
 
         local listener = cc.EventListenerTouchOneByOne:create()
@@ -150,7 +150,7 @@ function ShopLayer.create()
         darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
 
         local back = cc.Sprite:create("image/newstudy/background_word_xinshouyindao_yellow.png")
-        back:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT*0.4)
+        back:setPosition(bigWidth/2, s_DESIGN_HEIGHT*0.4)
         back:ignoreAnchorPointForPosition(false)
         back:setAnchorPoint(0.5,0.5)
         darkColor:addChild(back)
@@ -161,7 +161,7 @@ function ShopLayer.create()
         back:addChild(title)
 
         local i = 2
-        local x = s_DESIGN_WIDTH/2+150*(1-2*(i%2))
+        local x = bigWidth/2+150*(1-2*(i%2))
         local y = bigHeight-height*(math.floor((i-1)/2))-435
 
         local item_clicked = function(sender, eventType)
