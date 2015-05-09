@@ -31,14 +31,31 @@ function ChapterLayer:createGuideLayer()
         local back = cc.Layer:create()
         back:setContentSize(s_DESIGN_WIDTH, s_DESIGN_HEIGHT)
 
-        local tutorial_text = cc.Sprite:create('image/tutorial/tutorial_text.png')
-        tutorial_text:setPosition(back:getContentSize().width/2,back:getContentSize().height/2 + 300)
-        back:addChild(tutorial_text,520)
-        local text = cc.Label:createWithSystemFont('完成了今日任务\n回主页打卡吧','',28)
-        text:setPosition(tutorial_text:getContentSize().width/2,tutorial_text:getContentSize().height/2)
-        text:setColor(cc.c3b(0,0,0))
-        tutorial_text:addChild(text)
+        -- local tutorial_text = cc.Sprite:create('image/tutorial/tutorial_text.png')
+        -- tutorial_text:setPosition(back:getContentSize().width/2,back:getContentSize().height/2 + 300)
+        -- back:addChild(tutorial_text,520)
+        -- local text = cc.Label:createWithSystemFont('完成了今日任务\n回主页打卡吧','',28)
+        -- text:setPosition(tutorial_text:getContentSize().width/2,tutorial_text:getContentSize().height/2)
+        -- text:setColor(cc.c3b(0,0,0))
+        -- tutorial_text:addChild(text)
         s_SCENE:popup(back)
+
+         local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+        beibei:setPosition(back:getContentSize().width *0.5, back:getContentSize().height *0.7)
+        back:addChild(beibei)
+
+        local head = cc.Sprite:create("image/guide/beibei_xinshouyindao_newwords.png")
+        head:setPosition(beibei:getContentSize().width *0.5, 200)
+        beibei:addChild(head)
+
+        local finger = cc.Sprite:create("image/guide/beibei_hand2_xinshouyindao_newwords.png")
+        finger:setPosition(beibei:getContentSize().width *0.3, beibei:getContentSize().height + 10)
+        beibei:addChild(finger)
+
+        local beibei_tip_label = cc.Label:createWithSystemFont("完成了今日任务\n回主页打卡吧","",32)
+        beibei_tip_label:setPosition(beibei:getContentSize().width *0.5, beibei:getContentSize().height *0.5)
+        beibei_tip_label:setColor(cc.c4b(36,63,79,255))
+        beibei:addChild(beibei_tip_label)
         
         local action0 = cc.DelayTime:create(3)
         local action1 = cc.CallFunc:create(function ()
@@ -91,6 +108,7 @@ function ChapterLayer:ctor()
     self.activeChapterEndIndex = 0
     self.biggestChapterIndex = 0
     self:initActiveChapterRange()
+
 
     self.chapterDic = {}
     -- add list view

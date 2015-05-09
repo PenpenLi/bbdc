@@ -155,6 +155,9 @@ function Pause:onBack()
 
     if ccbPause['Layer'].inTryingLayer then
         --s_CorePlayManager.enterLevelLayer()
+        local StoryLayer = require('view.level.StoryLayer')
+        local storyLayer = StoryLayer.create(7)
+        s_SCENE:replaceGameLayer(storyLayer)
     else
         s_CorePlayManager.enterLevelLayer()
     end
