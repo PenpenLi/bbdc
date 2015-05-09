@@ -541,13 +541,13 @@ function LevelProgressPopup:createRepeatlPlay(playModel,wordList,parent)--重复
 end
 -- 锁定状态
 function LevelProgressPopup:createCantPlay(text,parent)--现在不能玩，参数 文字／父亲节点/是否有动画/动画之后玩什么
-    local cantPlay_Sprite = cc.Sprite:create("image/button/longbluefront.png")
+    local cantPlay_Sprite = cc.Sprite:create("image/islandPopup/lock.png")
     cantPlay_Sprite:setPosition(parent:getContentSize().width * 0.5 - 2, parent:getContentSize().height * 0.1)
-    cantPlay_Sprite:setColor(cc.c4b(199,199,193,255))
     parent:addChild(cantPlay_Sprite)
     
     local cantPlay_Label = cc.Label:createWithSystemFont(text,"",30)
     cantPlay_Label:setPosition(cc.p(cantPlay_Sprite:getContentSize().width / 2 ,cantPlay_Sprite:getContentSize().height / 2))
+    cantPlay_Label:setColor(cc.c4b(155,155,155,255))
     cantPlay_Sprite:addChild(cantPlay_Label)
     
     if text == "" then
@@ -673,7 +673,7 @@ function LevelProgressPopup:addGuide2()
     backColor:setPosition(self.backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, self.backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
     self.backPopup:addChild(backColor,5)
 
-    local tip_Sprite = cc.Sprite:create("image/button/longbluefront.png")
+    local tip_Sprite = cc.Sprite:create("image/guide/background_fxboss_tomorrow.png")
     tip_Sprite:setPosition(backColor:getContentSize().width * 0.5 - 6, backColor:getContentSize().height * 0.32 - 2)
     tip_Sprite:setColor(cc.c4b(199,199,193,255))
     backColor:addChild(tip_Sprite)
@@ -684,7 +684,7 @@ function LevelProgressPopup:addGuide2()
     label:enableOutline(cc.c4b(255,255,255,255),1)
     tip_Sprite:addChild(label)
 
-    local cantPlay_Sprite = cc.Sprite:create("image/button/longbluefront.png")
+    local cantPlay_Sprite = cc.Sprite:create("image/guide/background_fxboss_tomorrow.png")
     cantPlay_Sprite:setPosition(backColor:getContentSize().width * 0.5 - 6, backColor:getContentSize().height * 0.22 - 2)
     cantPlay_Sprite:setColor(cc.c4b(199,199,193,255))
     backColor:addChild(cantPlay_Sprite)
@@ -732,11 +732,13 @@ function LevelProgressPopup:addGuide1()
     backColor:setPosition(self.backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, self.backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
     self.backPopup:addChild(backColor,5)
 
-    local label = cc.Label:createWithSystemFont("新玩法！","",48)
+    local label = cc.Sprite:create("image/guide/xinwanfa_word_fxboss.png")
     label:setPosition(backColor:getContentSize().width *0.5,backColor:getContentSize().height *0.75)
-    label:setColor(cc.c4b(255,255,255,255))
-    label:enableOutline(cc.c4b(255,255,255,255),1)
     backColor:addChild(label)
+
+    local beibei = cc.Sprite:create("image/guide/bb_background_fxboss_tomorrow.png")
+    beibei:setPosition(backColor:getContentSize().width *0.3,backColor:getContentSize().height *0.25)
+    backColor:addChild(beibei)
 
     local sprite = cc.Sprite:create("image/islandPopup/subtask_review_boss.png")
     sprite:setPosition(backColor:getContentSize().width *0.5,backColor:getContentSize().height *0.55)
