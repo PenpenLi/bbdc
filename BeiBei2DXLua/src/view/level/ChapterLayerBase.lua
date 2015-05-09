@@ -101,7 +101,7 @@ function ChapterLayerBase:plotUnlockLevelAnimation(levelKey)
         lockLayer:runAction(cc.Sequence:create(action7, action8))
     end
     if lockSprite ~= nil or lockLayer ~= nil then
-        s_SCENE:callFuncWithDelay(0.7,function()
+        self:callFuncWithDelay(0.7,function()
             self:plotDecorationOfLevel(levelIndex-0)
         end)
     end

@@ -147,7 +147,7 @@ function ShopAlter.create(itemId, location)
 
     local label_content
     if itemId == 6 and state == 1 then -- vip
-        local vip_content = "恭喜你！获得贝贝VIP门票一张！请加微信：beibei001，距离VIP群，仅有一步之遥！"
+        local vip_content = "恭喜你！获得贝贝VIP门票一张！请加微信：beibeidanci001，距离VIP群，仅有一步之遥！"
         label_content = cc.Label:createWithSystemFont(vip_content,"",32)
     else
         label_content = cc.Label:createWithSystemFont(s_DataManager.product[itemId].productDescription,"",32)

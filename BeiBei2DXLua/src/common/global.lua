@@ -2,8 +2,8 @@
 --初始化单例，工具，Layer,用户数据
 --
 
-app_version_debug   = 206000
-app_version_release = 206000
+app_version_debug   = 209000
+app_version_release = 209000
 
 local function _initConstant()
     -- number

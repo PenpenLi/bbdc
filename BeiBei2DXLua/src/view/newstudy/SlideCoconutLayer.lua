@@ -60,6 +60,14 @@ local function createLastButton(word,wrongNum,wrongWordList)
 end
 
 function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
+        -- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideCoco)
+    if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_slideSuccess then
+        s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideCoco2)
+    end
+    if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_slideSuccess2 then
+        s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideCoco3)
+    end
     AnalyticsStudySlideCoconut_EnterLayer()
 
     if s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat1_3 then
@@ -148,6 +156,14 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
             AnalyticsStudySlideCoconut_LeaveLayer()
             if s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat2_1 then
                s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_studyRepeat2_1 + 1)
+            end
+
+            s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideSuccess)
+            if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_slideCoco2 then
+                s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideSuccess2)
+            end
+            if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_slideCoco3 then
+                s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideSuccess3)
             end
 
             s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()

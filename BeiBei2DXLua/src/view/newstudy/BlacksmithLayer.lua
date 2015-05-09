@@ -73,6 +73,7 @@ function BlacksmithLayer:createOptions(randomNameArray,wordlist,position)
                             s_CURRENT_USER:setTutorialStep(s_tutorial_study + 1)
                             s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_review_boss)
                         end
+                        s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_ironSuccess)
 
                         s_CURRENT_USER:addBeans(s_CURRENT_USER.beanRewardForIron)
                         saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY]}) 
@@ -162,6 +163,7 @@ local function createDontknow(wordlist)
 end
 
 function BlacksmithLayer:ctor(wordlist)
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_iron)
     AnalyticsForgeIron_EnterLayer()
 
     -- if s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat2_3 then

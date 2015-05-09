@@ -3,8 +3,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="libs/android-async-http-1.4.6.jar"/>
 	<classpathentry kind="lib" path="libs/avossns-v2.6.9.2.jar"/>
 	<classpathentry kind="lib" path="libs/avosstatistics-v2.6.9.2.jar"/>
@@ -18,5 +16,7 @@
 	<classpathentry kind="lib" path="libs/avoscloud-push-v3.0.2.jar"/>
 	<classpathentry kind="lib" path="libs/avoscloud-sdk-v3.0.2.jar"/>
 	<classpathentry kind="lib" path="libs/Java-WebSocket-1.2.0-leancloud.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

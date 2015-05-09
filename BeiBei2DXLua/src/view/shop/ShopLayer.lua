@@ -8,6 +8,7 @@ local ShopLayer = class("ShopLayer", function()
 end)
 
 function ShopLayer.create()    
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_shopPopup)
     local layer = ShopLayer.new()
 
     local bigWidth = s_DESIGN_WIDTH + 2*s_DESIGN_OFFSET_WIDTH
@@ -181,6 +182,7 @@ function ShopLayer.create()
                 darkColor:removeFromParent()
                 local shopAlter = ShopAlter.create(i, 'in')
                 s_SCENE:popup(shopAlter)
+                s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_buyData)
             end
         end
 

@@ -17,7 +17,7 @@ function StoryLayer:ctor(tag)
 	elseif tag == 2 then
 		self:addIntroduction2()
 	elseif tag == 3 then
-		self:addIntroduction3()
+   		self:addIntroduction3()
 	elseif tag == 4 then
 		self:addIntroduction4()
 	elseif tag == 5 then
@@ -105,10 +105,14 @@ function StoryLayer:directStory(requestTag)   -- request tag:发起切换剧情�
 	        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})   
     	end
 		s_CorePlayManager.enterLevelLayer() 
+		    -- 更新引导步骤
+    	s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterLevel)
 	end
 end
 
 function StoryLayer:addIntroduction1()
+	-- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterStory1)
 	local drama = sp.SkeletonAnimation:create("spine/tutorial/story/jieshao1.json","spine/tutorial/story/jieshao1.atlas",1)
 	drama:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT/2)
 	drama:setAnchorPoint(0.5, 0.5)
@@ -121,6 +125,8 @@ function StoryLayer:addIntroduction1()
 end
 
 function StoryLayer:addIntroduction2() 
+	-- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterStory2)
 	local drama = sp.SkeletonAnimation:create("spine/tutorial/story/skeleton.json","spine/tutorial/story/skeleton.atlas",1)
 	drama:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT/2)
 	drama:setAnchorPoint(0.5, 0.5)
@@ -133,6 +139,8 @@ function StoryLayer:addIntroduction2()
 end
 
 function StoryLayer:addIntroduction3()
+	-- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterStory3)
 	local drama = sp.SkeletonAnimation:create("spine/tutorial/story/jieshao_2.5.json","spine/tutorial/story/jieshao_2.5.atlas",1)
 	drama:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT/2)
 	drama:setAnchorPoint(0.5, 0.5)
@@ -145,6 +153,8 @@ function StoryLayer:addIntroduction3()
 end
 
 function StoryLayer:addIntroduction4()
+	-- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterStory4)
 	local drama = sp.SkeletonAnimation:create("spine/tutorial/story/jieshao_3.json","spine/tutorial/story/jieshao_3.atlas",1)
 	drama:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT/2)
 	drama:setAnchorPoint(0.5, 0.5)
@@ -157,6 +167,8 @@ function StoryLayer:addIntroduction4()
 end
 
 function StoryLayer:addIntroduction5()
+	-- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterStory5)
 	local drama = sp.SkeletonAnimation:create("spine/tutorial/story/jieshao_4.json","spine/tutorial/story/jieshao_4.atlas",1)
 	drama:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT/2)
 	drama:setAnchorPoint(0.5, 0.5)
@@ -169,6 +181,8 @@ function StoryLayer:addIntroduction5()
 end
 
 function StoryLayer:addIntroduction6()
+	-- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterStory6)
 	local drama = sp.SkeletonAnimation:create("spine/tutorial/story/jieshao_5.json","spine/tutorial/story/jieshao_5.atlas",1)
 	drama:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT/2)
 	drama:setAnchorPoint(0.5, 0.5)
@@ -178,12 +192,12 @@ function StoryLayer:addIntroduction6()
 	-- self:callFuncWithDelay(2.5, function()
 	-- 	self:directStory(6)
 	-- end)
-	local button = require("view.button.longButtonInStudy").create("giveup","blue","试玩")
+	local button = require("view.button.longButtonInStudy").create("small","blue","试玩")
 	button:setPosition(0,-s_DESIGN_HEIGHT / 2.6)
 	drama:addChild(button)
 
 	button.func = function ()
-
+        s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterStoryBoss)
 		local SummaryBossLayer = require('view.summaryboss.SummaryBossLayer')
         local summaryBossLayer = SummaryBossLayer.create(nil,0,true)
         s_SCENE:replaceGameLayer(summaryBossLayer) 
@@ -191,6 +205,8 @@ function StoryLayer:addIntroduction6()
 end
 
 function StoryLayer:addIntroduction7()
+	-- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterStory7)
 	local drama = sp.SkeletonAnimation:create("spine/tutorial/story/jieshao_6.json","spine/tutorial/story/jieshao_6.atlas",1)
 	drama:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT/2)
 	drama:setAnchorPoint(0.5, 0.5)

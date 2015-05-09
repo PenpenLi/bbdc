@@ -34,7 +34,7 @@ local function numberToSprite(number)
 end
 
 function LoginRewardPopup:ctor()
-    print("rewardtutorial"..s_CURRENT_USER.newTutorialStep)
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_reward)
     AnalyticsLoginReward()
 
     local rewardList = s_DataManager.bean

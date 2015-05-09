@@ -3,7 +3,7 @@ local CongratulationPopup = class ("CongratulationPopup",function ()
 end)
 
 function CongratulationPopup.create()
-
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_end)
     local layer = CongratulationPopup.new()
 
     local bigWidth = s_DESIGN_WIDTH + 2*s_DESIGN_OFFSET_WIDTH

@@ -21,6 +21,7 @@ local HINT_TIME = 10
 local bullet_damage = 2
 
 function SummaryBossLayer.create(wordList,type,entrance)   
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_summaryBoss)
     AnalyticsSummaryBoss()
     s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     local layer = SummaryBossLayer.new()

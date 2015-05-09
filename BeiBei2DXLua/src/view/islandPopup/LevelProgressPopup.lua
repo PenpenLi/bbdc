@@ -133,6 +133,7 @@ local function addBackButton(backPopup,islandIndex)
             if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
                 s_CURRENT_USER.newTutorialStep = s_newtutorial_sb_cn
                 saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
+                s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_library)
             end
         end
     end
@@ -257,6 +258,8 @@ function LevelProgressPopup:createPape(islandIndex)
     -- 小岛进度为8时，小岛完成
     if self.current_index >= 7 then
         progress_index = 6
+    elseif self.current_index > 2 then
+        progress_index = self.current_index - 1
     end
     -- 小岛进度条
     local progressBar = ProgressBar.create(6,progress_index)

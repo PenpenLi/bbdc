@@ -108,6 +108,16 @@ function DataUser:ctor()
 
     --data share time
     self.dataShareTime                     = 300
+
+    self.newTutorialStepRecord             = 0                   
+end
+
+function DataUser:setNewTutorialStepRecord(step)
+    local currentStep = self.newTutorialStepRecord
+    if currentStep < step then
+        self.newTutorialStepRecord = step
+        AnalyticsNewTutorial(step)
+    end
 end
 
 function DataUser:getLockFunctionState(productId)

@@ -21,7 +21,8 @@ local list = {}
 local TEXT_CHANGE_ACCOUNT = '切换账号' -- "登出游戏"
 
 function HomeLayer.create(share)
-    print("hometutorial"..s_CURRENT_USER.newTutorialStep)
+    -- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterHome)
     --s_CURRENT_USER:addBeans(100)
 
     --Analytics.lua
@@ -317,6 +318,7 @@ function HomeLayer.create(share)
     -- 新手引导
 
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_shop then
+        s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_shop)
         local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
         darkColor:setAnchorPoint(0.5,0.5)
         darkColor:ignoreAnchorPointForPosition(false)
@@ -675,7 +677,7 @@ function HomeLayer.create(share)
             button_friend:setPosition(bigWidth / 2 - 1, 200)
             button_friend:setScale9Enabled(true)
             button_friend:setAnchorPoint(1,0.5)
-            button_friend:addTouchEventListener(button_right_clicked)
+            button_friend:addTouchEventListener(button_friend_clicked)
             backColor:addChild(button_friend,1)   
 
             layer.button_friend = button_friend
@@ -953,6 +955,7 @@ function HomeLayer:setButtonEnabled(enabled)
 end
 
 function HomeLayer:showShareCheckIn()
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_share)
     local Share = require('view.share.ShareCheckIn')
     local shareLayer = Share.create(self)
     shareLayer:setPosition(0,-s_DESIGN_HEIGHT)
@@ -964,6 +967,7 @@ function HomeLayer:showShareCheckIn()
 end
 
 function HomeLayer:showDataShare()
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_king)
     self.dataShare.moveUp = function ()
         if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
             local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()

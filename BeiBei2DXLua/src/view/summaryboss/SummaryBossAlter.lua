@@ -68,6 +68,7 @@ function SummaryBossAlter.create(bossLayer,win,index,entrance)
 end
 
 function SummaryBossAlter:lose(entrance)
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_summaryBossFail)
     --add board
     self.loseBoard = cc.Sprite:create("image/summarybossscene/background_zjboss_tanchu.png")
     self.loseBoard:setPosition(s_DESIGN_WIDTH * 0.5,s_DESIGN_HEIGHT * 1.3)
@@ -162,7 +163,6 @@ function SummaryBossAlter:lose(entrance)
 end
 
 function SummaryBossAlter:addTime()
-
     AnalyticsSummaryBossAddTime()
 
     if s_SCENE.popupLayer~=nil then
@@ -314,7 +314,7 @@ function SummaryBossAlter:lose2(entrance)
 end
 
 function SummaryBossAlter:win1(entrance)
-
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_summaryBossSuccess)
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_sb_cn and entrance then
         s_CURRENT_USER:setTutorialStep(s_tutorial_summary_boss + 1)
         s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_complete_win)
