@@ -6,6 +6,7 @@ end)
 
 local Button                = require("view.button.longButtonInStudy")
 local ProgressBar           = require("view.islandPopup.ProgressBar")
+local ChapterLayer          = require("view.ChapterLayer")
 
 function LevelProgressPopup.create(index,playAnimation)
     local layer = LevelProgressPopup.new(index)
@@ -107,6 +108,14 @@ local function addBackButton(backPopup,islandIndex)
     local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
     beibei:setPosition(backColor:getContentSize().width *0.5, backColor:getContentSize().height *0.7)
     backColor:addChild(beibei)
+
+    local head = cc.Sprite:create("image/guide/beibei_xinshouyindao_newwords.png")
+    head:setPosition(beibei:getContentSize().width *0.5, 200)
+    beibei:addChild(head)
+
+    local finger = cc.Sprite:create("image/guide/beibei_hand2_xinshouyindao_newwords.png")
+    finger:setPosition(beibei:getContentSize().width *0.3, beibei:getContentSize().height + 10)
+    beibei:addChild(finger)
 
     local beibei_tip_label = cc.Label:createWithSystemFont("刚学的单词都在这里哦！","",32)
     beibei_tip_label:setPosition(beibei:getContentSize().width *0.5, beibei:getContentSize().height *0.5)
@@ -652,10 +661,11 @@ function LevelProgressPopup:createSummary()
     return back
 end
 function LevelProgressPopup:addGuide2()
+        print("backtutorial"..s_CURRENT_USER.newTutorialStep)
     -- 第二步引导
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_rb_show then
         s_CURRENT_USER.newTutorialStep = s_newtutorial_island_back
-        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep}) 
     end
     -- 更新引导tag
 
@@ -691,6 +701,7 @@ function LevelProgressPopup:addGuide2()
         if backColor ~= nil then
             backColor:removeFromParent()
             backColor = nil
+            ChapterLayer:createGuideLayer()
         end
     end)
     local action2 = cc.Sequence:create(action0,action1)
@@ -704,6 +715,7 @@ function LevelProgressPopup:addGuide2()
         if backColor ~= nil then
             backColor:removeFromParent()
             backColor = nil
+            ChapterLayer:createGuideLayer()
         end
     end
 

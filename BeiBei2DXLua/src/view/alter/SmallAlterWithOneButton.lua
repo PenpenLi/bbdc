@@ -7,10 +7,12 @@ end)
 function SmallAlterWithOneButton.create(info, btnMsg)
     local main = cc.Layer:create()
     main:setContentSize(s_DESIGN_WIDTH,s_DESIGN_HEIGHT)
+    main:setPosition(cc.p(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT/2))
     main:setAnchorPoint(0.5,0.5)
     main:ignoreAnchorPointForPosition(false)
 
     main.affirm = function()
+
     end
 
     main.close = function()

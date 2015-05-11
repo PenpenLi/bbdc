@@ -163,15 +163,7 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
 --    if levelConfig['type'] == 1 then
     local currentProgress = s_CURRENT_USER.levelInfo:computeCurrentProgress() + 0
     local currentChapterKey = 'chapter'..math.floor(currentProgress/10)
-    
-    
-    -- TODO add review boss position
-    -- TODO check level state
-----    local levelState = math.random(0, 3)
---    levelState = 5
 
-    -- levelState = 3
-    -- s_level_popup_state = 1
 
     if levelState == 0 then
         local deco = sp.SkeletonAnimation:create("spine/chapterlevel/beibeidaizi.json","spine/chapterlevel/beibeidaizi.atlas",1)
@@ -183,9 +175,6 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
         -- deco:setPosition(levelPosition.x,levelPosition.y+20)
         -- self:addChild(deco, 130)
     elseif levelState == 1 then
-        -- local deco = cc.Sprite:create('image/chapter/elements/tubiao_chuizi_tanchu_xiaoguan.png')
-        -- deco:setPosition(levelPosition.x,levelPosition.y+20)
-        -- self:addChild(deco, 130)
         if s_level_popup_state ~= 0 then
             local deco = sp.SkeletonAnimation:create("spine/chapterlevel/beibeidaizi.json","spine/chapterlevel/beibeidaizi.atlas",1)
             deco:setPosition(levelPosition.x-60,levelPosition.y-10)
@@ -209,8 +198,9 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
         end
 
 
-    elseif levelState == 2 or (levelState >= 4 and levelIndex == currentTaskBossIndex) then
-        if s_level_popup_state ~= 0 then
+    --elseif levelState == 2 or (levelState >= 4 and levelIndex == currentTaskBossIndex) then
+    elseif levelState == 2 or (levelState >= 4) then
+        if s_level_popup_state ~= 0 and levelState < 4 then
             local deco = sp.SkeletonAnimation:create("spine/chapterlevel/chuizi.json","spine/chapterlevel/chuizi.atlas",1)
             deco:setPosition(levelPosition.x-60,levelPosition.y-10)
             deco:setAnchorPoint(1,1)
@@ -232,20 +222,26 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
         -- only one review boss
     elseif levelState == 3 then 
         if s_level_popup_state ~= 0 then
-            local reviewBoss = sp.SkeletonAnimation:create('spine/3 fxzlsxuanxiaoguandiaoluo1.json', 'spine/3 fxzlsxuanxiaoguandiaoluo1.atlas', 1)
-            reviewBoss:addAnimation(1, '2', true)   
-            reviewBoss:setPosition(levelPosition.x-110, levelPosition.y-80)
-            self:addChild(reviewBoss, 140)
-            reviewBoss:setAnchorPoint(0.5,0.5)
-            -- reviewBoss:runAction(cc.FadeOut:create(1.0))
-            local action1 = cc.RotateBy:create(0.5, 360)
-            local action2 = cc.MoveBy:create(0.5, cc.p(250, 800))
-            local action3 = cc.ScaleTo:create(0.5, 0.75)
-            local action4 = cc.Spawn:create(action1, action2, action3)
-            reviewBoss:runAction(action4)
-            self:callFuncWithDelay(0.4, function() 
-                reviewBoss:runAction(cc.FadeOut:create(0.2))
-            end)
+            -- local reviewBoss = sp.SkeletonAnimation:create('spine/3 fxzlsxuanxiaoguandiaoluo1.json', 'spine/3 fxzlsxuanxiaoguandiaoluo1.atlas', 1)
+            -- reviewBoss:addAnimation(1, '2', true)   
+            -- reviewBoss:setPosition(levelPosition.x-110, levelPosition.y-80)
+            -- self:addChild(reviewBoss, 140)
+            -- reviewBoss:setAnchorPoint(0.5,0.5)
+            -- -- reviewBoss:runAction(cc.FadeOut:create(1.0))
+            -- local action1 = cc.RotateBy:create(0.5, 360)
+            -- local action2 = cc.MoveBy:create(0.5, cc.p(250, 800))
+            -- local action3 = cc.ScaleTo:create(0.5, 0.75)
+            -- local action4 = cc.Spawn:create(action1, action2, action3)
+            -- reviewBoss:runAction(action4)
+            -- self:callFuncWithDelay(0.4, function() 
+            --     reviewBoss:runAction(cc.FadeOut:create(0.2))
+            -- end)
+            local deco = sp.SkeletonAnimation:create("spine/chapterlevel/chuizi.json","spine/chapterlevel/chuizi.atlas",1)
+            deco:setPosition(levelPosition.x-60,levelPosition.y-10)
+            deco:setAnchorPoint(1,1)
+            deco:addAnimation(0, 'animation', true)
+            self:addChild(deco, 130)
+            deco:runAction(cc.FadeOut:create(1.0))
             self:callFuncWithDelay(0.5, function()
                 local summaryboss = sp.SkeletonAnimation:create("spine/klschongshangdaoxia.json","spine/klschongshangdaoxia.atlas",1)
                 summaryboss:setPosition(levelPosition.x-100,levelPosition.y-50)

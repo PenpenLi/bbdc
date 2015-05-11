@@ -23,7 +23,9 @@ end
 
 function MissionProgressLayer.create(share,homelayer)
     local missionCount = s_LocalDatabaseManager:getTodayTotalTaskNum()
+    -- 获取每天需要完成的任务数量
     local completeCount = missionCount - s_LocalDatabaseManager:getTodayRemainTaskNum()
+    -- 已经完成的任务数量
     if share ~= nil and share then
         completeCount = missionCount
     end
@@ -34,11 +36,8 @@ function MissionProgressLayer.create(share,homelayer)
     local taskCurrent = 120
     
     local bossNumber = 0
-
     
     taskTotal = (bossNumber + 2) * getMaxWrongNumEveryLevel()
-    --taskCurrent = s_CorePlayManager:getProgress() + (bossNumber - s_LocalDatabaseManager:getTodayRemainBossNum()) * s_max_wrong_num_everyday
-    
     
     local startTime = 0
 
@@ -52,14 +51,9 @@ function MissionProgressLayer.create(share,homelayer)
     local buttonSpin
     local circleSpin
     
-    
     local layer = MissionProgressLayer.new()
-    
-    
---    print("taskCurrent "..taskCurrent)
     layer.stopListener = false
-    
-    
+    -- 触摸控制
     
     local missionToday = cc.Label:createWithSystemFont("今日任务","",50)
     missionToday:setPosition(bigWidth/2, s_DESIGN_HEIGHT/2 + 260)
@@ -81,14 +75,13 @@ function MissionProgressLayer.create(share,homelayer)
     for i = 1,missionCount do
         back[i] = cc.ProgressTimer:create(cc.Sprite:create('image/homescene/missionprogress/white_circle.png'))
         back[i]:setColor(cc.c4b(170,217,231,255 * 0.2 * (i % 3 + 1)))
-        --back[i]:setOpacity(255 * 0.2 * ((i - 1) % 3 + 1))
         back[i]:setType(cc.PROGRESS_TIMER_TYPE_RADIAL)
         back[i]:setPercentage(100 / missionCount)
         back[i]:setRotation(360 * (i - 1) / missionCount)
         back[i]:setPosition(backProgress:getContentSize().width / 2 ,backProgress:getContentSize().height / 2 )
         backProgress:addChild(back[i])
-        
     end
+    -- 填充任务条
 
     local circle_color = {cc.c3b(76,223,204),cc.c3b(36,168,217),cc.c3b(18,128,213)}
 
@@ -105,10 +98,8 @@ function MissionProgressLayer.create(share,homelayer)
                     split_line:runAction(cc.Sequence:create(cc.DelayTime:create((i - 1) / missionCount),cc.Show:create()))
                 end
             end
+            -- 任务条彼此之间的填充带
             local shareDelayTime = 0
-            if share ~= nil and share then
-                shareDelayTime = 0
-            end
             for i = 1, completeCount do 
                 local taskProgress = cc.ProgressTimer:create(cc.Sprite:create('image/homescene/missionprogress/white_circle.png'))
                 taskProgress:setColor(circle_color[(i - 1) % 3 + 1])

@@ -7,6 +7,7 @@ local MissionProgress = require("view.home.MissionProgressLayer")
 local OfflineTipHome = require("view.offlinetip.OfflineTipForHome")
 local OfflineTipFriend = require("view.offlinetip.OfflineTipForFriend")
 local SmallAlter = require("view.alter.SmallAlter")
+local SmallAlterWithOneButton = require("view.alter.SmallAlterWithOneButton")
 
 local HomeLayer = class("HomeLayer", function ()
     return cc.Layer:create()
@@ -20,6 +21,7 @@ local list = {}
 local TEXT_CHANGE_ACCOUNT = '切换账号' -- "登出游戏"
 
 function HomeLayer.create(share)
+    print("hometutorial"..s_CURRENT_USER.newTutorialStep)
     --s_CURRENT_USER:addBeans(100)
 
     --Analytics.lua
@@ -294,12 +296,32 @@ function HomeLayer.create(share)
     button_shop:addTouchEventListener(button_shop_clicked)
     backColor:addChild(button_shop,1) 
 
+
+        -- 签到领奖
+
+    local function ClickRewardBtnFunction()
+        if s_CURRENT_USER.newTutorialStep >= s_newtutorial_loginreward then
+            -- 打卡之前，每日领奖功能锁定
+            local Loginreward = require("view.loginreward.LoginRewardPopup")
+            local loginreward = Loginreward.create()
+            s_SCENE:popup(loginreward)
+        else
+            local tipPopup =  SmallAlterWithOneButton.create("您现在不能自动领取签到奖励。")
+            s_SCENE:popup(tipPopup)
+            tipPopup.affirm = function ()
+                s_SCENE:removeAllPopups()
+            end
+        end
+    end
+
+    -- 新手引导
+
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_shop then
         local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
         darkColor:setAnchorPoint(0.5,0.5)
         darkColor:ignoreAnchorPointForPosition(false)
         darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
-        backColor:addChild(darkColor, 3)
+        layer:addChild(darkColor, 3)
 
         local listener = cc.EventListenerTouchOneByOne:create()
         listener:setSwallowTouches(true)
@@ -307,7 +329,7 @@ function HomeLayer.create(share)
         darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
 
         local back = cc.Sprite:create("image/newstudy/background_word_xinshouyindao_yellow.png")
-        back:setPosition(s_DESIGN_WIDTH/2, s_DESIGN_HEIGHT*0.35)
+        back:setPosition((s_RIGHT_X - s_LEFT_X)/2, s_DESIGN_HEIGHT*0.35)
         back:ignoreAnchorPointForPosition(false)
         back:setAnchorPoint(0.5,0.5)
         darkColor:addChild(back)
@@ -316,6 +338,16 @@ function HomeLayer.create(share)
         title:setPosition(back:getContentSize().width/2,back:getContentSize().height/2)
         title:setColor(cc.c3b(35,181,229))
         back:addChild(title)
+
+        local body = cc.Sprite:create("image/newstudy/bb_big_yindao.png")
+        body:setPosition(150, -150)
+        back:addChild(body)
+
+        local beibei_arm = cc.Sprite:create("image/newstudy/bb_arm_yindao.png")
+        beibei_arm:setPosition(body:getContentSize().width/2 - 70,body:getContentSize().height/2 - 2)
+        beibei_arm:ignoreAnchorPointForPosition(false)
+        beibei_arm:setAnchorPoint(0,0)
+        body:addChild(beibei_arm,-1)
 
         local button_shop_clicked = function(sender, eventType)
             if eventType == ccui.TouchEventType.ended then
@@ -330,18 +362,8 @@ function HomeLayer.create(share)
         button_shop:setAnchorPoint(0,0.5)
         button_shop:addTouchEventListener(button_shop_clicked)
         darkColor:addChild(button_shop) 
-
-    elseif s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
-        local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
-        s_SCENE:popup(CongratulationPopup)
-    end
-
-    -- 签到领奖
-
-    local function ClickRewardBtnFunction()
-        local Loginreward = require("view.loginreward.LoginRewardPopup")
-        local loginreward = Loginreward.create()
-        s_SCENE:popup(loginreward) 
+    elseif s_CURRENT_USER.newTutorialStep == s_newtutorial_loginreward then
+        ClickRewardBtnFunction()
     end
 
     local button_reward_clicked = function(sender, eventType)
@@ -353,6 +375,10 @@ function HomeLayer.create(share)
     end
 
     local button_reward = ccui.Button:create("image/homescene/home_page_medal_button.png","image/homescene/home_page_medal_button_press.png","")
+    if s_CURRENT_USER.newTutorialStep < s_newtutorial_loginreward then
+        button_reward:loadTextureNormal("image/guide/Rewardlocked.png")
+        button_reward:loadTexturePressed("image/guide/Rewardlocked.png")
+    end
     button_reward:setPosition(bigWidth / 2 + 166, 200)
     button_reward:setScale9Enabled(true)
     button_reward:addTouchEventListener(button_reward_clicked)
@@ -837,11 +863,6 @@ function HomeLayer.create(share)
             s_CURRENT_USER.dataShareTime = 0
             dataShare:moveDown()
         end 
-        dataShare.moveUp = function ()
-            if isGot == false and is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) == true and isGotAllWord >= s_max_wrong_num[1] then
-                ClickRewardBtnFunction()
-            end
-        end
     end
 
     --avoid bulletInBoard and reward popup exist at same time
@@ -944,9 +965,10 @@ end
 
 function HomeLayer:showDataShare()
     self.dataShare.moveUp = function ()
-        local Loginreward = require("view.loginreward.LoginRewardPopup")
-        local loginreward = Loginreward:create()
-        s_SCENE:popup(loginreward) 
+        if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+            local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
+            s_SCENE:popup(CongratulationPopup)
+        end
     end
     if s_CURRENT_USER.dataShareTime >= 300 then
         s_CURRENT_USER.dataShareTime = 0

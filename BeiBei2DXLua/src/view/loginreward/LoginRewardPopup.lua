@@ -8,6 +8,7 @@ function LoginRewardPopup.create()
 end
 
 local function numberToSprite(number)
+        print("rewardtutorial"..s_CURRENT_USER.newTutorialStep)
     if number >= 1 and number <= 5 then
         local shadow_sprite = cc.Sprite:create("image/loginreward/back"..number..".png")
         for i = 1,number do
@@ -50,6 +51,7 @@ function LoginRewardPopup:ctor()
         local remove = cc.CallFunc:create(function() 
              s_SCENE:removeAllPopups()
              s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
+             s_CorePlayManager.enterHomeLayer()
         end)
         backPopup:runAction(cc.Sequence:create(move,remove))
     end
@@ -221,11 +223,23 @@ function LoginRewardPopup:ctor()
     end 
 
     local sprite = backPopup:getChildByName("reward"..(today + 1))
+    local beginNum = s_CURRENT_USER:getBeans()
+    local getBeanNum = 0
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_loginreward then 
+        getBeanNum = 10
+    else
+        getBeanNum = rewardList[#currentData].reward
+    end
 
     if todayMark == 0 and sprite ~= nil then
         s_TOUCH_EVENT_BLOCK_LAYER.lockTouch() 
         s_SCENE:callFuncWithDelay(0.5,function()
-            s_CURRENT_USER:addBeans(rewardList[#currentData].reward)  
+            if s_CURRENT_USER.newTutorialStep == s_newtutorial_loginreward then
+                s_CURRENT_USER.newTutorialStep = s_newtutorial_shop
+                saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
+            end
+            -- 每日登陆引导
+            s_CURRENT_USER:addBeans(getBeanNum)
             saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY]}) 
             sprite:setVisible(true) 
                     
@@ -267,7 +281,7 @@ function LoginRewardPopup:ctor()
             been_number_back:setPosition(s_RIGHT_X - s_LEFT_X - 100, s_DESIGN_HEIGHT - 70)
             backColor:addChild(been_number_back)
 
-            local been_number = cc.Label:createWithSystemFont(s_CURRENT_USER:getBeans() - rewardList[#currentData].reward,'',24)
+            local been_number = cc.Label:createWithSystemFont(s_CURRENT_USER:getBeans() - getBeanNum,'',24)
             been_number:setColor(cc.c4b(0,0,0,255))
             been_number:setPosition(been_number_back:getContentSize().width * 0.65 , been_number_back:getContentSize().height/2)
             been_number_back:addChild(been_number)
@@ -282,7 +296,7 @@ function LoginRewardPopup:ctor()
             local time = 0
             local function update(delta)
                 time = time + delta
-                local num = math.ceil(s_CURRENT_USER:getBeans() - rewardList[#currentData].reward + rewardList[#currentData].reward * (time - 1) / 0.4)
+                local num = math.ceil(beginNum + getBeanNum * time / 2)
                     if time >= 1 then
                         been_number:setString(num)
                         if num == s_CURRENT_USER:getBeans() then 

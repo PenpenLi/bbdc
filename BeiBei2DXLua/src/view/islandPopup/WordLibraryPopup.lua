@@ -77,6 +77,14 @@ local function addBackButton(top_sprite,backPopup,index)
     beibei:setPosition(backColor:getContentSize().width *0.5, backColor:getContentSize().height *0.7)
     backColor:addChild(beibei)
 
+    local head = cc.Sprite:create("image/guide/beibei_xinshouyindao_newwords.png")
+    head:setPosition(beibei:getContentSize().width *0.5, 200)
+    beibei:addChild(head)
+
+    local finger = cc.Sprite:create("image/guide/beibei_hand2_xinshouyindao_newwords.png")
+    finger:setPosition(beibei:getContentSize().width *0.3, beibei:getContentSize().height + 10)
+    beibei:addChild(finger)
+
     local beibei_tip_label = cc.Label:createWithSystemFont("点击这里返回任务面板","",32)
     beibei_tip_label:setPosition(beibei:getContentSize().width *0.5, beibei:getContentSize().height *0.5)
     beibei_tip_label:setColor(cc.c4b(36,63,79,255))
@@ -217,6 +225,16 @@ local function addGuideLayer(parent,func)
     local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
     beibei:setPosition(backColor:getContentSize().width *0.5, backColor:getContentSize().height *0.3)
     backColor:addChild(beibei,5)
+
+    local body = cc.Sprite:create("image/newstudy/bb_big_yindao.png")
+    body:setPosition(50, 0)
+    beibei:addChild(body)
+
+    local beibei_arm = cc.Sprite:create("image/newstudy/bb_arm_yindao.png")
+    beibei_arm:setPosition(body:getContentSize().width/2 - 70,body:getContentSize().height/2 - 2)
+    beibei_arm:ignoreAnchorPointForPosition(false)
+    beibei_arm:setAnchorPoint(0,0)
+    body:addChild(beibei_arm,-1)
 
     local beibei_tip_label = cc.Label:createWithSystemFont("看，刚收集的生词","",32)
     beibei_tip_label:setPosition(beibei:getContentSize().width *0.6, beibei:getContentSize().height *0.5)

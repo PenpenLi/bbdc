@@ -64,9 +64,11 @@ s_newtutorial_wordpool              = 5
 s_newtutorial_sb_cn                 = 6
 s_newtutorial_rb_show               = 7
 s_newtutorial_island_back           = 8
-s_newtutorial_loginreward           = 9
-s_newtutorial_shop                  = 10
-s_newtutorial_over                  = 11
+s_newtutorial_over                  = 9
+s_newtutorial_loginreward           = 10
+s_newtutorial_shop                  = 11
+s_newtutorial_allover               = 12
+
 
 
 

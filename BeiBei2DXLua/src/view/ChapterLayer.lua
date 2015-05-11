@@ -18,38 +18,89 @@ function ChapterLayer.create()
     return layer
 end
 
-function ChapterLayer:ctor()
-    AnalyticsTutorialLevelSelect()
-    
-    if s_CURRENT_USER.tutorialStep == s_tutorial_level_select then
-        s_CURRENT_USER:setTutorialStep(s_tutorial_level_select+1)
-        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_level_select+1)
-    end
+function ChapterLayer:createGuideLayer()
 
     -- back tutorial 
 
     -- if true then
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_island_back then
-        s_CURRENT_USER.newTutorialStep = s_newtutorial_loginreward
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_over
         saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
 
         -- plot ui
         local back = cc.Layer:create()
         back:setContentSize(s_DESIGN_WIDTH, s_DESIGN_HEIGHT)
 
-        local tutorial_text = cc.Sprite:create('image/tutorial/tutorial_text.png')
-        tutorial_text:setPosition(back:getContentSize().width/2,back:getContentSize().height/2 + 300)
-        back:addChild(tutorial_text,520)
-        local text = cc.Label:createWithSystemFont('完成了今日任务\n回主页打卡吧','',28)
-        text:setPosition(tutorial_text:getContentSize().width/2,tutorial_text:getContentSize().height/2)
-        text:setColor(cc.c3b(0,0,0))
-        tutorial_text:addChild(text)
+        -- local tutorial_text = cc.Sprite:create('image/tutorial/tutorial_text.png')
+        -- tutorial_text:setPosition(back:getContentSize().width/2,back:getContentSize().height/2 + 300)
+        -- back:addChild(tutorial_text,520)
+        -- local text = cc.Label:createWithSystemFont('完成了今日任务\n回主页打卡吧','',28)
+        -- text:setPosition(tutorial_text:getContentSize().width/2,tutorial_text:getContentSize().height/2)
+        -- text:setColor(cc.c3b(0,0,0))
+        -- tutorial_text:addChild(text)
         s_SCENE:popup(back)
-        s_SCENE:callFuncWithDelay(1, function()
-            s_SCENE:removeAllPopups()
+
+         local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+        beibei:setPosition(back:getContentSize().width *0.5, back:getContentSize().height *0.7)
+        back:addChild(beibei)
+
+        local head = cc.Sprite:create("image/guide/beibei_xinshouyindao_newwords.png")
+        head:setPosition(beibei:getContentSize().width *0.5, 200)
+        beibei:addChild(head)
+
+        local finger = cc.Sprite:create("image/guide/beibei_hand2_xinshouyindao_newwords.png")
+        finger:setPosition(beibei:getContentSize().width *0.3, beibei:getContentSize().height + 10)
+        beibei:addChild(finger)
+
+        local beibei_tip_label = cc.Label:createWithSystemFont("完成了今日任务\n回主页打卡吧","",32)
+        beibei_tip_label:setPosition(beibei:getContentSize().width *0.5, beibei:getContentSize().height *0.5)
+        beibei_tip_label:setColor(cc.c4b(36,63,79,255))
+        beibei:addChild(beibei_tip_label)
+        
+        local action0 = cc.DelayTime:create(3)
+        local action1 = cc.CallFunc:create(function ()
+            if back ~= nil then
+                back:removeFromParent()
+                s_SCENE:removeAllPopups()
+                back = nil
+                s_CorePlayManager.enterHomeLayer()
+            end
         end)
+        local action2 = cc.Sequence:create(action0,action1)
+        back:runAction(action2)
+
+        local onTouchBegan = function(touch, event)
+            return true  
+        end
+
+        local onTouchEnded = function(touch, event)
+            if back ~= nil then
+                back:removeFromParent()
+                s_SCENE:removeAllPopups()
+                back = nil
+                s_CorePlayManager.enterHomeLayer()
+            end
+        end
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+        listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+        local eventDispatcher = back:getEventDispatcher()
+        eventDispatcher:addEventListenerWithSceneGraphPriority(listener, back) 
     end
 
+end
+
+function ChapterLayer:ctor()
+        print("chaptutorial"..s_CURRENT_USER.newTutorialStep)
+    AnalyticsTutorialLevelSelect()
+
+    if s_CURRENT_USER.tutorialStep == s_tutorial_level_select then
+        s_CURRENT_USER:setTutorialStep(s_tutorial_level_select+1)
+        s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_level_select+1)
+    end
+    
     playMusic(s_sound_bgm1,true)
 
     -- show repeat chapter list
@@ -57,6 +108,7 @@ function ChapterLayer:ctor()
     self.activeChapterEndIndex = 0
     self.biggestChapterIndex = 0
     self:initActiveChapterRange()
+
 
     self.chapterDic = {}
     -- add list view
@@ -255,6 +307,8 @@ end
 function ChapterLayer:checkUnlockLevel()
     -- get state --
     local progress = s_CURRENT_USER.levelInfo:getLevelInfo(s_CURRENT_USER.bookKey)
+    -- 小岛进度
+
     -- check state
     local bossList = s_LocalDatabaseManager.getAllBossInfo()
     print('---BOSS list')
@@ -267,9 +321,11 @@ function ChapterLayer:checkUnlockLevel()
         if bossInfo["coolingDay"] - 0 == 0 and bossInfo["typeIndex"] - 4 >= 0 and taskIndex == -2 and bossInfo["typeIndex"] - 8 < 0 then
             taskIndex = bossID - 1
             taskState = bossInfo["typeIndex"]
+            -- 寻找以前打过的复习 boss
         end
         if (progressIndex + 1) == bossID then
             progressState = bossInfo["typeIndex"]
+            -- 当前小岛的进度
         end
     end
     -- get state --
@@ -283,16 +339,6 @@ function ChapterLayer:checkUnlockLevel()
     -- unlock chapter
         self:plotUnlockCloudAnimation()
         local currentChapterKey = 'chapter'..math.floor(currentProgress / s_islands_per_page)
---        
---        local delay = 0.5
---        local func = function()
---            self:addChapterIntoListView(currentChapterKey)
---        end
---
---        local delayAction = cc.DelayTime:create(delay)
---        local callAction = cc.CallFunc:create(func)
---        local sequence = cc.Sequence:create(delayAction, callAction)
---        self:runAction(sequence)
         self:callFuncWithDelay(0.1, function() 
             self:addChapterIntoListView(currentChapterKey)
             self.activeChapterEndIndex = self.activeChapterEndIndex + 1
@@ -322,17 +368,27 @@ function ChapterLayer:checkUnlockLevel()
     elseif currentProgress - oldProgress > 0 then   -- unlock level
         local chapterKey = 'chapter'..math.floor(oldProgress / s_islands_per_page)
         local delayTime = 0
---        self:callFuncWithDelay(delayTime, 
---            function()
---                -- add notification
---                self:addPlayerNotification(false) 
---            end
---        )  
-        self.chapterDic[chapterKey]:plotUnlockLevelAnimation('level'..currentProgress)
 
         self:callFuncWithDelay(1, function()
             self:scrollLevelLayer(currentProgress, 1)
         end)
+
+        local chapterKey = 'chapter'..math.floor(oldProgress / s_islands_per_page)
+        if taskIndex == -2 and s_level_popup_state == 1 then
+            s_level_popup_state = 2
+                s_SCENE.touchEventBlockLayer.lockTouch()
+                self:callFuncWithDelay(1.1, function()
+                    s_SCENE.touchEventBlockLayer.unlockTouch()
+                end)
+            self:callFuncWithDelay(1.0, function()
+                local isAnimation = true
+                self.chapterDic[chapterKey]:addPopup(oldProgress,isAnimation)
+            end)
+        end
+        self:callFuncWithDelay(5.0, function()
+            self.chapterDic[chapterKey]:plotUnlockLevelAnimation('level'..currentProgress)
+        end)
+
 --        if taskIndex == -2 then
 --            self:callFuncWithDelay(1.3, function() 
 --                self.chapterDic[chapterKey]:addPopup(currentProgress)
@@ -591,13 +647,6 @@ function ChapterLayer:addPlayerNotification(isRunScale)  -- notification
         button_title:setAnchorPoint(0.5,0.5)
         button_title:setPosition(start:getContentSize().width/2,start:getContentSize().height/2)
         start:addChild(button_title)
-    elseif type == 'complete' then
-        local title = cc.Label:createWithSystemFont(' 今日目标已达成\n明天要再接再厉哦','',22)
-        title:setColor(cc.c3b(74,136,184))
-        title:ignoreAnchorPointForPosition(false)
-        title:setAnchorPoint(0,0)
-        title:setPosition(20,60)
-        notification:addChild(title)
     end
 end
 
