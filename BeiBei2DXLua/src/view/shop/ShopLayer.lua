@@ -176,7 +176,7 @@ function ShopLayer.create()
 
         local item_clicked = function(sender, eventType)
             if eventType == ccui.TouchEventType.ended then
-                s_CURRENT_USER.newTutorialStep = s_newtutorial_over
+                s_CURRENT_USER.newTutorialStep = s_newtutorial_allover
                 saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
                 darkColor:removeFromParent()
                 local shopAlter = ShopAlter.create(i, 'in')

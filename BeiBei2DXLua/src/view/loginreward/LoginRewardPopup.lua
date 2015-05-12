@@ -8,7 +8,6 @@ function LoginRewardPopup.create()
 end
 
 local function numberToSprite(number)
-        print("rewardtutorial"..s_CURRENT_USER.newTutorialStep)
     if number >= 1 and number <= 5 then
         local shadow_sprite = cc.Sprite:create("image/loginreward/back"..number..".png")
         for i = 1,number do
@@ -35,7 +34,7 @@ local function numberToSprite(number)
 end
 
 function LoginRewardPopup:ctor()
-
+    print("rewardtutorial"..s_CURRENT_USER.newTutorialStep)
     AnalyticsLoginReward()
 
     local rewardList = s_DataManager.bean
@@ -164,6 +163,8 @@ function LoginRewardPopup:ctor()
      
      local currentWeek = s_CURRENT_USER.logInDatas[#s_CURRENT_USER.logInDatas]
      -- print("~~~~~~~~~~~")
+     -- print("dayInWeekBegin"..dayInWeekBegin)
+     -- print("dayInWeekEnd"..dayInWeekEnd)
      -- print_lua_table(currentWeek)
      -- print("~~~~~~~~~~~")
      local dayTime = 24 * 60 * 60
