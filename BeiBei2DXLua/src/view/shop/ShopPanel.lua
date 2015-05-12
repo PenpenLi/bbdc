@@ -48,7 +48,20 @@ function ShopPanel.create(itemId)
     button_sure.func = function ()
         button_func()
     end
-    main:addChild(button_sure)
+
+    local cantBuy_Sprite = cc.Sprite:create("image/islandPopup/lock.png")
+    cantBuy_Sprite:setPosition(maxWidth/2,240)
+
+    local cantBuy_Label = cc.Label:createWithSystemFont("现在不卖！","",30)
+    cantBuy_Label:setPosition(cc.p(cantBuy_Sprite:getContentSize().width / 2 ,cantBuy_Sprite:getContentSize().height / 2))
+    cantBuy_Label:setColor(cc.c4b(155,155,155,255))
+    cantBuy_Sprite:addChild(cantBuy_Label)
+
+    if s_CURRENT_USER.newTutorialStep < s_newtutorial_loginreward then
+        main:addChild(cantBuy_Sprite)
+    else
+        main:addChild(button_sure)
+    end
 
     local been = cc.Sprite:create("image/shop/been.png")
     been:setPosition(50, button_sure.button_front:getContentSize().height/2)

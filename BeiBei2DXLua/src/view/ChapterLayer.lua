@@ -19,10 +19,6 @@ function ChapterLayer.create()
 end
 
 function ChapterLayer:createGuideLayer()
-
-    -- back tutorial 
-
-    -- if true then
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_island_back then
         s_CURRENT_USER.newTutorialStep = s_newtutorial_over
         saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
@@ -30,17 +26,37 @@ function ChapterLayer:createGuideLayer()
         -- plot ui
         local back = cc.Layer:create()
         back:setContentSize(s_DESIGN_WIDTH, s_DESIGN_HEIGHT)
-
-        -- local tutorial_text = cc.Sprite:create('image/tutorial/tutorial_text.png')
-        -- tutorial_text:setPosition(back:getContentSize().width/2,back:getContentSize().height/2 + 300)
-        -- back:addChild(tutorial_text,520)
-        -- local text = cc.Label:createWithSystemFont('完成了今日任务\n回主页打卡吧','',28)
-        -- text:setPosition(tutorial_text:getContentSize().width/2,tutorial_text:getContentSize().height/2)
-        -- text:setColor(cc.c3b(0,0,0))
-        -- tutorial_text:addChild(text)
         s_SCENE:popup(back)
 
-         local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
+        local click_home = function(sender, eventType)
+            if eventType == ccui.TouchEventType.ended then
+                if back ~= nil then   
+                    back:removeFromParent()
+                    s_SCENE:removeAllPopups()
+                    back = nil
+                end
+                s_CorePlayManager.enterHomeLayer()
+            end
+        end
+
+        local homeButton = ccui.Button:create("image/homescene/missionprogress/white_circle.png","image/homescene/missionprogress/white_circle.png","")
+        homeButton:addTouchEventListener(click_home)
+        homeButton:ignoreAnchorPointForPosition(false)
+        homeButton:setScale(0.15)
+        homeButton:setPosition(s_LEFT_X + 60  , s_DESIGN_HEIGHT - 60 )
+        homeButton:setLocalZOrder(1)
+        homeButton:setOpacity(0)
+        back:addChild(homeButton,200)
+
+        local finishProgress = cc.Sprite:create('image/homescene/missionprogress/home_page_task_finished_circle.png')
+        finishProgress:setPosition(homeButton:getContentSize().width / 2 ,homeButton:getContentSize().height / 2 )
+        homeButton:addChild(finishProgress)
+    
+        local btnSprite = cc.Sprite:create("image/homescene/missionprogress/taskfinishedstartbutton.png")
+        btnSprite:setPosition(homeButton:getContentSize().width / 2 ,homeButton:getContentSize().height / 2 )
+        homeButton:addChild(btnSprite)
+
+        local beibei = cc.Sprite:create("image/newstudy/background_yindao.png")
         beibei:setPosition(back:getContentSize().width *0.5, back:getContentSize().height *0.7)
         back:addChild(beibei)
 
@@ -56,29 +72,16 @@ function ChapterLayer:createGuideLayer()
         beibei_tip_label:setPosition(beibei:getContentSize().width *0.5, beibei:getContentSize().height *0.5)
         beibei_tip_label:setColor(cc.c4b(36,63,79,255))
         beibei:addChild(beibei_tip_label)
-        
-        local action0 = cc.DelayTime:create(3)
-        local action1 = cc.CallFunc:create(function ()
-            if back ~= nil then
-                back:removeFromParent()
-                s_SCENE:removeAllPopups()
-                back = nil
-                s_CorePlayManager.enterHomeLayer()
-            end
-        end)
-        local action2 = cc.Sequence:create(action0,action1)
-        back:runAction(action2)
 
         local onTouchBegan = function(touch, event)
             return true  
         end
 
         local onTouchEnded = function(touch, event)
-            if back ~= nil then
+            if back ~= nil then   
                 back:removeFromParent()
                 s_SCENE:removeAllPopups()
                 back = nil
-                s_CorePlayManager.enterHomeLayer()
             end
         end
 
@@ -214,7 +217,7 @@ function ChapterLayer:ctor()
     self:addNotification()
     -- check unlock level
     self:checkUnlockLevel()
-    self:addBackToHome()
+    self:addBackToHome(self)
     self:addBeansUI()
 
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_island_finger then
@@ -832,7 +835,7 @@ function ChapterLayer:addBottomBounce()
     self.listView:addChild(self.chapterDic['rightCloud'],200)
 end
 
-function ChapterLayer:addBackToHome()
+function ChapterLayer:addBackToHome(parent)
     local click_home = function(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
             local IntroLayer = require("view.home.HomeLayer")
@@ -851,7 +854,7 @@ function ChapterLayer:addBackToHome()
     homeButton:setPosition(s_LEFT_X + 60  , s_DESIGN_HEIGHT - 60 )
     homeButton:setLocalZOrder(1)
     homeButton:setOpacity(0)
-    self:addChild(homeButton,200)
+    parent:addChild(homeButton,200)
 
     local missionCount = s_LocalDatabaseManager:getTodayTotalTaskNum()
     local completeCount = missionCount - s_LocalDatabaseManager:getTodayRemainTaskNum()

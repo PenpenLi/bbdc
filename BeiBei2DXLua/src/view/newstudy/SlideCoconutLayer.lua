@@ -310,9 +310,9 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
         beibei_tip_label:setColor(cc.c4b(36,63,79,255))
         beibei:addChild(beibei_tip_label)
     elseif s_CURRENT_USER.slideNum == 1 then
-        local lastTouchTime = 4
+        local lastTouchTime = 5
         mat.updateLastTouchTime = function()
-            lastTouchTime = 4
+            lastTouchTime = 5
         end
         local action1 = cc.DelayTime:create(1.0)
         local action2 = cc.CallFunc:create(function()
@@ -345,9 +345,9 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
         local action3 = cc.RepeatForever:create(cc.Sequence:create(action1,action2))
         backColor:runAction(action3)
     elseif s_CURRENT_USER.slideNum == 2 then
-        local lastTouchTime = 4
+        local lastTouchTime = 5
         mat.updateLastTouchTime = function()
-            lastTouchTime = 4
+            lastTouchTime = 5
         end
         local action1 = cc.DelayTime:create(1.0)
         local action2 = cc.CallFunc:create(function()
@@ -357,6 +357,11 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
 
                 local lastButton = createLastButton(word,wrongNum,wrongWordList)
                 backColor:addChild(lastButton, 3)
+
+                local finger = sp.SkeletonAnimation:create('spine/tutorial/fingle.json', 'spine/tutorial/fingle.atlas',1)
+                finger:addAnimation(0, 'animation', true)
+                finger:setPosition(bigWidth/2 + 100, 50)
+                backColor:addChild(finger,130)
 
                 local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
                 darkColor:setAnchorPoint(0.5,0)

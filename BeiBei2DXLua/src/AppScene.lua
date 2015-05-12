@@ -134,6 +134,8 @@ s_newTutorialStepRecord_shop = 30
 s_newTutorialStepRecord_shopPopup = 31
 -- 32.完成数据1购买
 s_newTutorialStepRecord_buyData = 32
+-- 33.结束
+s_newTutorialStepRecord_over = 33
 
 local AppScene = class("AppScene", function()
     return cc.Scene:create()

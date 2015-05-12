@@ -38,6 +38,13 @@ function ShopAlter.create(itemId, location)
 
     main.sure = function()
         if s_CURRENT_USER:getBeans() >= s_DataManager.product[itemId].productValue then
+            if s_CURRENT_USER.newTutorialStep == s_newTutorialStepRecord_shopPopup then
+                if itemId == 2 then
+                    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_buyData)
+                else
+                    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_over)
+                end
+            end
             s_CURRENT_USER:subtractBeans(s_DataManager.product[itemId].productValue)
             s_CURRENT_USER:unlockFunctionState(itemId)
             saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY], ['lockFunction']=s_CURRENT_USER.lockFunction})

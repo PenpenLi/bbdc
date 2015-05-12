@@ -142,7 +142,7 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
     local levelState, coolingDay
     local currentTaskBossIndex = -1
     for bossID, bossInfo in pairs(bossList) do
-        if bossInfo["coolingDay"] + 0 == 0 and currentTaskBossIndex == -1 and bossInfo["typeIndex"] - 8 < 0 then
+        if bossInfo["coolingDay"] + 0 == 0 and currentTaskBossIndex == -1 and bossInfo["typeIndex"] - 7 < 0 then
             currentTaskBossIndex = bossID - 1
         end
         if bossID - (levelIndex + 1) == 0 then
@@ -199,7 +199,7 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
 
 
     --elseif levelState == 2 or (levelState >= 4 and levelIndex == currentTaskBossIndex) then
-    elseif levelState == 2 or (levelState >= 4) then
+    elseif levelState == 2 or (levelState >= 4 and coolingDay == 0 ) then
         if s_level_popup_state ~= 0 and levelState < 4 then
             local deco = sp.SkeletonAnimation:create("spine/chapterlevel/chuizi.json","spine/chapterlevel/chuizi.atlas",1)
             deco:setPosition(levelPosition.x-60,levelPosition.y-10)

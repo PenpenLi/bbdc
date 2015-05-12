@@ -285,12 +285,24 @@ function HomeLayer.create(share)
 
     local button_shop_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
-            AnalyticsShopBtn()
-            changeViewToFriendOrShop("ShopLayer")
+            if s_CURRENT_USER.newTutorialStep < s_newtutorial_loginreward then
+                local tipPopup =  SmallAlterWithOneButton.create("您现在不能进入商店。")
+                s_SCENE:popup(tipPopup)
+                tipPopup.affirm = function ()
+                    s_SCENE:removeAllPopups()
+                end
+            else
+                AnalyticsShopBtn()
+                changeViewToFriendOrShop("ShopLayer")
+            end
         end
     end
 
     local button_shop = ccui.Button:create("image/homescene/home_page_shop_button.png","image/homescene/home_page_shop_button_press.png","")
+    if s_CURRENT_USER.newTutorialStep < s_newtutorial_loginreward then
+        button_shop:loadTextureNormal("image/guide/shop_locked.png")
+        button_shop:loadTexturePressed("image/guide/shop_locked.png")
+    end
     button_shop:setPosition(bigWidth / 2 + 1, 200)
     button_shop:setScale9Enabled(true)
     button_shop:setAnchorPoint(0,0.5)
@@ -318,17 +330,11 @@ function HomeLayer.create(share)
     -- 新手引导
 
     if s_CURRENT_USER.newTutorialStep == s_newtutorial_shop then
-        s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_shop)
         local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
         darkColor:setAnchorPoint(0.5,0.5)
         darkColor:ignoreAnchorPointForPosition(false)
         darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
         layer:addChild(darkColor, 3)
-
-        local listener = cc.EventListenerTouchOneByOne:create()
-        listener:setSwallowTouches(true)
-        listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
-        darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
 
         local back = cc.Sprite:create("image/newstudy/background_word_xinshouyindao_yellow.png")
         back:setPosition((s_RIGHT_X - s_LEFT_X)/2, s_DESIGN_HEIGHT*0.35)
@@ -364,8 +370,32 @@ function HomeLayer.create(share)
         button_shop:setAnchorPoint(0,0.5)
         button_shop:addTouchEventListener(button_shop_clicked)
         darkColor:addChild(button_shop) 
+
+        local onTouchBegan = function(touch, event)
+            return true  
+        end
+
+        local onTouchEnded = function(touch, event)
+            local location = darkColor:convertToNodeSpace(touch:getLocation())
+            if not cc.rectContainsPoint(button_shop:getBoundingBox(),location) then
+                darkColor:removeFromParent()
+            end
+        end
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+        listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+        local eventDispatcher = darkColor:getEventDispatcher()
+        eventDispatcher:addEventListenerWithSceneGraphPriority(listener, darkColor) 
     elseif s_CURRENT_USER.newTutorialStep == s_newtutorial_loginreward then
         ClickRewardBtnFunction()
+    elseif s_CURRENT_USER.newTutorialStep == s_newtutorial_allover then
+        if s_CURRENT_USER:getLockFunctionState(2) == 0 then
+            s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_buyData)
+        else
+            s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_over)
+        end
     end
 
     local button_reward_clicked = function(sender, eventType)
@@ -458,7 +488,7 @@ function HomeLayer.create(share)
     local follow_button_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
             -- popup layer
-
+            AnalyticsFollowBeibei()
             local back = cc.Sprite:create("image/homescene/background_ciku_white.png")
             back:setPosition(cc.p(s_DESIGN_WIDTH/2, 550))
             local info = cc.Sprite:create('image/homescene/Phone-Hook1.png')
@@ -623,6 +653,22 @@ function HomeLayer.create(share)
             return
         end
 
+        if s_CURRENT_USER.newTutorialStep < s_newtutorial_loginreward then
+            local tipPopup =  SmallAlterWithOneButton.create("您现在不能使用好友功能。")
+            s_SCENE:popup(tipPopup)
+            tipPopup.affirm = function ()
+                s_SCENE:removeAllPopups()
+            end
+            return
+        end
+
+        if s_CURRENT_USER:getLockFunctionState(1) == 0 then -- check is friend function unlock
+            local ShopAlter = require("view.shop.ShopAlter")
+            local shopAlter = ShopAlter.create(1, 'out')
+            s_SCENE:popup(shopAlter)
+            return
+        end
+
         if s_CURRENT_USER.usertype ~= USER_TYPE_GUEST then
             changeViewToFriendOrShop("FriendLayer")
         else
@@ -645,13 +691,7 @@ function HomeLayer.create(share)
             AnalyticsFriendBtn()
             playSound(s_sound_buttonEffect)
         elseif eventType == ccui.TouchEventType.ended then
-            if s_CURRENT_USER:getLockFunctionState(1) == 0 then -- check is friend function unlock
-                local ShopAlter = require("view.shop.ShopAlter")
-                local shopAlter = ShopAlter.create(1, 'out')
-                s_SCENE:popup(shopAlter)
-            else
-                layer.friendButtonFunc()
-            end
+            layer.friendButtonFunc()
         end
     end
 

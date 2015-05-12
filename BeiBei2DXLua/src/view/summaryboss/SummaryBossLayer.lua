@@ -20,8 +20,10 @@ local dir_right = 4
 local HINT_TIME = 10
 local bullet_damage = 2
 
-function SummaryBossLayer.create(wordList,type,entrance)   
-    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_summaryBoss)
+function SummaryBossLayer.create(wordList,type,entrance) 
+    if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_library or s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_ironSuccess then  
+        s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_summaryBoss)
+    end
     AnalyticsSummaryBoss()
     s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     local layer = SummaryBossLayer.new()

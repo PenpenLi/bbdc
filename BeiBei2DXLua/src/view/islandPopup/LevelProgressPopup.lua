@@ -76,6 +76,12 @@ local function addBackButton(backPopup,islandIndex)
         -- 三维翻转效果
             if click == 0 then
                 click = 1
+                if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
+                    s_CURRENT_USER.newTutorialStep = s_newtutorial_sb_cn
+                    saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep}) 
+                    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_library) 
+                end
+                                
                 local action0 = cc.CallFunc:create(function()
                     backPopup:runAction(cc.OrbitCamera:create(0.4,1, 0, 0, 90, 0, 0))
                 end)
@@ -133,7 +139,6 @@ local function addBackButton(backPopup,islandIndex)
             if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
                 s_CURRENT_USER.newTutorialStep = s_newtutorial_sb_cn
                 saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
-                s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_library)
             end
         end
     end

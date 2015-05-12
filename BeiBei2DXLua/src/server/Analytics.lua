@@ -20,6 +20,12 @@ end
 
 ----------------------------------------------------------------------------------------
 
+function AnalyticsFollowBeibei()
+    print('Analytics', getAnalyticsPrefix() .. 'FollowBeibei', 'TOUCH'); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'FollowBeibei', 'TOUCH')
+end
+
+----------------------------------------------------------------------------------------
+
 function AnalyticsTutorial(step)
     if is2TimeInSameDay(os.time(),s_CURRENT_USER.localTime) then
         print('Analytics', getAnalyticsPrefix() .. 'TutorialStep_1st_day', tostring(step)); cx.CXAnalytics:logEventAndLabel(getAnalyticsPrefix() .. 'TutorialStep_1st_day', tostring(step))

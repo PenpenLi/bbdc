@@ -7,8 +7,8 @@ local ShopLayer = class("ShopLayer", function()
     return cc.Layer:create()
 end)
 
-function ShopLayer.create()    
-    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_shopPopup)
+function ShopLayer.create()  
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_shop)  
     local layer = ShopLayer.new()
 
     local bigWidth = s_DESIGN_WIDTH + 2*s_DESIGN_OFFSET_WIDTH
@@ -182,7 +182,7 @@ function ShopLayer.create()
                 darkColor:removeFromParent()
                 local shopAlter = ShopAlter.create(i, 'in')
                 s_SCENE:popup(shopAlter)
-                s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_buyData)
+                s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_shopPopup)
             end
         end
 
@@ -203,6 +203,26 @@ function ShopLayer.create()
         local been_small = cc.Sprite:create("image/shop/been_small.png")
         been_small:setPosition(40, item_name_back:getContentSize().height/2-5)
         item_name_back:addChild(been_small)
+
+        local onTouchBegan = function(touch, event)
+            return true  
+        end
+
+        local onTouchEnded = function(touch, event)
+            local location = darkColor:convertToNodeSpace(touch:getLocation())
+            if not cc.rectContainsPoint(item:getBoundingBox(),location) then
+                darkColor:removeFromParent()
+                s_CURRENT_USER.newTutorialStep = s_newtutorial_allover
+                saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
+            end
+        end
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+        listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+        local eventDispatcher = darkColor:getEventDispatcher()
+        eventDispatcher:addEventListenerWithSceneGraphPriority(listener, darkColor) 
 
     end
     

@@ -116,6 +116,7 @@ function DataUser:setNewTutorialStepRecord(step)
     local currentStep = self.newTutorialStepRecord
     if currentStep < step then
         self.newTutorialStepRecord = step
+        saveUserToServer({['newTutorialStepRecord'] = s_CURRENT_USER.newTutorialStepRecord}) 
         AnalyticsNewTutorial(step)
     end
 end
