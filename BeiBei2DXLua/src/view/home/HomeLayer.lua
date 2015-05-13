@@ -479,9 +479,9 @@ function HomeLayer.create(share)
 
         local sprite1 = setting_back:getChildByName("button1")                               
         if sprite1 ~= nil then sprite1:removeFromParent() end
-        local sprite2 = setting_back:getChildByName("button5")  
-        if sprite2 ~= nil then sprite2:setPosition(0, s_DESIGN_HEIGHT - sprite2:getContentSize().height * (4 - 1) - 90) end
-        local sprite3 = setting_back:getChildByName("button4")                               
+        local sprite2 = setting_back:getChildByName("button4") 
+        if sprite2 ~= nil then sprite2:setPosition(0, s_DESIGN_HEIGHT - sprite2:getContentSize().height * (4 - 2) - 90) end
+        local sprite3 = setting_back:getChildByName("button3")                               
         if sprite3 ~= nil then sprite3:removeFromParent() end
     end
 
