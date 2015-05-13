@@ -36,7 +36,13 @@ function ShopAlter.create(itemId, location)
 
     local item
 
+    local mainSureMark = 0
     main.sure = function()
+        if mainSureMark == 0 then
+            mainSureMark = 1 
+        else
+            return
+        end
         if s_CURRENT_USER:getBeans() >= s_DataManager.product[itemId].productValue then
             if s_CURRENT_USER.newTutorialStep == s_newTutorialStepRecord_shopPopup then
                 if itemId == 2 then
@@ -85,7 +91,13 @@ function ShopAlter.create(itemId, location)
         end
     end
 
+    local mainGoMark = 0
     main.go = function ()
+        if mainGoMark == 0 then
+            mainGoMark = 1 
+        else
+            return
+        end
         for i=1,5 do
             if itemId == i then
                 s_LocalDatabaseManager.setBuy(math.pow(2,i-1))

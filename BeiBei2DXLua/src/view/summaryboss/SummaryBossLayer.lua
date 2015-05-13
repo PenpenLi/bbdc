@@ -21,7 +21,8 @@ local HINT_TIME = 10
 local bullet_damage = 2
 
 function SummaryBossLayer.create(wordList,type,entrance) 
-    if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_library or s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_ironSuccess then  
+    if  s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_ironSuccess or 
+        s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_libraryOver then  
         s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_summaryBoss)
     end
     AnalyticsSummaryBoss()

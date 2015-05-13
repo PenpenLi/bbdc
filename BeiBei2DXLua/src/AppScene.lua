@@ -114,28 +114,30 @@ s_newTutorialStepRecord_iron = 20
 s_newTutorialStepRecord_ironSuccess = 21
 -- 22.进入词库
 s_newTutorialStepRecord_library = 22
--- 23.进入总结boss
-s_newTutorialStepRecord_summaryBoss = 23
--- 24.完成总结boss胜利
-s_newTutorialStepRecord_summaryBossSuccess = 24
--- 25.完成总结boss失败
-s_newTutorialStepRecord_summaryBossFail = 25
--- 26.弹出打卡完成后的分享界面
-s_newTutorialStepRecord_share = 26
--- 27.弹出贝贝拉出来的学霸指数界面
-s_newTutorialStepRecord_king = 27
--- 28.完成新手引导
-s_newTutorialStepRecord_end = 28
--- 29.弹出登陆奖励
-s_newTutorialStepRecord_reward = 29
--- 30.进入商店
-s_newTutorialStepRecord_shop = 30
--- 31.打开购买面板
-s_newTutorialStepRecord_shopPopup = 31
--- 32.完成数据1购买
-s_newTutorialStepRecord_buyData = 32
--- 33.结束
-s_newTutorialStepRecord_over = 33
+-- 23.词库结束
+s_newTutorialStepRecord_libraryOver = 23
+-- 24.进入总结boss
+s_newTutorialStepRecord_summaryBoss = 24
+-- 25.完成总结boss胜利
+s_newTutorialStepRecord_summaryBossSuccess = 25
+-- 26.完成总结boss失败
+s_newTutorialStepRecord_summaryBossFail = 26
+-- 27.弹出打卡完成后的分享界面
+s_newTutorialStepRecord_share = 27
+-- 28.弹出贝贝拉出来的学霸指数界面
+s_newTutorialStepRecord_king = 28
+-- 29.完成新手引导
+s_newTutorialStepRecord_end = 29
+-- 30.弹出登陆奖励
+s_newTutorialStepRecord_reward = 30
+-- 31.进入商店
+s_newTutorialStepRecord_shop = 31
+-- 32.打开购买面板
+s_newTutorialStepRecord_shopPopup = 32
+-- 33.完成数据1购买
+s_newTutorialStepRecord_buyData = 33
+-- 34.结束
+s_newTutorialStepRecord_over = 34
 
 local AppScene = class("AppScene", function()
     return cc.Scene:create()

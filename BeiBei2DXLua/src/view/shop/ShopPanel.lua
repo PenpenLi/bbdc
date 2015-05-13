@@ -52,7 +52,7 @@ function ShopPanel.create(itemId)
     local cantBuy_Sprite = cc.Sprite:create("image/islandPopup/lock.png")
     cantBuy_Sprite:setPosition(maxWidth/2,240)
 
-    local cantBuy_Label = cc.Label:createWithSystemFont("现在不卖！","",30)
+    local cantBuy_Label = cc.Label:createWithSystemFont("商店未开启","",30)
     cantBuy_Label:setPosition(cc.p(cantBuy_Sprite:getContentSize().width / 2 ,cantBuy_Sprite:getContentSize().height / 2))
     cantBuy_Label:setColor(cc.c4b(155,155,155,255))
     cantBuy_Sprite:addChild(cantBuy_Label)
