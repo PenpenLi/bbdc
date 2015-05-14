@@ -86,6 +86,12 @@ function CongratulationPopup.create()
 
     end)
 
+    
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_loginreward
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
+    end
+
 
     return layer
 end
