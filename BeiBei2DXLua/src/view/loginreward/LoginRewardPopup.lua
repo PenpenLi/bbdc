@@ -232,13 +232,18 @@ function LoginRewardPopup:ctor()
         getBeanNum = rewardList[#currentData].reward
     end
 
-    if todayMark == 0 and sprite ~= nil then
+    if todayMark == 0 and sprite ~= nil and not tolua.isnull(sprite) then
         s_TOUCH_EVENT_BLOCK_LAYER.lockTouch() 
         s_SCENE:callFuncWithDelay(0.5,function()
             if s_CURRENT_USER.newTutorialStep == s_newtutorial_loginreward then
                 s_CURRENT_USER.newTutorialStep = s_newtutorial_shop
                 saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
             end
+
+            if tolua.isnull(sprite) then
+                return
+            end
+
             -- 每日登陆引导
             s_CURRENT_USER:addBeans(getBeanNum)
             saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY]}) 
@@ -308,8 +313,6 @@ function LoginRewardPopup:ctor()
             bean:scheduleUpdateWithPriorityLua(update, 0)
         end)
     end
-
-
 
     local onTouchEnded = function(touch, event)
         local location = self:convertToNodeSpace(touch:getLocation())
