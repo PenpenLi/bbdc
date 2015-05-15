@@ -24,6 +24,7 @@ local function closeAnimation()
     local action2 = cc.EaseBackIn:create(action1)
     local action3 = cc.CallFunc:create(function()
         s_SCENE:removeAllPopups()
+        s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     end)
     back_login:runAction(cc.Sequence:create(action2,action3))
 end

@@ -9,6 +9,7 @@ local ProgressBar           = require("view.islandPopup.ProgressBar")
 local ChapterLayer          = require("view.ChapterLayer")
 
 function LevelProgressPopup.create(index,playAnimation)
+    s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     local layer = LevelProgressPopup.new(index)
     local islandIndex = tonumber(index)
     layer.unit = s_LocalDatabaseManager.getBossInfo(islandIndex)

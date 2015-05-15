@@ -288,6 +288,7 @@ function ChapterLayerBase:checkLevelStateBeforePopup(levelIndex)
 end
 
 function ChapterLayerBase:addPopup(levelIndex,isAnimation)
+    s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     local LevelProgressPopup = require("view.islandPopup.LevelProgressPopup")
     local levelProgressPopup = LevelProgressPopup.create(levelIndex + 1,isAnimation)
     s_SCENE:popup(levelProgressPopup)  

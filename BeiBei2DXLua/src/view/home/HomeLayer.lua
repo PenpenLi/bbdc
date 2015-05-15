@@ -505,7 +505,7 @@ function HomeLayer.create(share)
             closeButton:addTouchEventListener(close_button_clicked)
             back:addChild(closeButton)
 
-            local label2 = cc.Label:createWithSystemFont("V2.0.6","",25)
+            local label2 = cc.Label:createWithSystemFont("V2.0.9","",25)
             label2:setColor(cc.c4b(36,61,78,255))
             label2:setPosition(back:getContentSize().width/2+45, back:getContentSize().height/2+75)
             info:addChild(label2)
@@ -1008,8 +1008,12 @@ end
 
 function HomeLayer:showDataShare()
     s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_king)
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_loginreward
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
+    end
     self.dataShare.moveUp = function ()
-        if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+        if s_CURRENT_USER.newTutorialStep == s_newtutorial_loginreward then
             local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
             s_SCENE:popup(CongratulationPopup)
         end

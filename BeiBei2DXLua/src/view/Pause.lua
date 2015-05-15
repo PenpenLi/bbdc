@@ -144,7 +144,7 @@ function Pause:onRetry()
 end
 
 function Pause:onBack()
-    --button sound
+    ccbPause['Layer']:onClose()
     playSound(s_sound_buttonEffect)
     --cc.SimpleAudioEngine:getInstance():stopMusic()
     
@@ -154,18 +154,13 @@ function Pause:onBack()
     end
 
     if ccbPause['Layer'].inTryingLayer then
-        --s_CorePlayManager.enterLevelLayer()
         local StoryLayer = require('view.level.StoryLayer')
         local storyLayer = StoryLayer.create(7)
         s_SCENE:replaceGameLayer(storyLayer)
     else
         s_CorePlayManager.enterLevelLayer()
     end
-    
-    s_SCENE.popupLayer.listener:setSwallowTouches(false)
-    s_SCENE.popupLayer:removeAllChildren()
-    s_SCENE.popupLayer.layerpaused = false
-    
+
     s_CURRENT_USER.beanRewardForIron = 3
     --if self.win and isPassed == 0 then
     --    s_SCENE.levelLayerState = s_unlock_normal_plotInfo_state
