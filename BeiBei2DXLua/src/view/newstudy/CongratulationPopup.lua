@@ -3,7 +3,7 @@ local CongratulationPopup = class ("CongratulationPopup",function ()
 end)
 
 function CongratulationPopup.create()
-
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_end)
     local layer = CongratulationPopup.new()
 
     local bigWidth = s_DESIGN_WIDTH + 2*s_DESIGN_OFFSET_WIDTH
@@ -17,12 +17,6 @@ function CongratulationPopup.create()
     back:runAction(action2)
 
     local function closeAnimation()
-        print("overtutorial"..s_CURRENT_USER.newTutorialStep)
-        if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
-            s_CURRENT_USER.newTutorialStep = s_newtutorial_loginreward
-            saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
-        end
-
         local action1 = cc.MoveTo:create(0.5,cc.p(s_LEFT_X + bigWidth/2, s_DESIGN_HEIGHT/2*3))
         local action2 = cc.EaseBackIn:create(action1)
         local action3 = cc.CallFunc:create(function()
@@ -85,6 +79,12 @@ function CongratulationPopup.create()
     end, function ()
 
     end)
+
+    
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_loginreward
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
+    end
 
 
     return layer

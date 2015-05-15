@@ -69,8 +69,75 @@ s_newtutorial_loginreward           = 10
 s_newtutorial_shop                  = 11
 s_newtutorial_allover               = 12
 
-
-
+-- newTutorialStepRecord 
+-- 1.进入选书界面
+s_newTutorialStepRecord_selectBook = 1
+-- 2.进入主界面
+s_newTutorialStepRecord_enterHome = 2
+-- 3.剧情1
+s_newTutorialStepRecord_enterStory1 = 3
+-- 4.剧情2
+s_newTutorialStepRecord_enterStory2 = 4
+-- 5.剧情3
+s_newTutorialStepRecord_enterStory3 = 5
+-- 6.剧情4
+s_newTutorialStepRecord_enterStory4 = 6
+-- 7.剧情5
+s_newTutorialStepRecord_enterStory5 = 7
+-- 8.剧情6
+s_newTutorialStepRecord_enterStory6 = 8
+-- 9.进入试玩的总结boss
+s_newTutorialStepRecord_enterStoryBoss = 9
+-- 10.剧情7
+s_newTutorialStepRecord_enterStory7 = 10
+-- 11.进入选小关界面
+s_newTutorialStepRecord_enterLevel = 11
+-- 12.进入收集生词
+s_newTutorialStepRecord_collectWord = 12
+-- 13.进入详细释义
+s_newTutorialStepRecord_detailInfo = 13
+-- 14.进入划词界面
+s_newTutorialStepRecord_slideCoco = 14
+-- 15.成功完成划词
+s_newTutorialStepRecord_slideSuccess = 15
+-- 16.进入第二个划词界面
+s_newTutorialStepRecord_slideCoco2 = 16
+-- 17.成功完成第二个划词
+s_newTutorialStepRecord_slideSuccess2 = 17
+-- 18.进入第三个划词界面
+s_newTutorialStepRecord_slideCoco3 = 18
+-- 19.成功完成收集生词
+s_newTutorialStepRecord_slideSuccess3 = 19
+-- 20.进入趁热打铁
+s_newTutorialStepRecord_iron = 20
+-- 21.完成乘热打铁
+s_newTutorialStepRecord_ironSuccess = 21
+-- 22.进入词库
+s_newTutorialStepRecord_library = 22
+-- 23.词库结束
+s_newTutorialStepRecord_libraryOver = 23
+-- 24.进入总结boss
+s_newTutorialStepRecord_summaryBoss = 24
+-- 25.完成总结boss胜利
+s_newTutorialStepRecord_summaryBossSuccess = 25
+-- 26.完成总结boss失败
+s_newTutorialStepRecord_summaryBossFail = 26
+-- 27.弹出打卡完成后的分享界面
+s_newTutorialStepRecord_share = 27
+-- 28.弹出贝贝拉出来的学霸指数界面
+s_newTutorialStepRecord_king = 28
+-- 29.完成新手引导
+s_newTutorialStepRecord_end = 29
+-- 30.弹出登陆奖励
+s_newTutorialStepRecord_reward = 30
+-- 31.进入商店
+s_newTutorialStepRecord_shop = 31
+-- 32.打开购买面板
+s_newTutorialStepRecord_shopPopup = 32
+-- 33.完成数据1购买
+s_newTutorialStepRecord_buyData = 33
+-- 34.结束
+s_newTutorialStepRecord_over = 34
 
 local AppScene = class("AppScene", function()
     return cc.Scene:create()

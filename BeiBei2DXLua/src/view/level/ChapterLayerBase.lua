@@ -101,7 +101,7 @@ function ChapterLayerBase:plotUnlockLevelAnimation(levelKey)
         lockLayer:runAction(cc.Sequence:create(action7, action8))
     end
     if lockSprite ~= nil or lockLayer ~= nil then
-        s_SCENE:callFuncWithDelay(0.7,function()
+        self:callFuncWithDelay(0.7,function()
             self:plotDecorationOfLevel(levelIndex-0)
         end)
     end
@@ -142,7 +142,7 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
     local levelState, coolingDay
     local currentTaskBossIndex = -1
     for bossID, bossInfo in pairs(bossList) do
-        if bossInfo["coolingDay"] + 0 == 0 and currentTaskBossIndex == -1 and bossInfo["typeIndex"] - 8 < 0 then
+        if bossInfo["coolingDay"] + 0 == 0 and currentTaskBossIndex == -1 and bossInfo["typeIndex"] - 7 < 0 then
             currentTaskBossIndex = bossID - 1
         end
         if bossID - (levelIndex + 1) == 0 then
@@ -199,7 +199,7 @@ function ChapterLayerBase:plotDecorationOfLevel(levelIndex)
 
 
     --elseif levelState == 2 or (levelState >= 4 and levelIndex == currentTaskBossIndex) then
-    elseif levelState == 2 or (levelState >= 4) then
+    elseif levelState == 2 or (levelState >= 4 and coolingDay == 0 ) then
         if s_level_popup_state ~= 0 and levelState < 4 then
             local deco = sp.SkeletonAnimation:create("spine/chapterlevel/chuizi.json","spine/chapterlevel/chuizi.atlas",1)
             deco:setPosition(levelPosition.x-60,levelPosition.y-10)
@@ -288,6 +288,7 @@ function ChapterLayerBase:checkLevelStateBeforePopup(levelIndex)
 end
 
 function ChapterLayerBase:addPopup(levelIndex,isAnimation)
+    s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     local LevelProgressPopup = require("view.islandPopup.LevelProgressPopup")
     local levelProgressPopup = LevelProgressPopup.create(levelIndex + 1,isAnimation)
     s_SCENE:popup(levelProgressPopup)  

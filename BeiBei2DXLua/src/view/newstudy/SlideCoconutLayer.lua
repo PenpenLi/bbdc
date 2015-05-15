@@ -60,6 +60,14 @@ local function createLastButton(word,wrongNum,wrongWordList)
 end
 
 function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
+        -- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideCoco)
+    if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_slideSuccess then
+        s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideCoco2)
+    end
+    if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_slideSuccess2 then
+        s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideCoco3)
+    end
     AnalyticsStudySlideCoconut_EnterLayer()
 
     if s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat1_3 then
@@ -148,6 +156,14 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
             AnalyticsStudySlideCoconut_LeaveLayer()
             if s_CURRENT_USER.tutorialStep == s_tutorial_study and s_CURRENT_USER.tutorialSmallStep == s_smalltutorial_studyRepeat2_1 then
                s_CURRENT_USER:setTutorialSmallStep(s_smalltutorial_studyRepeat2_1 + 1)
+            end
+
+            s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideSuccess)
+            if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_slideCoco2 then
+                s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideSuccess2)
+            end
+            if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_slideCoco3 then
+                s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_slideSuccess3)
             end
 
             s_TOUCH_EVENT_BLOCK_LAYER.lockTouch()
@@ -294,9 +310,9 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
         beibei_tip_label:setColor(cc.c4b(36,63,79,255))
         beibei:addChild(beibei_tip_label)
     elseif s_CURRENT_USER.slideNum == 1 then
-        local lastTouchTime = 4
+        local lastTouchTime = 5
         mat.updateLastTouchTime = function()
-            lastTouchTime = 4
+            lastTouchTime = 5
         end
         local action1 = cc.DelayTime:create(1.0)
         local action2 = cc.CallFunc:create(function()
@@ -329,9 +345,9 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
         local action3 = cc.RepeatForever:create(cc.Sequence:create(action1,action2))
         backColor:runAction(action3)
     elseif s_CURRENT_USER.slideNum == 2 then
-        local lastTouchTime = 4
+        local lastTouchTime = 5
         mat.updateLastTouchTime = function()
-            lastTouchTime = 4
+            lastTouchTime = 5
         end
         local action1 = cc.DelayTime:create(1.0)
         local action2 = cc.CallFunc:create(function()
@@ -341,6 +357,11 @@ function SlideCoconutLayer:ctor(word,wrongNum,wrongWordList)
 
                 local lastButton = createLastButton(word,wrongNum,wrongWordList)
                 backColor:addChild(lastButton, 3)
+
+                local finger = sp.SkeletonAnimation:create('spine/tutorial/fingle.json', 'spine/tutorial/fingle.atlas',1)
+                finger:addAnimation(0, 'animation', true)
+                finger:setPosition(bigWidth/2 + 100, 50)
+                backColor:addChild(finger,130)
 
                 local darkColor = cc.LayerColor:create(cc.c4b(0,0,0,150), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
                 darkColor:setAnchorPoint(0.5,0)

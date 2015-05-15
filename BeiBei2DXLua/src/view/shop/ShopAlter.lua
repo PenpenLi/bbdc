@@ -36,8 +36,21 @@ function ShopAlter.create(itemId, location)
 
     local item
 
+    local mainSureMark = 0
     main.sure = function()
+        if mainSureMark == 0 then
+            mainSureMark = 1 
+        else
+            return
+        end
         if s_CURRENT_USER:getBeans() >= s_DataManager.product[itemId].productValue then
+            if s_CURRENT_USER.newTutorialStep == s_newTutorialStepRecord_shopPopup then
+                if itemId == 2 then
+                    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_buyData)
+                else
+                    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_over)
+                end
+            end
             s_CURRENT_USER:subtractBeans(s_DataManager.product[itemId].productValue)
             s_CURRENT_USER:unlockFunctionState(itemId)
             saveUserToServer({[DataUser.BEANSKEY]=s_CURRENT_USER[DataUser.BEANSKEY], ['lockFunction']=s_CURRENT_USER.lockFunction})
@@ -78,7 +91,13 @@ function ShopAlter.create(itemId, location)
         end
     end
 
+    local mainGoMark = 0
     main.go = function ()
+        if mainGoMark == 0 then
+            mainGoMark = 1 
+        else
+            return
+        end
         for i=1,5 do
             if itemId == i then
                 s_LocalDatabaseManager.setBuy(math.pow(2,i-1))
@@ -147,7 +166,7 @@ function ShopAlter.create(itemId, location)
 
     local label_content
     if itemId == 6 and state == 1 then -- vip
-        local vip_content = "恭喜你！获得贝贝VIP门票一张！请加微信：beibei001，距离VIP群，仅有一步之遥！"
+        local vip_content = "恭喜你！获得贝贝VIP门票一张！请加微信：beibeidanci001，距离VIP群，仅有一步之遥！"
         label_content = cc.Label:createWithSystemFont(vip_content,"",32)
     else
         label_content = cc.Label:createWithSystemFont(s_DataManager.product[itemId].productDescription,"",32)

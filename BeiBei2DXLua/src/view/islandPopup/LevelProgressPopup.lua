@@ -9,6 +9,7 @@ local ProgressBar           = require("view.islandPopup.ProgressBar")
 local ChapterLayer          = require("view.ChapterLayer")
 
 function LevelProgressPopup.create(index,playAnimation)
+    s_TOUCH_EVENT_BLOCK_LAYER.unlockTouch()
     local layer = LevelProgressPopup.new(index)
     local islandIndex = tonumber(index)
     layer.unit = s_LocalDatabaseManager.getBossInfo(islandIndex)
@@ -76,10 +77,16 @@ local function addBackButton(backPopup,islandIndex)
         -- 三维翻转效果
             if click == 0 then
                 click = 1
+                if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
+                    s_CURRENT_USER.newTutorialStep = s_newtutorial_sb_cn
+                    saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep}) 
+                    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_library) 
+                end
+                                
                 local action0 = cc.CallFunc:create(function()
                     backPopup:runAction(cc.OrbitCamera:create(0.4,1, 0, 0, 90, 0, 0))
                 end)
-                local action2 = cc.DelayTime:create(0.4)
+                local action2 = cc.DelayTime:create(0.2)
                 local action3 = cc.CallFunc:create(function()
                     local WordLibrary = require("view.islandPopup.WordLibraryPopup")
                     local wordLibrary = WordLibrary.create(islandIndex)
@@ -257,6 +264,8 @@ function LevelProgressPopup:createPape(islandIndex)
     -- 小岛进度为8时，小岛完成
     if self.current_index >= 7 then
         progress_index = 6
+    elseif self.current_index > 2 then
+        progress_index = self.current_index - 1
     end
     -- 小岛进度条
     local progressBar = ProgressBar.create(6,progress_index)

@@ -36,17 +36,13 @@ local function addBackButton(top_sprite,backPopup,index)
     local click = 0 
     local button_back_clicked = function()
         if click == 0 then
-            --更新引导tag
-            if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
-                s_CURRENT_USER.newTutorialStep = s_newtutorial_sb_cn
-                saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})  
-            end
             click = 1
+            s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_libraryOver)
             playSound(s_sound_buttonEffect)
             local action0 = cc.CallFunc:create(function()
                 backPopup:runAction(cc.OrbitCamera:create(0.4,1, 0, 0, 90, 0, 0))
             end)
-            local action2 = cc.DelayTime:create(0.4)
+            local action2 = cc.DelayTime:create(0.2)
             local action3 = cc.CallFunc:create(function()
                 local LevelProgressPopup = require("view.islandPopup.LevelProgressPopup")
                 local levelProgressPopup = LevelProgressPopup.create(index)
@@ -69,7 +65,7 @@ local function addBackButton(top_sprite,backPopup,index)
     local backColor = cc.LayerColor:create(cc.c4b(0,0,0,100), s_RIGHT_X - s_LEFT_X, s_DESIGN_HEIGHT)
     -- 引导内容
     backColor:setPosition(backPopup:getContentSize().width *0.5 - (s_RIGHT_X - s_LEFT_X)/2, backPopup:getContentSize().height * 0.5 - s_DESIGN_HEIGHT/2)
-    if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
+    if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_library then
         backPopup:addChild(backColor,3)
     end
 
@@ -405,7 +401,7 @@ function WordLibraryPopup:ctor(index)
         end
     end
 
-    if s_CURRENT_USER.newTutorialStep == s_newtutorial_wordpool then
+    if s_CURRENT_USER.newTutorialStepRecord == s_newTutorialStepRecord_library then
         addGuideLayer(self.backPopup,function ()
             addBackButton(top_sprite,self.backPopup,index)
         end)

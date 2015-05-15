@@ -309,6 +309,8 @@ end)
 
 
 function BookLayer.create()
+    -- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_selectBook)
     local layer = BookLayer.new()
     layer.book = {}
 

@@ -21,7 +21,8 @@ local list = {}
 local TEXT_CHANGE_ACCOUNT = '切换账号' -- "登出游戏"
 
 function HomeLayer.create(share)
-    print("hometutorial"..s_CURRENT_USER.newTutorialStep)
+    -- 更新引导步骤
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_enterHome)
     --s_CURRENT_USER:addBeans(100)
 
     --Analytics.lua
@@ -284,12 +285,24 @@ function HomeLayer.create(share)
 
     local button_shop_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
-            AnalyticsShopBtn()
-            changeViewToFriendOrShop("ShopLayer")
+            if s_CURRENT_USER.newTutorialStep < s_newtutorial_loginreward then
+                local tipPopup =  SmallAlterWithOneButton.create("您现在不能进入商店。")
+                s_SCENE:popup(tipPopup)
+                tipPopup.affirm = function ()
+                    s_SCENE:removeAllPopups()
+                end
+            else
+                AnalyticsShopBtn()
+                changeViewToFriendOrShop("ShopLayer")
+            end
         end
     end
 
     local button_shop = ccui.Button:create("image/homescene/home_page_shop_button.png","image/homescene/home_page_shop_button_press.png","")
+    if s_CURRENT_USER.newTutorialStep < s_newtutorial_loginreward then
+        button_shop:loadTextureNormal("image/guide/shop_locked.png")
+        button_shop:loadTexturePressed("image/guide/shop_locked.png")
+    end
     button_shop:setPosition(bigWidth / 2 + 1, 200)
     button_shop:setScale9Enabled(true)
     button_shop:setAnchorPoint(0,0.5)
@@ -322,11 +335,6 @@ function HomeLayer.create(share)
         darkColor:ignoreAnchorPointForPosition(false)
         darkColor:setPosition(s_DESIGN_WIDTH/2 ,s_DESIGN_HEIGHT/2)
         layer:addChild(darkColor, 3)
-
-        local listener = cc.EventListenerTouchOneByOne:create()
-        listener:setSwallowTouches(true)
-        listener:registerScriptHandler(function(touch, event) return true end,cc.Handler.EVENT_TOUCH_BEGAN )
-        darkColor:getEventDispatcher():addEventListenerWithSceneGraphPriority(listener, darkColor)
 
         local back = cc.Sprite:create("image/newstudy/background_word_xinshouyindao_yellow.png")
         back:setPosition((s_RIGHT_X - s_LEFT_X)/2, s_DESIGN_HEIGHT*0.35)
@@ -362,8 +370,32 @@ function HomeLayer.create(share)
         button_shop:setAnchorPoint(0,0.5)
         button_shop:addTouchEventListener(button_shop_clicked)
         darkColor:addChild(button_shop) 
+
+        local onTouchBegan = function(touch, event)
+            return true  
+        end
+
+        local onTouchEnded = function(touch, event)
+            local location = darkColor:convertToNodeSpace(touch:getLocation())
+            if not cc.rectContainsPoint(button_shop:getBoundingBox(),location) then
+                darkColor:removeFromParent()
+            end
+        end
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        listener:setSwallowTouches(true)
+        listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+        listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+        local eventDispatcher = darkColor:getEventDispatcher()
+        eventDispatcher:addEventListenerWithSceneGraphPriority(listener, darkColor) 
     elseif s_CURRENT_USER.newTutorialStep == s_newtutorial_loginreward then
         ClickRewardBtnFunction()
+    elseif s_CURRENT_USER.newTutorialStep == s_newtutorial_allover then
+        if s_CURRENT_USER:getLockFunctionState(2) == 0 then
+            s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_buyData)
+        else
+            s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_over)
+        end
     end
 
     local button_reward_clicked = function(sender, eventType)
@@ -447,16 +479,16 @@ function HomeLayer.create(share)
 
         local sprite1 = setting_back:getChildByName("button1")                               
         if sprite1 ~= nil then sprite1:removeFromParent() end
-        local sprite2 = setting_back:getChildByName("button5")  
-        if sprite2 ~= nil then sprite2:setPosition(0, s_DESIGN_HEIGHT - sprite2:getContentSize().height * (4 - 1) - 90) end
-        local sprite3 = setting_back:getChildByName("button4")                               
+        local sprite2 = setting_back:getChildByName("button4") 
+        if sprite2 ~= nil then sprite2:setPosition(0, s_DESIGN_HEIGHT - sprite2:getContentSize().height * (4 - 2) - 90) end
+        local sprite3 = setting_back:getChildByName("button3")                               
         if sprite3 ~= nil then sprite3:removeFromParent() end
     end
 
     local follow_button_clicked = function(sender, eventType)
         if eventType == ccui.TouchEventType.ended then
             -- popup layer
-
+            AnalyticsFollowBeibei()
             local back = cc.Sprite:create("image/homescene/background_ciku_white.png")
             back:setPosition(cc.p(s_DESIGN_WIDTH/2, 550))
             local info = cc.Sprite:create('image/homescene/Phone-Hook1.png')
@@ -473,7 +505,7 @@ function HomeLayer.create(share)
             closeButton:addTouchEventListener(close_button_clicked)
             back:addChild(closeButton)
 
-            local label2 = cc.Label:createWithSystemFont("V2.0.6","",25)
+            local label2 = cc.Label:createWithSystemFont("V2.0.9","",25)
             label2:setColor(cc.c4b(36,61,78,255))
             label2:setPosition(back:getContentSize().width/2+45, back:getContentSize().height/2+75)
             info:addChild(label2)
@@ -621,6 +653,22 @@ function HomeLayer.create(share)
             return
         end
 
+        if s_CURRENT_USER.newTutorialStep < s_newtutorial_loginreward then
+            local tipPopup =  SmallAlterWithOneButton.create("您现在不能使用好友功能。")
+            s_SCENE:popup(tipPopup)
+            tipPopup.affirm = function ()
+                s_SCENE:removeAllPopups()
+            end
+            return
+        end
+
+        if s_CURRENT_USER:getLockFunctionState(1) == 0 then -- check is friend function unlock
+            local ShopAlter = require("view.shop.ShopAlter")
+            local shopAlter = ShopAlter.create(1, 'out')
+            s_SCENE:popup(shopAlter)
+            return
+        end
+
         if s_CURRENT_USER.usertype ~= USER_TYPE_GUEST then
             changeViewToFriendOrShop("FriendLayer")
         else
@@ -643,13 +691,7 @@ function HomeLayer.create(share)
             AnalyticsFriendBtn()
             playSound(s_sound_buttonEffect)
         elseif eventType == ccui.TouchEventType.ended then
-            if s_CURRENT_USER:getLockFunctionState(1) == 0 then -- check is friend function unlock
-                local ShopAlter = require("view.shop.ShopAlter")
-                local shopAlter = ShopAlter.create(1, 'out')
-                s_SCENE:popup(shopAlter)
-            else
-                layer.friendButtonFunc()
-            end
+            layer.friendButtonFunc()
         end
     end
 
@@ -675,7 +717,7 @@ function HomeLayer.create(share)
             button_friend:setPosition(bigWidth / 2 - 1, 200)
             button_friend:setScale9Enabled(true)
             button_friend:setAnchorPoint(1,0.5)
-            button_friend:addTouchEventListener(button_right_clicked)
+            button_friend:addTouchEventListener(button_friend_clicked)
             backColor:addChild(button_friend,1)   
 
             layer.button_friend = button_friend
@@ -953,6 +995,7 @@ function HomeLayer:setButtonEnabled(enabled)
 end
 
 function HomeLayer:showShareCheckIn()
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_share)
     local Share = require('view.share.ShareCheckIn')
     local shareLayer = Share.create(self)
     shareLayer:setPosition(0,-s_DESIGN_HEIGHT)
@@ -964,8 +1007,13 @@ function HomeLayer:showShareCheckIn()
 end
 
 function HomeLayer:showDataShare()
+    s_CURRENT_USER:setNewTutorialStepRecord(s_newTutorialStepRecord_king)
+    if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+        s_CURRENT_USER.newTutorialStep = s_newtutorial_loginreward
+        saveUserToServer({['newTutorialStep'] = s_CURRENT_USER.newTutorialStep})
+    end
     self.dataShare.moveUp = function ()
-        if s_CURRENT_USER.newTutorialStep == s_newtutorial_over then
+        if s_CURRENT_USER.newTutorialStep == s_newtutorial_loginreward then
             local CongratulationPopup = require("view.newstudy.CongratulationPopup").create()
             s_SCENE:popup(CongratulationPopup)
         end
