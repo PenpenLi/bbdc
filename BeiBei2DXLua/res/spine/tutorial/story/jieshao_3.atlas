@@ -6,57 +6,57 @@ filter: Linear,Linear
 repeat: none
 1
   rotate: false
-  xy: 2, 302
-  size: 17, 38
-  orig: 17, 38
+  xy: 857, 600
+  size: 21, 48
+  orig: 21, 48
   offset: 0, 0
   index: -1
 1_Zi
-  rotate: false
-  xy: 2, 342
-  size: 286, 30
-  orig: 286, 30
+  rotate: true
+  xy: 857, 650
+  size: 357, 37
+  orig: 357, 37
   offset: 0, 0
   index: -1
 1_daizi
   rotate: false
-  xy: 687, 800
-  size: 170, 174
-  orig: 170, 174
+  xy: 1, 37
+  size: 212, 218
+  orig: 212, 218
   offset: 0, 0
   index: -1
 1_daizi_yz
   rotate: false
-  xy: 687, 771
-  size: 130, 27
-  orig: 130, 27
+  xy: 1, 1
+  size: 162, 34
+  orig: 162, 34
   offset: 0, 0
   index: -1
 bccbcbcbbc
   rotate: false
-  xy: 2, 391
-  size: 683, 211
-  orig: 683, 211
+  xy: 1, 278
+  size: 854, 264
+  orig: 854, 264
   offset: 0, 0
   index: -1
 vvv
   rotate: false
-  xy: 2, 374
-  size: 683, 15
-  orig: 683, 15
+  xy: 1, 257
+  size: 854, 19
+  orig: 854, 19
   offset: 0, 0
   index: -1
 w
   rotate: false
-  xy: 859, 944
-  size: 115, 30
-  orig: 115, 30
+  xy: 215, 217
+  size: 144, 38
+  orig: 144, 38
   offset: 0, 0
   index: -1
 yun
   rotate: false
-  xy: 2, 604
-  size: 683, 370
-  orig: 683, 370
+  xy: 1, 544
+  size: 854, 463
+  orig: 854, 463
   offset: 0, 0
   index: -1

@@ -1,0 +1,61 @@
+
+jieshao2.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arm2
+  rotate: false
+  xy: 906, 955
+  size: 98, 54
+  orig: 98, 54
+  offset: 0, 0
+  index: -1
+bac
+  rotate: false
+  xy: 2, 100
+  size: 683, 909
+  orig: 683, 909
+  offset: 0, 0
+  index: -1
+bac_white
+  rotate: true
+  xy: 687, 195
+  size: 338, 289
+  orig: 338, 289
+  offset: 0, 0
+  index: -1
+bb副本
+  rotate: false
+  xy: 687, 535
+  size: 217, 474
+  orig: 217, 474
+  offset: 0, 0
+  index: -1
+yingzi
+  rotate: false
+  xy: 687, 159
+  size: 165, 34
+  orig: 165, 34
+  offset: 0, 0
+  index: -1
+youguais
+  rotate: false
+  xy: 2, 2
+  size: 132, 96
+  orig: 132, 96
+  offset: 0, 0
+  index: -1
+
+jieshao22.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+guaishou_zi
+  rotate: false
+  xy: 2, 19
+  size: 447, 430
+  orig: 447, 430
+  offset: 0, 0
+  index: -1

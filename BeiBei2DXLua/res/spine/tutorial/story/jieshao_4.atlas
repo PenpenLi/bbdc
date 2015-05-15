@@ -6,63 +6,63 @@ filter: Linear,Linear
 repeat: none
 2
   rotate: false
-  xy: 410, 184
+  xy: 409, 183
   size: 22, 39
   orig: 22, 39
   offset: 0, 0
   index: -1
 2_ccizi
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 174, 140
   orig: 174, 140
   offset: 0, 0
   index: -1
 2_paizi
   rotate: true
-  xy: 687, 419
+  xy: 686, 418
   size: 406, 79
   orig: 406, 79
   offset: 0, 0
   index: -1
 2_paizi 2
   rotate: false
-  xy: 2, 144
+  xy: 1, 143
   size: 406, 79
   orig: 406, 79
   offset: 0, 0
   index: -1
 2_zi
   rotate: true
-  xy: 768, 538
+  xy: 767, 537
   size: 287, 30
   orig: 287, 30
   offset: 0, 0
   index: -1
 bccbcbcbbc
   rotate: false
-  xy: 2, 242
+  xy: 1, 241
   size: 683, 211
   orig: 683, 211
   offset: 0, 0
   index: -1
 vvv
   rotate: false
-  xy: 2, 225
+  xy: 1, 224
   size: 683, 15
   orig: 683, 15
   offset: 0, 0
   index: -1
 yingzibbbb
   rotate: true
-  xy: 687, 239
+  xy: 686, 238
   size: 178, 38
   orig: 178, 38
   offset: 0, 0
   index: -1
 yun
   rotate: false
-  xy: 2, 455
+  xy: 1, 454
   size: 683, 370
   orig: 683, 370
   offset: 0, 0
