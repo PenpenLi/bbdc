@@ -344,7 +344,7 @@ function BookLayer.create()
        backButton:setVisible(true)
     end
     
-    local hint = cc.Label:createWithSystemFont("请您先选择一本合适您的书籍","",24)
+    local hint = cc.Label:createWithSystemFont("请您先选择一本合适您的单词书","",24)
     hint:setPosition((s_RIGHT_X - s_LEFT_X)/2,1073)
     hint:setColor(cc.c4b(66,66,62,255))
     backColor:addChild(hint) 

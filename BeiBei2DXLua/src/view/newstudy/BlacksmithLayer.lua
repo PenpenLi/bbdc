@@ -153,7 +153,7 @@ local function createDontknow(wordlist)
         s_SCENE:replaceGameLayer(chooseWrongLayer)            
     end
 
-    local choose_dontknow_button = Button.create("long","blue","不认识") 
+    local choose_dontknow_button = Button.create("long","blue","重新学习") 
     choose_dontknow_button:setPosition(bigWidth/2, 100)
     choose_dontknow_button.func = function ()
         button_func()
@@ -229,7 +229,7 @@ function BlacksmithLayer:ctor(wordlist)
     self.dontknow = createDontknow(wordlist)
     backColor:addChild(self.dontknow)
 
-    local label_dontknow = cc.Label:createWithSystemFont("不认识的单词请选择不认识","",26)
+    local label_dontknow = cc.Label:createWithSystemFont("陌生单词请选择\"重新学习\"","",26)
     label_dontknow:setPosition(bigWidth/2, 220)
     label_dontknow:setColor(cc.c4b(37,158,227,255))
     backColor:addChild(label_dontknow)

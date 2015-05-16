@@ -39,7 +39,7 @@ local function createNextButton(getBean)
         s_CorePlayManager.enterLevelLayer()
     end 
 
-    local button_go =  Button.create("long","blue","YES！")
+    local button_go =  Button.create("long","blue","迎战复习怪兽！")
     button_go:setPosition(bigWidth/2, 100)
 
     button_go.func = function ()

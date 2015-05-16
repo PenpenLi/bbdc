@@ -196,7 +196,7 @@ local function createDontknow(word,wrongNum, preWordName, preWordNameState)
         end
     end
 
-    local choose_dontknow_button = Button.create("不认识")
+    local choose_dontknow_button = Button.create("重新学习")
     choose_dontknow_button:setPosition(bigWidth/2, 100)
     choose_dontknow_button:addTouchEventListener(click_dontknow_button)
     
@@ -252,7 +252,7 @@ function CollectUnfamiliarLayer:ctor(wordName, wrongWordNum, preWordName, preWor
     self.dontknow = createDontknow(wordName,wrongWordNum, preWordName, preWordNameState)
     backColor:addChild(self.dontknow)
     
-    local label_dontknow = cc.Label:createWithSystemFont("不认识的单词请选择不认识","",26)
+    local label_dontknow = cc.Label:createWithSystemFont("陌生单词请选择重新学习","",26)
     label_dontknow:setPosition(bigWidth/2, 220)
     label_dontknow:setColor(cc.c4b(37,158,227,255))
     backColor:addChild(label_dontknow)

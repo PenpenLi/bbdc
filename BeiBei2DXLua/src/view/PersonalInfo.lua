@@ -50,7 +50,7 @@ function PersonalInfo:ctor()
     local moved = false
     local start_y = nil
     local colorArray = {cc.c4b(56,182,236,255),cc.c4b(238,75,74,255 ),cc.c4b(251,166,24,255 ),cc.c4b(128,172,20,255 )}
-    local titleArray = {'单词掌握统计','单词学习日增长','登陆贝贝天数','学习效率统计'}
+    local titleArray = {'单词掌握统计记录功能','单词每日增长记录功能','登陆贝贝天数','单词学习效率统计功能'}
     self.intro_array = {}
     local target = {}
 
@@ -100,7 +100,7 @@ function PersonalInfo:ctor()
         local title_here = titleArray[5 - i]
         local title
         if s_CURRENT_USER:getLockFunctionState(6 - i) ~= UNLOCK then
-            title_here = titleArray[5 - i].."被锁住了!"
+            title_here = titleArray[5 - i].."被冻住了!"
             
             
             local ShopPanel = require('view.shop.ShopPanel')

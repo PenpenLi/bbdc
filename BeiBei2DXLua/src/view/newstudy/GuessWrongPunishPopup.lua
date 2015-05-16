@@ -31,7 +31,7 @@ function GuessWrongPunishPopup:ctor(currentReward,totalReward)
     local action2 = cc.EaseBackOut:create(action1)
     back:runAction(action2)
     
-    local text = cc.Label:createWithSystemFont("瞎猜是会有惩罚的！","",30)
+    local text = cc.Label:createWithSystemFont("瞎猜是会损失贝贝豆的哦！","",30)
     text:setPosition(back:getContentSize().width * 0.5,back:getContentSize().height * 0.8)
     text:setColor(cc.c4b(84,107,140,255))
     back:addChild(text)
@@ -74,7 +74,7 @@ function GuessWrongPunishPopup:ctor(currentReward,totalReward)
         back:runAction(cc.Sequence:create(action2,action3))
     end  
 
-    local button_goon =  Button.create("small","blue","知道了")
+    local button_goon =  Button.create("small","blue","明白啦")
     button_goon:setPosition(back:getContentSize().width * 0.5,back:getContentSize().height * 0.2)
     button_goon.func = function ()
         button_func()

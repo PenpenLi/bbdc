@@ -128,7 +128,7 @@ function ShopAlter.create(itemId, location)
             main.sure()
         end
 
-        button_sure = Button.create("middle","blue",s_DataManager.product[itemId].productValue.."贝贝豆购买") 
+        button_sure = Button.create("middle","blue",s_DataManager.product[itemId].productValue.."用贝贝豆解冻") 
         button_sure:setPosition(maxWidth/2,100)
         button_sure.func = function ()
             button_func()

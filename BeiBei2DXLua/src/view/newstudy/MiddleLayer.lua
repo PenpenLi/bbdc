@@ -92,29 +92,29 @@ end
 local function createNumberSprite(wrongNumber)
     local bigWidth = s_DESIGN_WIDTH + 2*s_DESIGN_OFFSET_WIDTH
     local figureback_main = cc.Sprite:create("image/newstudy/figurebackground.png")
-    figureback_main:setPosition(bigWidth /2 + 60, 1000)
+    figureback_main:setPosition(bigWidth /2 + 100, 1000)
     figureback_main:setOpacity(0)
 
     local figureback_sub = cc.Sprite:create("image/newstudy/figurebackground.png")
-    figureback_sub:setPosition(figureback_main:getContentSize().width / 2 ,figureback_main:getContentSize().height / 2)
+    figureback_sub:setPosition(figureback_main:getContentSize().width / 2+40 ,figureback_main:getContentSize().height / 2)
     figureback_main:addChild(figureback_sub)
 
-    local label_hint_part_one = cc.Label:createWithSystemFont("收集生词","",40)
-    label_hint_part_one:setPosition(-20, 50)
+    local label_hint_part_one = cc.Label:createWithSystemFont("恭喜！收集到生词","",40)
+    label_hint_part_one:setPosition(30, 50)
     label_hint_part_one:ignoreAnchorPointForPosition(false)
     label_hint_part_one:setAnchorPoint(1,0.5)
     label_hint_part_one:setColor(cc.c4b(42,120,158,255))
     figureback_main:addChild(label_hint_part_one)
 
     local label_hint_part_two = cc.Label:createWithSystemFont("个","",40)
-    label_hint_part_two:setPosition(110, 50)
+    label_hint_part_two:setPosition(160, 50)
     label_hint_part_two:ignoreAnchorPointForPosition(false)
     label_hint_part_two:setAnchorPoint(0,0.5)
     label_hint_part_two:setColor(cc.c4b(42,120,158,255))
     figureback_main:addChild(label_hint_part_two)
 
     local labelWordNum = cc.Label:createWithSystemFont(0,"",60)
-    labelWordNum:setPosition(50,50)
+    labelWordNum:setPosition(90,50)
     labelWordNum:setColor(cc.c4b(242,121,0,255))
     figureback_main:addChild(labelWordNum)
     
